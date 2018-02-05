@@ -1,0 +1,16 @@
+platform :ios, '8.0'
+
+target 'myForce' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for myForce
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga/yoga.podspec'
+  pod 'GoogleMaps'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+
+
+
+end
