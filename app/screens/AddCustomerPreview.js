@@ -61,7 +61,7 @@ export default class AddCustomerPreview extends Component {
             </Item>
             <Item stackedLabel disabled style={styles.itemForm}>
               <Label>PIC Name</Label>
-              <Input multiline={true} value="Anthony Alicea" style={{paddingVertical: 15}}/>
+              <Input multiline={true} value="Nando Reza Pratama" style={{paddingVertical: 15}}/>
             </Item>
             <View style={{alignItems: 'center', display: 'flex', marginTop: 30}}>
               <Text style={{fontWeight: 'bold', fontSize: 18}}>Create New PIC</Text>
@@ -76,7 +76,7 @@ export default class AddCustomerPreview extends Component {
             </Item>
             <Item stackedLabel disabled style={styles.itemForm}>
               <Label>PIC Email</Label>
-              <Input value="anthonyalicea@gmail.com"/>
+              <Input value="nandooo@gmail.com"/>
             </Item>
             <Item stackedLabel disabled style={styles.itemForm}>
               <Label>PIC Address</Label>

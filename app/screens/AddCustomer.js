@@ -32,7 +32,7 @@ export default class AddCustomer extends Component {
       <Container style={{backgroundColor:'#ffffff'}}>
         <Header style={styles.header}>
           <Left style={styles.backHeader}>
-            <Button transparent onPress={() => goBack()}>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="ios-arrow-back" size={25} color="#000000" />
               <Text style={styles.back}>Back</Text>
             </Button>
@@ -99,7 +99,7 @@ export default class AddCustomer extends Component {
             </Item>
           </Form>
           <View style={styles.buttonView}>
-            <Button primary style={styles.buttonBack}>
+            <Button primary style={styles.buttonBack} onPress={() => this.props.navigation.navigate('Activity')}>
               <Text style={styles.buttonText}>BACK</Text>
             </Button>
             <Button primary style={styles.button} onPress={() => this.props.navigation.navigate('AddCustomerPreview')}>

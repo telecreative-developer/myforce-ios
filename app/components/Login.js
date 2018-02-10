@@ -57,6 +57,7 @@ class Login extends Component {
   render() {
     return (
       <Content style={styles.paddingForm}>
+        <Text style={{fontWeight: '900', fontSize: 28, marginBottom: 20, color: '#2f2f4f', textAlign: 'center'}}>Login</Text>
         <Form>
           <Item floatingLabel>
             <Label>Email</Label>

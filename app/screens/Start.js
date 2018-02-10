@@ -26,20 +26,15 @@ class Start extends Component {
   render() {
     const { navigate } = this.props.navigation
     return (
-      <Container>
+      <Container style={{backgroundColor: '#fff'}}>
         <View style={styles.banner}>
           <LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
             <Image source={logo} />
           </LinearGradient>
         </View>
-        <Tabs initialPage={0}>
-          <Tab heading='Log In'  style={styles.tab}>
-            <Login forgotPassword={() => navigate('ForgotPassword')}/>
-          </Tab>
-          <Tab heading='Register'  style={styles.tab}>
-            <Register />
-          </Tab>
-        </Tabs>
+        <View style={{flex: 1}}>
+          <Login forgotPassword={() => navigate('ForgotPassword')}/>
+        </View>
       </Container>
     )
   }

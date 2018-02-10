@@ -42,7 +42,7 @@ class Profile extends Component {
   renderBackground() {
     return(
       <View key="background">
-        <Image source={{uri: 'https://images.pexels.com/photos/789382/pexels-photo-789382.jpeg?h=350&dpr=2&auto=compress&cs=tinysrgb',
+        <Image source={{uri: 'https://images.pexels.com/photos/567633/pexels-photo-567633.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb',
                         width: window.width,
                         height: PARALLAX_HEADER_HEIGHT}}/>
         <View style={{position: 'absolute',
@@ -74,7 +74,9 @@ class Profile extends Component {
         CTO of Telecreative, Creative Junky
       </Text>
       <TouchableOpacity style={styles.changeCover}>
-        <Text style={styles.changeCoverText}>Change Cover</Text>
+        <Badge style={{backgroundColor: '#2A5CF0', alignItems: 'center', justifyContent: 'center', marginTop: 15}}>
+          <Text style={styles.changeCoverText}>Change Cover</Text>
+        </Badge>
       </TouchableOpacity>
     </View>
     )
@@ -338,10 +340,9 @@ const styles = StyleSheet.create({
     display: 'flex'
   },
   changeCoverText: {
-    textAlign: 'right', 
     color: '#ffffff', 
-    fontSize: 14, 
-    marginTop: 25
+    fontSize: 14,
+    marginHorizontal: 5
   }
 });
 

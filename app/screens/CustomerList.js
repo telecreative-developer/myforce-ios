@@ -26,7 +26,8 @@ class CustomerList extends Component {
     super()
 
     this.state = {
-      search: ''
+      search: '',
+      pic: 'Rizaldy Halim'
     }
   }
 
@@ -38,7 +39,7 @@ class CustomerList extends Component {
 
   renderItems = ({item}) => (
     <TouchableOpacity onPress={() => this.props.setNavigate({link: 'CustomerProfile', data: item})}>
-      <ContactCard title={item.name} person={item.pic} description={item.description} avatar={item.avatar} />
+      <ContactCard title={item.name} person={this.state.pic} description={item.description} avatar={item.avatar} />
     </TouchableOpacity>
   )
 

@@ -41,7 +41,8 @@ class CustomerProfile extends Component {
       modalNewPipeline: false,
       modalPic: false,
       pipelineTabs: 'active',
-      pipeline: ''
+      pipeline: '',
+      picName: ''
     }
   }
 
@@ -193,6 +194,10 @@ class CustomerProfile extends Component {
                   <Label>Pipeline Title</Label>
                   <Input value={this.state.pipeline} onChangeText={(pipeline) => this.setState({pipeline})} />
                 </Item>
+                <Item floatingLabel>
+                  <Label>PIC Name</Label>
+                  <Input value={this.state.picName} onChangeText={(picName) => this.setState({picName})} />
+                </Item>
               </Form>
             </View>
           <Footer>
@@ -286,7 +291,7 @@ class CustomerProfile extends Component {
             <Text style={styles.title}>CUSTOMER PROFILE</Text>
           </Body>
           <Right>
-            <TouchableOpacity onPress={() => navigate('Profile')}>
+            <TouchableOpacity onPress={() => navigate('Notification')}>
               <Icon name="ios-notifications" size={25}></Icon>
             </TouchableOpacity>
           </Right>
@@ -532,7 +537,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   modalWrapperAddPipeline: {
-    width: width / 1.2,
+    width: width / 1.1,
     height: height / 2.2,
     backgroundColor: '#ffffff',
     borderRadius: 5,
