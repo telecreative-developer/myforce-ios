@@ -10,13 +10,24 @@ import { users, userRegionRank, userNationRank } from './users'
 import { pipelines } from './pipelines'
 
 const config = {
-  key: 'root',
-  storage
+	key: 'root',
+	storage
 }
 
 const reducers = persistCombineReducers(config, {
-  userRegionRank, userNationRank, pipelines,
-  loading, failed, navigate, activePageHome, customers, sessionPersistance, regionals, products, subproducts, users
+	userRegionRank,
+	userNationRank,
+	pipelines,
+	loading,
+	failed,
+	navigate,
+	activePageHome,
+	customers,
+	sessionPersistance,
+	regionals,
+	products,
+	subproducts,
+	users
 })
 
 export default reducers

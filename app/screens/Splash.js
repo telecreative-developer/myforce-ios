@@ -8,51 +8,53 @@ import { login } from '../actions/login'
 import { connect } from 'react-redux'
 
 class Splash extends Component {
-  componentDidMount() {
-    setTimeout(async () => {
-      await this.props.fetchRegionals()
-      const response = await AsyncStorage.getItem('session')
-      const data = await JSON.parse(response)
-      if(data !== null) {
-        try {
-          await this.props.login(data.email, data.password)
-          await this.props.navigation.navigate('Home')
-        }catch(e) {
-          await this.props.navigation.navigate('Home')
-        }
-      }else{
-        await this.props.navigation.navigate('Start')
-      }
-    }, 2000)
-  }
-  
-  render() {
-    return (
-      <Container>
-        <LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
-          <Image source={logo} />
-        </LinearGradient>
-      </Container>
-    )
-  }
+	componentDidMount() {
+		setTimeout(async () => {
+			await this.props.fetchRegionals()
+			const response = await AsyncStorage.getItem('session')
+			const data = await JSON.parse(response)
+			if (data !== null) {
+				try {
+					await this.props.login(data.email, data.password)
+					await this.props.navigation.navigate('Home')
+				} catch (e) {
+					await this.props.navigation.navigate('Home')
+				}
+			} else {
+				await this.props.navigation.navigate('Start')
+			}
+		}, 2000)
+	}
+
+	render() {
+		return (
+			<Container>
+				<LinearGradient
+					colors={['#20E6CD', '#2D38F9']}
+					style={styles.linearGradient}>
+					<Image source={logo} />
+				</LinearGradient>
+			</Container>
+		)
+	}
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    login: (email, password) => dispatch(login(email, password)),
-    fetchRegionals: () => dispatch(fetchRegionals())
-  }
+const mapDispatchToProps = dispatch => {
+	return {
+		login: (email, password) => dispatch(login(email, password)),
+		fetchRegionals: () => dispatch(fetchRegionals())
+	}
 }
 
 const styles = StyleSheet.create({
-  linearGradient: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+	linearGradient: {
+		flex: 1,
+		width: '100%',
+		height: '100%',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
+	}
 })
 
 export default connect(null, mapDispatchToProps)(Splash)
