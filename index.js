@@ -28,6 +28,7 @@ import OrderSummary from './app/screens/OrderSummary'
 import Cart from './app/screens/Cart'
 import AddCustomer from './app/screens/AddCustomer'
 import AddCustomerPreview from './app/screens/AddCustomerPreview'
+import Calendar from './app/screens/Calendar'
 
 const store = Reactotron.createStore(reducers, applyMiddleware(thunk))
 const persistor = persistStore(store)
@@ -50,7 +51,8 @@ const App = StackNavigator({
   ForgotPassword: {screen: ForgotPassword},
   OrderSummary: {screen: OrderSummary},
   Cart: {screen: Cart},
-  AddCustomerPreview: {screen: AddCustomerPreview}
+  AddCustomerPreview: {screen: AddCustomerPreview},
+  Calendar: {screen: Calendar}
 }, {
   headerMode: 'none'
 })
