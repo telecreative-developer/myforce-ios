@@ -145,13 +145,13 @@ class Activity extends Component {
 				<Header style={styles.header}>
 					<Left>
 						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-							{this.props.sessionPersistance.data.avatar === '' ? (
+							{this.props.sessionPersistance.avatar === '' ? (
 								<Thumbnail rounded small source={defaultAvatar} />
 							) : (
 								<Thumbnail
 									small
 									rounded
-									source={{ uri: this.props.sessionPersistance.data.avatar }}
+									source={{ uri: this.props.sessionPersistance.avatar }}
 								/>
 							)}
 						</TouchableOpacity>
@@ -160,10 +160,19 @@ class Activity extends Component {
 						<Text style={styles.title}>ACTIVITY</Text>
 					</Body>
 					<Right>
-					<Button transparent onPress={() => this.props.setNavigate({link: 'Calendar'})}>
-							<Icon name="ios-calendar-outline" size={25} style={styles.iconCalendar} color={'#2D38F9'}/>
+						<Button
+							transparent
+							onPress={() => this.props.setNavigate({ link: 'Calendar' })}>
+							<Icon
+								name="ios-calendar-outline"
+								size={25}
+								style={styles.iconCalendar}
+								color={'#2D38F9'}
+							/>
 						</Button>
-						<Button transparent onPress={() => this.props.setNavigate({link: 'Notifications'})}>
+						<Button
+							transparent
+							onPress={() => this.props.setNavigate({ link: 'Notifications' })}>
 							<Icon name="ios-notifications" size={25} />
 						</Button>
 					</Right>

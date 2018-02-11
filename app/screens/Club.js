@@ -135,26 +135,26 @@ class Club extends Component {
 						<Grid>
 							<Col style={styles.leftCol}>
 								<View style={styles.headerDirection}>
-									{this.props.sessionPersistance.data.avatar === '' ? (
+									{this.props.sessionPersistance.avatar === '' ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
 										<Thumbnail
 											rounded
 											large
 											source={{
-												uri: this.props.sessionPersistance.data.avatar
+												uri: this.props.sessionPersistance.avatar
 											}}
 										/>
 									)}
 									<View>
 										<TouchableOpacity>
 											<H3 style={styles.profileName}>{`${
-												this.props.sessionPersistance.data.first_name
-											} ${this.props.sessionPersistance.data.last_name}`}</H3>
+												this.props.sessionPersistance.first_name
+											} ${this.props.sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
 										<View style={styles.headerDirection}>
 											<Text style={styles.Data}>
-												{this.props.sessionPersistance.data.bio}
+												{this.props.sessionPersistance.bio}
 											</Text>
 										</View>
 										<View style={styles.headerDirection}>
@@ -174,15 +174,14 @@ class Club extends Component {
 					<View style={styles.boardDirection}>
 						<View style={styles.leaderboard}>
 							<Text style={styles.leaderboardTitle}>
-								{this.props.sessionPersistance.data.regionals[0].region}{' '}
-								Leaderboard
+								{this.props.sessionPersistance.regionals[0].region} Leaderboard
 							</Text>
 							<FlatList
 								data={this.props.users
 									.filter(
 										u =>
 											u.id_region ===
-											this.props.sessionPersistance.data.regionals[0].id_region
+											this.props.sessionPersistance.regionals[0].id_region
 									)
 									.slice(0, 5)}
 								keyExtractor={this.key}

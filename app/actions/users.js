@@ -4,7 +4,7 @@ import {
 	GET_USER_NATION_RANK
 } from '../constants'
 import { url } from '../lib/server'
-import { setLoading, setFailed } from './processor'
+import { setLoading, setSuccess, setFailed } from './processor'
 
 export const fetchUsers = accessToken => {
 	return async dispatch => {

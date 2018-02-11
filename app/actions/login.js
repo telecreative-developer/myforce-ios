@@ -44,7 +44,9 @@ const fetchUserWithEmail = (email, password, accessToken) => {
 			})
 			const data = await response.json()
 			await dispatch(saveSessionForLocal({ email, password, accessToken }))
-			await dispatch(saveSessionForPersistance({ data, ...accessToken }))
+			await dispatch(
+				saveSessionForPersistance({ ...data.data[0], accessToken })
+			)
 			await dispatch(setSuccess(true, 'FETCH_USER_WITH_EMAIL'))
 			await dispatch(setLoading(false, 'FETCH_USER_WITH_EMAIL'))
 		} catch (e) {

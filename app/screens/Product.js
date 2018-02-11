@@ -76,7 +76,7 @@ class Product extends Component {
 							<Thumbnail
 								small
 								rounded
-								source={{ uri: this.props.sessionPersistance.data.avatar }}
+								source={{ uri: this.props.sessionPersistance.avatar }}
 							/>
 						</TouchableHighlight>
 					</Left>

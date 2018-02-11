@@ -33,7 +33,7 @@ class CustomerList extends Component {
 	}
 
 	componentDidMount() {
-		this.props.filterCustomersWithId(this.props.sessionPersistance.data.id)
+		this.props.filterCustomersWithId(this.props.sessionPersistance.id)
 	}
 
 	key = (item, index) => index
@@ -57,13 +57,13 @@ class CustomerList extends Component {
 					<Left>
 						<TouchableOpacity
 							onPress={() => this.props.setNavigate('Profile', '')}>
-							{this.props.sessionPersistance.data.avatar === '' ? (
+							{this.props.sessionPersistance.avatar === '' ? (
 								<Thumbnail rounded small source={defaultAvatar} />
 							) : (
 								<Thumbnail
 									small
 									rounded
-									source={{ uri: this.props.sessionPersistance.data.avatar }}
+									source={{ uri: this.props.sessionPersistance.avatar }}
 								/>
 							)}
 						</TouchableOpacity>

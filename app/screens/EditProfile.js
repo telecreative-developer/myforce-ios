@@ -50,14 +50,14 @@ class EditProfile extends Component {
 
 	componentWillMount() {
 		this.setState({
-			first_name: this.props.sessionPersistance.data.first_name,
-			last_name: this.props.sessionPersistance.data.last_name,
-			username: this.props.sessionPersistance.data.username,
-			gender: this.props.sessionPersistance.data.gender,
-			email: this.props.sessionPersistance.data.email,
-			id_region: this.props.sessionPersistance.data.id_region,
-			address: this.props.sessionPersistance.data.address,
-			phone: this.props.sessionPersistance.data.phone
+			first_name: this.props.sessionPersistance.first_name,
+			last_name: this.props.sessionPersistance.last_name,
+			username: this.props.sessionPersistance.username,
+			gender: this.props.sessionPersistance.gender,
+			email: this.props.sessionPersistance.email,
+			id_region: this.props.sessionPersistance.id_region,
+			address: this.props.sessionPersistance.address,
+			phone: this.props.sessionPersistance.phone
 		})
 	}
 
@@ -127,7 +127,7 @@ class EditProfile extends Component {
 			Alert.alert('Update failed', 'Please input valid email')
 		} else {
 			this.props.updateUser(
-				this.props.sessionPersistance.data.id,
+				this.props.sessionPersistance.id,
 				{
 					first_name,
 					last_name,

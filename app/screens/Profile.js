@@ -38,11 +38,11 @@ class Profile extends Component {
 	componentWillMount() {
 		this.props.getUserRegionRank(
 			this.props.users,
-			this.props.sessionPersistance.data.regionals[0].id_region
+			this.props.sessionPersistance.regionals[0].id_region
 		)
 		this.props.getUserNationRank(
 			this.props.users,
-			this.props.sessionPersistance.data.id
+			this.props.sessionPersistance.id
 		)
 	}
 
@@ -166,7 +166,7 @@ class Profile extends Component {
 
 	render() {
 		const { onScroll = () => {} } = this.props
-		const { data } = this.props.sessionPersistance
+		const { sessionPersistance } = this.props
 		return (
 			<ParallaxScrollView
 				onScroll={onScroll}
@@ -182,45 +182,52 @@ class Profile extends Component {
 					<Form>
 						<Item stackedLabel disabled>
 							<Label style={styles.labelText}>First Name</Label>
-							<Input disabled placeholder={data.first_name} />
+							<Input disabled placeholder={sessionPersistance.first_name} />
 						</Item>
 						<Item stackedLabel disabled>
 							<Label style={styles.labelText}>Last Name</Label>
-							<Input disabled placeholder={data.last_name} />
+							<Input disabled placeholder={sessionPersistance.last_name} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Username</Label>
-							<Input disabled placeholder={data.username} />
+							<Input disabled placeholder={sessionPersistance.username} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Gender</Label>
 							<Input
 								disabled
-								placeholder={data.gender === 1 ? 'Male' : 'Female'}
+								placeholder={
+									sessionPersistance.gender === 1 ? 'Male' : 'Female'
+								}
 							/>
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Email</Label>
-							<Input disabled placeholder={data.email} />
+							<Input disabled placeholder={sessionPersistance.email} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Regional</Label>
-							<Input disabled placeholder={data.regionals[0].region} />
+							<Input
+								disabled
+								placeholder={sessionPersistance.regionals[0].region}
+							/>
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Address</Label>
-							<Input disabled placeholder={data.address} />
+							<Input disabled placeholder={sessionPersistance.address} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Phone Number</Label>
-							<Input disabled placeholder={data.phone} />
+							<Input disabled placeholder={sessionPersistance.phone} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Regional Rank</Label>
 							<Input
 								disabled
 								placeholder={JSON.stringify(
-									this.props.userRegionRank.findIndex(i => i.id === data.id) + 1
+									this.props.userRegionRank.findIndex(
+										i => i.id === sessionPersistance.id
+									) + 1
 								)}
 							/>
 						</Item>

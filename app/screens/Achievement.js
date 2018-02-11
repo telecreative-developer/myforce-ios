@@ -255,26 +255,26 @@ class Achievements extends Component {
 						<Grid>
 							<Col style={styles.leftCol}>
 								<View style={styles.headerDirection}>
-									{this.props.sessionPersistance.data.avatar === '' ? (
+									{this.props.sessionPersistance.avatar === '' ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
 										<Thumbnail
 											rounded
 											large
 											source={{
-												uri: this.props.sessionPersistance.data.avatar
+												uri: this.props.sessionPersistance.avatar
 											}}
 										/>
 									)}
 									<View>
 										<TouchableOpacity>
 											<H3 style={styles.profileName}>{`${
-												this.props.sessionPersistance.data.first_name
-											} ${this.props.sessionPersistance.data.last_name}`}</H3>
+												this.props.sessionPersistance.first_name
+											} ${this.props.sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
 										<View style={styles.headerDirection}>
 											<Text style={styles.dataBio}>
-												{this.props.sessionPersistance.data.bio}
+												{this.props.sessionPersistance.bio}
 											</Text>
 										</View>
 										<View style={styles.headerDirection}>
