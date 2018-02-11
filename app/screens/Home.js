@@ -136,7 +136,11 @@ class Home extends Component {
 				this.props.navigate.link,
 				this.props.navigate.data
 			)
-		}
+		} else if (this.props.navigate.link === 'Calendar') {
+			this.props.navigation.navigate(this.props.navigate.link)
+		} else if (this.props.navigate.link === 'Notifications') {
+			this.props.navigation.navigate(this.props.navigate.link)
+		} 
 		return (
 			<Container>
 				{this.renderContent()}

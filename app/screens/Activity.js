@@ -156,9 +156,12 @@ class Activity extends Component {
 						<Text style={styles.title}>ACTIVITY</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity>
+					<Button transparent onPress={() => this.props.setNavigate({link: 'Calendar'})}>
+							<Icon name="ios-calendar-outline" size={25} style={styles.iconCalendar} color={'#2D38F9'}/>
+						</Button>
+						<Button transparent onPress={() => this.props.setNavigate({link: 'Notifications'})}>
 							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity>
+						</Button>
 					</Right>
 				</Header>
 				<View style={styles.wrapperView}>
@@ -320,6 +323,9 @@ const styles = StyleSheet.create({
 	},
 	card: {
 		marginTop: 15
+	},
+	iconCalendar: {
+		marginRight: 5
 	}
 })
 
