@@ -131,7 +131,7 @@ class CustomerProfile extends Component {
 	key = (item, index) => index
 
 	handleBackButton() {
-		this.props.setNavigate({ link: '', data: '' })
+		this.props.setNavigate('')
 		this.props.navigation.goBack()
 	}
 
@@ -478,7 +478,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setNavigate: navigate => dispatch(setNavigate(navigate)),
+		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		fetchPipelines: (id, accessToken) =>
 			dispatch(fetchPipelines(id, accessToken)),
 		fetchPipelinesRealtime: (id, accessToken) =>

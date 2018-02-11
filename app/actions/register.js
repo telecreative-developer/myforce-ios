@@ -3,10 +3,8 @@ import { setLoading, setFailed } from './processor'
 
 export const register = item => {
 	return async dispatch => {
-		await dispatch(setLoading({ condition: true, process_on: 'register' }))
-		await dispatch(
-			setFailed({ condition: false, process_on: 'register', message: '' })
-		)
+		await dispatch(setLoading(true, 'PROCESS_REGISTER'))
+		await dispatch(setFailed(false, 'PROCESS_REGISTER'))
 		try {
 			const response = await fetch(`${url}/users`, {
 				method: 'POST',
@@ -19,30 +17,21 @@ export const register = item => {
 			const data = await response.json()
 			if (data.code === 400 && data.errors[0].path === 'username') {
 				await dispatch(
-					setFailed({
-						condition: true,
-						process_on: 'register',
-						message: 'Username already used'
-					})
+					setFailed(true, 'PROCESS_REGISTER', 'Username already used')
 				)
-				await dispatch(setLoading({ condition: false, process_on: 'register' }))
+				await dispatch(setLoading(false, 'PROCESS_REGISTER'))
 			} else if (data.code === 400 && data.errors[0].path === 'email') {
 				await dispatch(
-					setFailed({
-						condition: true,
-						process_on: 'register',
-						message: 'Email already used'
-					})
+					setFailed(true, 'PROCESS_REGISTER', 'Email already used')
 				)
-				await dispatch(setLoading({ condition: false, process_on: 'register' }))
+				await dispatch(setLoading(false, 'PROCESS_REGISTER'))
 			} else {
-				await dispatch(setLoading({ condition: false, process_on: 'register' }))
+				await dispatch(setSuccess(true, 'PROCESS_REGISTER'))
+				await dispatch(setLoading(false, 'PROCESS_REGISTER'))
 			}
 		} catch (e) {
-			await dispatch(
-				setFailed({ condition: true, process_on: 'register', message: e })
-			)
-			await dispatch(setLoading({ condition: false, process_on: 'register' }))
+			await dispatch(setFailed(true, 'PROCESS_REGISTER', e))
+			await dispatch(setLoading(false, 'PROCESS_REGISTER'))
 		}
 	}
 }

@@ -1,12 +1,11 @@
 import { FETCH_PRODUCTS_SUCCESS } from '../constants'
 import { url } from '../lib/server'
-import { setLoading, setFailed } from './processor'
+import { setLoading, setSuccess, setFailed } from './processor'
 
 export const fetchProducts = accessToken => {
 	return async dispatch => {
-		await dispatch(
-			setLoading({ condition: true, process_on: 'fetch_products' })
-		)
+		await dispatch(setLoading(true, 'FETCH_PRODUCTS'))
+		await dispatch(setFailed(false, 'FETCH_PRODUCTS'))
 		try {
 			const response = await fetch(`${url}/products`, {
 				method: 'GET',
@@ -18,19 +17,11 @@ export const fetchProducts = accessToken => {
 			})
 			const data = await response.json()
 			await dispatch(fetchProductsSuccess(data.data))
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_products' })
-			)
-			await dispatch(
-				setFailed({ condition: false, process_on: 'fetch_products' })
-			)
+			await dispatch(setSuccess(false, 'FETCH_PRODUCTS'))
+			await dispatch(setLoading(false, 'FETCH_PRODUCTS'))
 		} catch (e) {
-			await dispatch(
-				setFailed({ condition: true, process_on: 'fetch_products', message: e })
-			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_products' })
-			)
+			await dispatch(setFailed(true, 'FETCH_PRODUCTS', e))
+			await dispatch(setLoading(false, 'FETCH_PRODUCTS'))
 		}
 	}
 }

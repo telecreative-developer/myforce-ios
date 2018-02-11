@@ -1,11 +1,11 @@
 import { FETCH_PIPELINES_SUCCESS } from '../constants'
 import { url } from '../lib/server'
-import { setLoading, setFailed } from './processor'
+import { setLoading, setSuccess, setFailed } from './processor'
 import { app } from '../lib/socket'
 
 export const postPipeline = (data, accessToken) => {
 	return async dispatch => {
-		await dispatch(setLoading({ condition: true, process_on: 'post_pipeline' }))
+		await dispatch(setLoading(true, 'POST_PIPELINE'))
 		try {
 			await fetch(`${url}/pipelines`, {
 				method: 'POST',
@@ -16,25 +16,18 @@ export const postPipeline = (data, accessToken) => {
 				},
 				body: JSON.stringify(data)
 			})
-			await dispatch(
-				setLoading({ condition: false, process_on: 'post_pipeline' })
-			)
+			await dispatch(setSuccess(false, 'POST_PIPELINE'))
+			await dispatch(setLoading(false, 'POST_PIPELINE'))
 		} catch (e) {
-			await dispatch(
-				setFailed({ condition: true, process_on: 'post_pipeline', message: e })
-			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'post_pipeline' })
-			)
+			await dispatch(setFailed(true, 'POST_PIPELINE', e))
+			await dispatch(setLoading(false, 'POST_PIPELINE'))
 		}
 	}
 }
 
 export const fetchPipelines = (id, accessToken) => {
 	return async dispatch => {
-		await dispatch(
-			setLoading({ condition: true, process_on: 'fetch_pipelines' })
-		)
+		await dispatch(setLoading(true, 'FETCH_PIPELINES'))
 		try {
 			const response = await fetch(
 				`${url}/pipelines?id_customer=${id}&$sort[createdAt]=-1`,
@@ -49,20 +42,11 @@ export const fetchPipelines = (id, accessToken) => {
 			)
 			const data = await response.json()
 			await dispatch(fetchPipelinesSuccess(data.data))
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_pipelines' })
-			)
+			await dispatch(setSuccess(false, 'FETCH_PIPELINES'))
+			await dispatch(setLoading(false, 'FETCH_PIPELINES'))
 		} catch (e) {
-			await dispatch(
-				setFailed({
-					condition: true,
-					process_on: 'fetch_pipelines',
-					message: e
-				})
-			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_pipelines' })
-			)
+			await dispatch(setFailed(true, 'FETCH_PIPELINES', e))
+			await dispatch(setLoading(false, 'FETCH_PIPELINES'))
 		}
 	}
 }

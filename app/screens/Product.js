@@ -45,9 +45,7 @@ class Product extends Component {
 	renderItems = ({ item }) => {
 		return (
 			<TouchableHighlight
-				onPress={() =>
-					this.props.setNavigate({ link: 'SubProduct', data: item })
-				}>
+				onPress={() => this.props.setNavigate('SubProduct', item)}>
 				<ImageBackground
 					source={{ uri: item.picture }}
 					imageStyle={styles.cardImage}
@@ -87,7 +85,7 @@ class Product extends Component {
 					</Body>
 					<Right>
 						<TouchableHighlight
-							onPress={() => this.props.setNavigate({ link: 'Profile' })}>
+							onPress={() => this.props.setNavigate('Profile')}>
 							<Icon name="ios-notifications" size={25} />
 						</TouchableHighlight>
 					</Right>
@@ -116,7 +114,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setNavigate: navigate => dispatch(setNavigate(navigate)),
+		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		fetchProducts: accessToken => dispatch(fetchProducts(accessToken))
 	}
 }

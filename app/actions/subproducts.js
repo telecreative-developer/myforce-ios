@@ -1,12 +1,11 @@
 import { url } from '../lib/server'
-import { setLoading, setFailed } from '../actions/processor'
+import { setLoading, setSuccess, setFailed } from '../actions/processor'
 import { FETCH_SUBPRODUCTS_SUCCESS } from '../constants'
 
 export const fetchSubproducts = (id, accessToken) => {
 	return async dispatch => {
-		await dispatch(
-			setLoading({ condition: true, process_on: 'fetch_subproducts' })
-		)
+		await dispatch(setLoading(true, 'FETCH_SUBPRODUCTS'))
+		await dispatch(setFailed(false, 'FETCH_SUBPRODUCTS'))
 		try {
 			const response = await fetch(`${url}/subproducts?id_product=${id}`, {
 				method: 'GET',
@@ -18,23 +17,11 @@ export const fetchSubproducts = (id, accessToken) => {
 			})
 			const data = await response.json()
 			await dispatch(fetchSubproductsSuccess(data.data))
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_subproducts' })
-			)
-			await dispatch(
-				setFailed({ condition: false, process_on: 'fetch_subproducts' })
-			)
+			await dispatch(setSuccess(true, 'FETCH_SUBPRODUCTS'))
+			await dispatch(setLoading(false, 'FETCH_SUBPRODUCTS'))
 		} catch (e) {
-			await dispatch(
-				setFailed({
-					condition: true,
-					process_on: 'fetch_subproducts',
-					message: e
-				})
-			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_subproducts' })
-			)
+			await dispatch(setFailed(true, 'FETCH_SUBPRODUCTS', e))
+			await dispatch(setLoading(false, 'FETCH_SUBPRODUCTS'))
 		}
 	}
 }

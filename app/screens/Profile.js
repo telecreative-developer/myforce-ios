@@ -115,7 +115,7 @@ class Profile extends Component {
 	}
 
 	handleBackButton() {
-		this.props.setNavigate({ link: '', data: '' })
+		this.props.setNavigate()
 		this.props.navigation.goBack()
 	}
 
@@ -249,7 +249,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setNavigate: navigate => dispatch(setNavigate(navigate)),
+		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		getUserNationRank: (data, id_region) =>
 			dispatch(getUserNationRank(data, id_region)),
 		getUserRegionRank: (data, id) => dispatch(getUserRegionRank(data, id))

@@ -106,6 +106,11 @@ class Activity extends Component {
 		</TouchableOpacity>
 	)
 
+	handleAddCustomer() {
+		this.props.navigateToAddCustomer()
+		this.setState({ isModalVisible: false })
+	}
+
 	render() {
 		return (
 			<Container>
@@ -130,7 +135,7 @@ class Activity extends Component {
 										Cancel
 									</Text>
 								</Button>
-								<Button onPress={this.props.navigateToAddCustomer}>
+								<Button onPress={() => this.handleAddCustomer()}>
 									<Text style={styles.modalYesButton}>Take the next step.</Text>
 								</Button>
 							</FooterTab>
@@ -139,8 +144,7 @@ class Activity extends Component {
 				</Modal>
 				<Header style={styles.header}>
 					<Left>
-						<TouchableOpacity
-							onPress={() => this.props.setNavigate({ link: 'Profile' })}>
+						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
 							{this.props.sessionPersistance.data.avatar === '' ? (
 								<Thumbnail rounded small source={defaultAvatar} />
 							) : (
@@ -212,7 +216,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
-		setNavigate: navigate => dispatch(setNavigate(navigate))
+		setNavigate: (link, data) => dispatch(setNavigate(link, data))
 	}
 }
 

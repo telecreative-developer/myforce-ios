@@ -8,7 +8,7 @@ import { setLoading, setFailed } from './processor'
 
 export const fetchUsers = accessToken => {
 	return async dispatch => {
-		await dispatch(setLoading({ condition: true, process_on: 'fetch_users' }))
+		await dispatch(setLoading(true, 'FETCH_USERS'))
 		try {
 			const response = await fetch(`${url}/users?$sort[point]=-1`, {
 				method: 'GET',
@@ -20,23 +20,18 @@ export const fetchUsers = accessToken => {
 			})
 			const data = await response.json()
 			await dispatch(fetchUsersSuccess(data.data))
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_users' })
-			)
+			await dispatch(setSuccess(true, 'FETCH_USERS'))
+			await dispatch(setLoading(false, 'FETCH_USERS'))
 		} catch (e) {
-			await dispatch(
-				setFailed({ condition: true, process_on: 'fetch_users', message: e })
-			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_users' })
-			)
+			await dispatch(setFailed(true, 'FETCH_USERS', e))
+			await dispatch(setLoading(false, 'FETCH_USERS'))
 		}
 	}
 }
 
 export const updateUser = (id, data, accessToken) => {
 	return async dispatch => {
-		await dispatch(setLoading({ condition: true, process_on: 'update_user' }))
+		await dispatch(setLoading(true, 'UPDATE_USER'))
 		try {
 			await fetch(`${url}/users/${id}`, {
 				method: 'PATCH',
@@ -47,16 +42,11 @@ export const updateUser = (id, data, accessToken) => {
 				},
 				body: JSON.stringify(data)
 			})
-			await dispatch(
-				setLoading({ condition: false, process_on: 'update_user' })
-			)
+			await dispatch(setSuccess(true, 'UPDATE_USER'))
+			await dispatch(setLoading(false, 'UPDATE_USER'))
 		} catch (e) {
-			await dispatch(
-				setFailed({ condition: true, process_on: 'update_user', message: e })
-			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'update_user' })
-			)
+			await dispatch(setFailed(true, 'UPDATE_USER', e))
+			await dispatch(setLoading(false, 'UPDATE_USER'))
 		}
 	}
 }

@@ -1,19 +1,11 @@
 import { FETCH_CUSTOMERS_SUCCESS, FILTER_CUSTOMERS_WITH_ID } from '../constants'
 import { url } from '../lib/server'
-import { setLoading, setFailed } from './processor'
+import { setLoading, setSuccess, setFailed } from './processor'
 
 export const fetchCustomers = accessToken => {
 	return async dispatch => {
-		await dispatch(
-			setLoading({ condition: true, process_on: 'fetch_customers' })
-		)
-		await dispatch(
-			setFailed({
-				condition: false,
-				process_on: 'fetch_customers',
-				message: ''
-			})
-		)
+		await dispatch(setLoading(true, 'FETCH_CUSTOMERS'))
+		await dispatch(setFailed(false, 'FETCH_CUSTOMERS'))
 		try {
 			const response = await fetch(`${url}/customers`, {
 				method: 'GET',
@@ -25,20 +17,13 @@ export const fetchCustomers = accessToken => {
 			})
 			const data = await response.json()
 			await dispatch(fetchCustomersSuccess(data.data))
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_customers' })
-			)
+			await dispatch(setSuccess(true, 'FETCH_CUSTOMERS'))
+			await dispatch(setLoading(false, 'FETCH_CUSTOMERS'))
 		} catch (e) {
 			await dispatch(
-				setFailed({
-					condition: true,
-					process_on: 'fetch_customers',
-					message: 'Failed get data customers'
-				})
+				setFailed(true, 'FETCH_CUSTOMERS', 'Failed get data customers')
 			)
-			await dispatch(
-				setLoading({ condition: false, process_on: 'fetch_customers' })
-			)
+			await dispatch(setLoading(false, 'fetch_customers'))
 		}
 	}
 }

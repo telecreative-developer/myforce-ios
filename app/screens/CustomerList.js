@@ -28,8 +28,7 @@ class CustomerList extends Component {
 		super()
 
 		this.state = {
-			search: '',
-			pic: 'Rizaldy Halim'
+			search: ''
 		}
 	}
 
@@ -41,12 +40,10 @@ class CustomerList extends Component {
 
 	renderItems = ({ item }) => (
 		<TouchableOpacity
-			onPress={() =>
-				this.props.setNavigate({ link: 'CustomerProfile', data: item })
-			}>
+			onPress={() => this.props.setNavigate('CustomerProfile', item)}>
 			<ContactCard
 				title={item.name}
-				person={this.state.pic}
+				person={item.pics[0].name}
 				description={item.description}
 				avatar={item.avatar}
 			/>
@@ -59,9 +56,7 @@ class CustomerList extends Component {
 				<Header style={styles.header}>
 					<Left>
 						<TouchableOpacity
-							onPress={() =>
-								this.props.setNavigate({ link: 'Profile', data: '' })
-							}>
+							onPress={() => this.props.setNavigate('Profile', '')}>
 							{this.props.sessionPersistance.data.avatar === '' ? (
 								<Thumbnail rounded small source={defaultAvatar} />
 							) : (
@@ -77,8 +72,7 @@ class CustomerList extends Component {
 						<Text style={styles.title}>CUSTOMERS</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity
-							onPress={() => this.props.setNavigate({ link: 'Profile' })}>
+						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
 							<Icon name="ios-notifications" size={25} />
 						</TouchableOpacity>
 					</Right>
@@ -115,7 +109,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setNavigate: navigate => dispatch(setNavigate(navigate)),
+		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		filterCustomersWithId: id => dispatch(filterCustomersWithId(id)),
 		filterCustomersWithName: name => dispatch(filterCustomersWithName(name))
 	}

@@ -1,5 +1,6 @@
 import {
 	SET_LOADING,
+	SET_SUCCESS,
 	SET_FAILED,
 	SET_NAVIGATE,
 	SET_ACTIVE_PAGE_HOME
@@ -18,7 +19,22 @@ const initialStateActivePageHome = {
 export const loading = (state = [], action) => {
 	switch (action.type) {
 		case SET_LOADING:
-			return action.payload
+			return {
+				condition: action.condition,
+				process_on: action.process_on
+			}
+		default:
+			return state
+	}
+}
+
+export const success = (state = [], action) => {
+	switch (action.type) {
+		case SET_SUCCESS:
+			return {
+				condition: action.condition,
+				process_on: action.process_on
+			}
 		default:
 			return state
 	}
@@ -27,7 +43,10 @@ export const loading = (state = [], action) => {
 export const failed = (state = [], action) => {
 	switch (action.type) {
 		case SET_FAILED:
-			return action.payload
+			return {
+				condition: action.condition,
+				process_on: action.process_on
+			}
 		default:
 			return state
 	}
@@ -36,7 +55,10 @@ export const failed = (state = [], action) => {
 export const navigate = (state = [], action) => {
 	switch (action.type) {
 		case SET_NAVIGATE:
-			return action.payload
+			return {
+				link: action.link,
+				data: action.data
+			}
 		default:
 			return state
 	}

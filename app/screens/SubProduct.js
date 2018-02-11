@@ -51,7 +51,7 @@ class SubProduct extends Component {
 	key = (item, key) => key
 
 	async handleBackButton() {
-		await this.props.setNavigate({ link: '', data: '' })
+		await this.props.setNavigate()
 		await this.props.navigation.goBack()
 	}
 
@@ -102,20 +102,16 @@ class SubProduct extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		subproducts: state.subproducts,
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	subproducts: state.subproducts,
+	sessionPersistance: state.sessionPersistance
+})
 
-const mapDispatchToProps = dispacth => {
-	return {
-		setNavigate: navigate => dispacth(setNavigate(navigate)),
-		fetchSubproducts: (id, accessToken) =>
-			dispacth(fetchSubproducts(id, accessToken))
-	}
-}
+const mapDispatchToProps = dispacth => ({
+	setNavigate: (link, data) => dispacth(setNavigate(link, data)),
+	fetchSubproducts: (id, accessToken) =>
+		dispacth(fetchSubproducts(id, accessToken))
+})
 
 const styles = StyleSheet.create({
 	container: {
