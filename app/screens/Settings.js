@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableHighlight } from 'react-native'
+import { NavigationActions } from 'react-navigation'
+import {
+	StyleSheet,
+	Alert,
+	AsyncStorage,
+	TouchableHighlight
+} from 'react-native'
 import {
 	Container,
 	Header,
@@ -14,7 +20,33 @@ import {
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-export default class Settings extends Component {
+class Settings extends Component {
+	handleConfirmLogout() {
+		Alert.alert(
+			'Logout',
+			'Are you sure want to logout from this app?',
+			[
+				{
+					text: 'Cancel',
+					onPress: () => {},
+					style: 'cancel'
+				},
+				{ text: 'Logout', onPress: () => this.handleLogout() }
+			],
+			{ cancelable: false }
+		)
+	}
+
+	handleLogout() {
+		AsyncStorage.removeItem('session')
+		this.props.navigation.dispatch(
+			NavigationActions.reset({
+				index: 0,
+				actions: [NavigationActions.navigate({ routeName: 'Start' })]
+			})
+		)
+	}
+
 	render() {
 		const { navigate, goBack } = this.props.navigation
 		return (
@@ -61,7 +93,7 @@ export default class Settings extends Component {
 								<Icon name="ios-arrow-forward" size={25} />
 							</Right>
 						</ListItem>
-						<ListItem icon>
+						<ListItem icon onPress={() => this.handleConfirmLogout()}>
 							<Left>
 								<Icon name="ios-log-out" size={25} />
 							</Left>
@@ -95,3 +127,5 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	}
 })
+
+export default Settings
