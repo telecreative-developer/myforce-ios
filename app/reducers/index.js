@@ -1,6 +1,6 @@
 import { persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
-import { loading, failed, navigate, activePageHome } from './processor'
+import { loading, success, failed, navigate, activePageHome } from './processor'
 import { customers } from './customers'
 import { sessionPersistance } from './session'
 import { regionals } from './regionals'
@@ -19,6 +19,7 @@ const reducers = persistCombineReducers(config, {
 	userNationRank,
 	pipelines,
 	loading,
+	success,
 	failed,
 	navigate,
 	activePageHome,

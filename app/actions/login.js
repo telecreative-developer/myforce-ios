@@ -5,7 +5,6 @@ import { saveSessionForLocal, saveSessionForPersistance } from './session'
 export const login = (email, password) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'PROCESS_LOGIN'))
-		await dispatch(setFailed(false, 'PROCESS_LOGIN'))
 		try {
 			const response = await fetch(`${url}/authentication`, {
 				method: 'POST',

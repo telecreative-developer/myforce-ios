@@ -33,17 +33,19 @@ class Login extends Component {
 
 	componentWillReceiveProps(props) {
 		if (
-			props.loading.condition === false &&
-			props.loading.process_on === 'login' &&
-			props.failed.condition === true
+			props.failed.process_on === 'PROCESS_LOGIN' &&
+			props.failed.condition === true &&
+			props.loading.process_on === 'PROCESS_LOGIN' &&
+			props.loading.condition === false
 		) {
 			Alert.alert('Login failed', props.failed.message)
 		} else if (
-			props.loading.condition === false &&
-			props.loading.process_on === 'fetch_user_with_email' &&
-			props.failed.condition === false
+			props.success.condition === true &&
+			props.success.process_on === 'FETCH_USER_WITH_EMAIL' &&
+			props.loading.process_on === 'FETCH_USER_WITH_EMAIL' &&
+			props.loading.condition === false
 		) {
-			this.props.setNavigate({ link: 'Home', data: '' })
+			props.setNavigate('Home')
 		}
 	}
 
@@ -56,7 +58,7 @@ class Login extends Component {
 					style={styles.loginButton}
 					onPress={() => this.handleLoginValidation()}>
 					{this.props.loading.condition === true &&
-					this.props.loading.process_on === 'login' ? (
+					this.props.loading.process_on === 'PROCESS_LOGIN' ? (
 						<Spinner color="#FFFFFF" />
 					) : (
 						<Text>Login</Text>
@@ -123,8 +125,10 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => {
+	console.log(state.success)
 	return {
 		loading: state.loading,
+		success: state.success,
 		failed: state.failed
 	}
 }
@@ -132,7 +136,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		login: (email, password) => dispatch(login(email, password)),
-		setNavigate: navigate => dispatch(setNavigate(navigate))
+		setNavigate: (link, data) => dispatch(setNavigate(link, data))
 	}
 }
 
