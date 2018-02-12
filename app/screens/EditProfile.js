@@ -64,9 +64,12 @@ class EditProfile extends Component {
 	componentWillReceiveProps(props) {
 		if (
 			props.loading.condition === false &&
-			props.loading.process_on === 'update_user'
+			props.loading.process_on === 'UPDATE_USER' &&
+			props.success.condition === true &&
+			props.success.process_on === 'UPDATE_USER'
 		) {
 			props.navigation.goBack()
+			Alert.alert('Profile updated', 'Your profile has been updated')
 		}
 	}
 
@@ -96,7 +99,7 @@ class EditProfile extends Component {
 			return (
 				<Button large block onPress={() => this.handleValidation()}>
 					{this.props.loading.condition === true &&
-					this.props.loading.process_on === 'update_user' ? (
+					this.props.loading.process_on === 'UPDATE_USER' ? (
 						<Spinner color="#FFFFFF" />
 					) : (
 						<Text style={styles.buttonText}>Update Profile</Text>
@@ -245,6 +248,7 @@ const mapStateToProps = state => {
 	return {
 		regions: state.regionals,
 		loading: state.loading,
+		success: state.success,
 		sessionPersistance: state.sessionPersistance
 	}
 }
