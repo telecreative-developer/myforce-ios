@@ -117,8 +117,8 @@ class Activity extends Component {
     this.setState({showImagePicker: false})
     Animated.timing(this.animatedValue1, {
       toValue: 400,
-      duration: 200
-    }).start()
+			duration: 200,
+		}).start()
 
     Animated.timing(this.animatedValue2, {
       toValue: 0,
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
 		height: height,
-		width: width,
+		width: width / 1.2,
 		position: 'absolute',
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
@@ -335,7 +335,8 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 	},
 	arrow: {
-		marginVertical: 5
+		marginVertical: 5,
+		color: '#c0c0c0'
 	},
 	header: {
 		height: 70
