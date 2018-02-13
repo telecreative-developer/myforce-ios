@@ -29,6 +29,8 @@ import Cart from './app/screens/Cart'
 import AddCustomer from './app/screens/AddCustomer'
 import AddCustomerPreview from './app/screens/AddCustomerPreview'
 import Calendar from './app/screens/Calendar'
+import ChoosePic from './app/screens/ChoosePic'
+import AddNewPic from './app/screens/AddNewPic'
 
 const store = Reactotron.createStore(reducers, applyMiddleware(thunk))
 const persistor = persistStore(store)
@@ -52,7 +54,9 @@ const App = StackNavigator({
   OrderSummary: {screen: OrderSummary},
   Cart: {screen: Cart},
   AddCustomerPreview: {screen: AddCustomerPreview},
-  Calendar: {screen: Calendar}
+  Calendar: {screen: Calendar},
+  ChoosePic: {screen: ChoosePic},
+  AddNewPic: {screen: AddNewPic}
 }, {
   headerMode: 'none'
 })

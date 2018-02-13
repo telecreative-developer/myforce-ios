@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, View, Image } from 'react-native'
+import { StyleSheet, Dimensions, View, Image, FlatList } from 'react-native'
 import {
 	Container,
 	Content,
@@ -26,15 +26,35 @@ export default class AddCustomerPreview extends Component {
 		super()
 
 		this.state = {
-			picName: 'Nando Reza Pratama'
+			data: [
+				{
+					picName: 'Nando Reza Pratama'
+				},
+				{
+					picName: 'Nando Reza Pratama'
+				},
+				{
+					picName: 'Nando Reza Pratama'
+				}
+			]
 		}
 	}
+
+	key = (item,index) => index
+
+	renderItems = ({item}) => (
+		<View style={styles.headerDirection}>
+			<Icon name="md-contact" size={18} />
+			<Text style={styles.data}>{item.picName}</Text>
+		</View>
+	)
+
 	render() {
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
 				<Header style={styles.header}>
 					<Left style={styles.backHeader}>
-						<Button transparent onPress={() => goBack()}>
+						<Button transparent onPress={() => this.props.navigation.goBack()}>
 							<Icon name="ios-arrow-back" size={25} color="#000000" />
 							<Text style={styles.back}>Back</Text>
 						</Button>
@@ -50,12 +70,6 @@ export default class AddCustomerPreview extends Component {
 				</Header>
 				<Content style={styles.content}>
 					<Form>
-						<View
-							style={{ alignItems: 'center', display: 'flex', marginTop: 30 }}>
-							<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-								Customer Data
-							</Text>
-						</View>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label>Customer Name</Label>
 							<Input value="PT Udemy" />
@@ -68,41 +82,13 @@ export default class AddCustomerPreview extends Component {
 								style={{ paddingVertical: 15 }}
 							/>
 						</Item>
-						<Item stackedLabel disabled style={styles.itemForm}>
-							<Label>PIC Name</Label>
-							<Input
-								multiline={true}
-								value="Nando Reza Pratama"
-								style={{ paddingVertical: 15 }}
-							/>
-						</Item>
-						<View
-							style={{ alignItems: 'center', display: 'flex', marginTop: 30 }}>
-							<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-								Create New PIC
-							</Text>
-						</View>
-						<Item stackedLabel disabled style={styles.itemForm}>
-							<Label>New PIC Name</Label>
-							<Input value="Sujatmoko" />
-						</Item>
-						<Item stackedLabel disabled style={styles.itemForm}>
-							<Label>PIC Phone Number</Label>
-							<Input value="+62858 3333 4444" />
-						</Item>
-						<Item stackedLabel disabled style={styles.itemForm}>
-							<Label>PIC Email</Label>
-							<Input value="nandooo@gmail.com" />
-						</Item>
-						<Item stackedLabel disabled style={styles.itemForm}>
-							<Label>PIC Address</Label>
-							<Input
-								multiline={true}
-								value="Jl. Tikungan Dua"
-								style={{ paddingVertical: 15 }}
-							/>
-						</Item>
 					</Form>
+					<Text style={{color: '#575757', fontSize: 14, marginLeft: 15, marginTop: 20, marginBottom: 5}}>PIC Name</Text>
+					<FlatList 
+							data={this.state.data}
+							keyExtractor={this.key}
+							renderItem={this.renderItems}
+						/>
 					<View style={styles.buttonView}>
 						<Button
 							primary
@@ -113,7 +99,7 @@ export default class AddCustomerPreview extends Component {
 						<Button
 							primary
 							style={styles.button}
-							onPress={() => this.props.navigation.navigate('Activity')}>
+							onPress={() => this.props.navigation.navigate('CustomerProfile')}>
 							<LinearGradient
 								colors={['#20E6CD', '#2D38F9']}
 								style={styles.linearGradient}>
@@ -198,5 +184,22 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center'
-	}
+	},
+	headerDirection: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginLeft: 20,
+		marginTop: 10
+	},
+	data: {
+		fontSize: 14,
+		color: '#181818',
+		marginLeft: 5
+	},
+	headerDirection: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginLeft: 15,
+		marginTop: 10
+	},
 })
