@@ -267,7 +267,7 @@ class Activity extends Component {
 						<Text style={styles.find}>Let's Find Your Customer</Text>
 						<View style={styles.searchView}>
 							<Item style={styles.searchForm} rounded>
-								<Input placeholder="Search" value={this.state.value} onFocus={() => this.handleShowImagePicker()} onChangeText={(value) => this.setState({image: false, value})}/>
+								<Input placeholder="Search" value={this.state.value} onFocus={() => this.handleShowImagePicker()} onChangeText={(value) => this.setState({value})}/>
 								<Icon size={25} name="ios-search"/>
 							</Item>
 						</View>
