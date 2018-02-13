@@ -408,6 +408,9 @@ class CustomerProfile extends Component {
 										Jl. Lorem Ipsum No.13 Sudirman, Jakarta Selatan
 									</Text>
 								</View>
+								<View style={styles.headerDirection}>
+								<Text style={styles.data}>PIC</Text>
+								</View>
 								<View style={styles.rowDirection}>
 									<TouchableOpacity
 										style={styles.headerDirection}
