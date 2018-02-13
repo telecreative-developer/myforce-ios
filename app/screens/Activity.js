@@ -264,6 +264,9 @@ class Activity extends Component {
 						))}
 					</MapView>
 					<Animated.View style={[styles.footer, animatedStyle1]}>
+						{this.state.showImagePicker === true ? 
+						<Icon name="ios-arrow-down" size={35} style={styles.arrow} onPress={() => this.handleCloseImagePicker()}/> :
+						<Icon name="ios-arrow-up" size={35} style={styles.arrow} onPress={() => this.handleShowImagePicker()}/> }
 						<Text style={styles.find}>Let's Find Your Customer</Text>
 						<View style={styles.searchView}>
 							<Item style={styles.searchForm} rounded>
@@ -330,7 +333,9 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontWeight: '900',
 		fontSize: 24,
-		marginTop: 25
+	},
+	arrow: {
+		marginVertical: 5
 	},
 	header: {
 		height: 70
