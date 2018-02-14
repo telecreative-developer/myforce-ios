@@ -58,7 +58,15 @@ class CustomerProfile extends Component {
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
-			picName: ''
+			picName: '',
+			dataPic: [
+				{
+					picName: 'Nando Reza Pratama'
+				},
+				{
+					picName: 'Kevin Hermawan'
+				}
+			]
 		}
 	}
 
@@ -217,6 +225,15 @@ class CustomerProfile extends Component {
 				</View>
 			</View>
 		</View>
+	)
+
+	renderItemsPic = ({ item }) => (
+		<TouchableOpacity
+			style={styles.headerDirection}
+			onPress={() => this.setState({ modalPic: true })}>
+			<Icon name="md-contact" size={15} />
+			<Text style={styles.data}>{item.picName}</Text>
+		</TouchableOpacity>
 	)
 
 	render() {
@@ -408,20 +425,18 @@ class CustomerProfile extends Component {
 										Jl. Lorem Ipsum No.13 Sudirman, Jakarta Selatan
 									</Text>
 								</View>
-								<View style={styles.rowDirection}>
-									<TouchableOpacity
-										style={styles.headerDirection}
-										onPress={() => this.setState({ modalPic: true })}>
-										<Icon name="md-contact" size={15} />
-										<Text style={styles.data}>Rizaldi Halim</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										style={styles.headerDirection}
-										onPress={() => this.setState({ modalPic: true })}>
-										<Icon name="md-contact" size={15} />
-										<Text style={styles.data}>Nur Muhammad Ridho</Text>
-									</TouchableOpacity>
-								</View>
+								<Text style={{fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>PIC List:</Text>
+								<FlatList 
+									data={this.state.dataPic}
+									keyExtractor={this.key}
+									renderItem={this.renderItemsPic}
+								/>
+								<TouchableOpacity
+									style={styles.headerDirection}
+									onPress={() => this.setState({ modalPic: true })}>
+									<Icon name="md-add" size={15} color={'#'}/>
+									<Text style={styles.dataAddPic}>Add More PIC</Text>
+								</TouchableOpacity>
 							</View>
 						</View>
 					</View>
@@ -560,7 +575,8 @@ const styles = StyleSheet.create({
 	customerHeader: {
 		backgroundColor: '#ffffff',
 		width: '100%',
-		height: height / 7,
+		height: 'auto',
+		paddingVertical: 20,
 		justifyContent: 'center'
 	},
 	headerDirection: {
@@ -618,6 +634,11 @@ const styles = StyleSheet.create({
 	data: {
 		fontSize: 12,
 		color: '#181818',
+		marginLeft: 5
+	},
+	dataAddPic: {
+		fontSize: 12,
+		color: '#2D38F9',
 		marginLeft: 5
 	},
 	titleFlex: {

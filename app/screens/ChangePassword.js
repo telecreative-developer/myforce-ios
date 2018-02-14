@@ -32,14 +32,15 @@ export default class ChangePassword extends Component {
 		return (
 			<Container style={styles.container}>
 				<Header style={styles.header}>
-					<Left style={styles.backHeader} />
+					<Left>
+						<Button transparent onPress={() => goBack()} style={{paddingLeft: 0}}>
+							<Text style={styles.cancel}>Cancel</Text>
+						</Button>
+					</Left>
 					<Body>
 						<Text style={styles.title}>CHANGE PASSWORD</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity onPress={() => goBack()}>
-							<Text style={styles.cancel}>Cancel</Text>
-						</TouchableOpacity>
 					</Right>
 				</Header>
 				<View style={styles.image}>

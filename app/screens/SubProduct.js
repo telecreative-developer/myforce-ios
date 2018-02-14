@@ -83,7 +83,7 @@ class SubProduct extends Component {
 						</Text>
 					</Body>
 					<Right>
-						<TouchableHighlight>
+						<TouchableHighlight onPress={() => this.props.setNavigate({link: 'Notifications'})} underlayColor={'transparent'}>
 							<Icon name="ios-notifications" size={25} />
 						</TouchableHighlight>
 					</Right>

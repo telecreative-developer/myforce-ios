@@ -6,7 +6,10 @@ import {
 	TouchableOpacity,
 	FlatList,
 	Image,
-	TextInput
+	TextInput, 
+	Animated, 
+	Easing,
+	BackHandler
 } from 'react-native'
 import {
 	Container,
@@ -25,7 +28,8 @@ import {
 	Form,
 	Input,
 	Item,
-	Label
+	Label,
+	ListItem
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
@@ -37,6 +41,7 @@ import { connect } from 'react-redux'
 import { fetchCustomers } from '../actions/customers'
 import { setNavigate } from '../actions/processor'
 import image from '../assets/images/add-user.png'
+import ornament from '../assets/images/ornament.png'
 
 const { width, height } = Dimensions.get('window')
 
@@ -51,15 +56,75 @@ class Activity extends Component {
 		super()
 
 		this.state = {
+			showImagePicker: false,
 			isModalVisible: false,
+			value:'',
+			image: true,
 			region: {
 				latitude: LATITUDE,
 				longitude: LONGITUDE,
 				latitudeDelta: LATITUDE_DELTA,
 				longitudeDelta: LONGITUDE_DELTA
-			}
-		}
+			},
+			dataCustomer: [
+				{
+					customerName: 'PT Frisian Flag',
+					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
+				},
+				{
+					customerName: 'PT Frisian Flag',
+					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
+				},
+				{
+					customerName: 'PT Frisian Flag',
+					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
+				},
+				{
+					customerName: 'PT Frisian Flag',
+					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
+				}
+			]
+		},
+		this.animatedValue1 = new Animated.Value(400)
+    this.animatedValue2 = new Animated.Value(0)
 	}
+
+	componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      if(this.state.showImagePicker) {
+        this.handleCloseImagePicker()
+        return true
+      }else{
+        return false
+      }
+    })
+  }
+
+  handleShowImagePicker() {
+    this.setState({showImagePicker: true})
+    Animated.spring(this.animatedValue1, {
+      toValue: height / 1.25,
+      tension: 50
+    }).start()
+
+    Animated.spring(this.animatedValue2, {
+      toValue: 120,
+      tension: 50
+    }).start()
+  }
+
+  handleCloseImagePicker() {
+    this.setState({showImagePicker: false, image: true, value: ''})
+    Animated.timing(this.animatedValue1, {
+      toValue: 400,
+			duration: 200,
+		}).start()
+
+    Animated.timing(this.animatedValue2, {
+      toValue: 0,
+      duration: 200
+    }).start()
+  }
 
 	componentDidMount() {
 		this.props.fetchCustomers(this.props.sessionPersistance.accessToken)
@@ -95,15 +160,14 @@ class Activity extends Component {
 
 	key = (item, index) => index
 
-	renderItems = ({ item }) => (
-		<TouchableOpacity style={styles.card}>
-			<HorizontalJoker
-				title={item.name}
-				person={item.pic}
-				description={item.description}
-				avatar={item.avatar}
-			/>
-		</TouchableOpacity>
+	renderItemsCustomer = ({ item }) => (
+		<ListItem onPress={() => this.handleCloseImagePicker()}>
+			<Icon name="ios-locate-outline" size={40}/>
+			<Body>
+				<Text style={{fontWeight: 'bold', fontSize: 18}}>{item.customerName}</Text>
+				<Text note style={{fontSize: 18}}>{item.customerAddress}</Text>
+			</Body>
+		</ListItem>
 	)
 
 	handleAddCustomer() {
@@ -112,6 +176,8 @@ class Activity extends Component {
 	}
 
 	render() {
+		const animatedStyle1 = { height: this.animatedValue1 }
+    const animatedStyle2 = { height: this.animatedValue2 }
 		return (
 			<Container>
 				<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
@@ -197,21 +263,28 @@ class Activity extends Component {
 							/>
 						))}
 					</MapView>
-					<View style={styles.searchView}>
-						<Item style={styles.searchForm} rounded>
-							<Input placeholder="Search" />
-							<Icon size={25} name="ios-search" />
-						</Item>
-					</View>
-					<TouchableOpacity
-						style={styles.centerButton}
-						onPress={() => this.setState({ isModalVisible: true })}>
-						<LinearGradient
-							colors={['#20E6CD', '#2D38F9']}
-							style={styles.linearGradient}>
-							<Text style={styles.buttonText}>CHECK IN</Text>
-						</LinearGradient>
-					</TouchableOpacity>
+					<Animated.View style={[styles.footer, animatedStyle1]}>
+						{this.state.showImagePicker === true ? 
+						<Icon name="ios-arrow-down" size={35} style={styles.arrow} onPress={() => this.handleCloseImagePicker()}/> :
+						<Icon name="ios-arrow-up" size={35} style={styles.arrow} onPress={() => this.handleShowImagePicker()}/> }
+						<Text style={styles.find}>Let's Find Your Customer</Text>
+						<View style={styles.searchView}>
+							<Item style={styles.searchForm} rounded>
+								<Input placeholder="Search" value={this.state.value} onFocus={() => this.handleShowImagePicker()} onChangeText={(value) => this.setState({value})}/>
+								<Icon size={25} name="ios-search"/>
+							</Item>
+						</View>
+						{this.state.image === true && this.state.value === '' ? 
+							<Image source={ornament} style={styles.ornament}/> :
+							<View style={{width: width / 1.5, marginTop: 15, height: height}}>
+								<FlatList 
+									data={this.state.dataCustomer}
+									keyExtractor={this.key}
+									renderItem={this.renderItemsCustomer}
+								/>
+							</View>
+						}
+					</Animated.View>
 				</View>
 			</Container>
 		)
@@ -233,6 +306,38 @@ const mapDispatchToProps = dispatch => {
 }
 
 const styles = StyleSheet.create({
+	footer: {
+    display: 'flex',
+		alignItems: 'center',
+    flexDirection: 'column',
+    backgroundColor: '#fff',
+		height: height,
+		width: width / 1.2,
+		position: 'absolute',
+		borderTopLeftRadius: 10,
+		borderTopRightRadius: 10,
+		bottom: 0
+  },
+  buttonPicker: {
+    width: width / 3.5,
+    height: height / 6,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E0E0E0'
+	},
+	ornament: {
+		marginTop: 0
+	},
+	find: {
+		textAlign: 'center',
+		fontWeight: '900',
+		fontSize: 24,
+	},
+	arrow: {
+		marginVertical: 5,
+		color: '#c0c0c0'
+	},
 	header: {
 		height: 70
 	},
@@ -252,18 +357,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	searchView: {
-		marginTop: height / 40,
-		position: 'absolute',
-		flex: 1,
 		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center'
+		marginTop: 20
 	},
 	searchForm: {
 		paddingHorizontal: 10,
 		borderRadius: 5,
-		backgroundColor: '#ffffff',
-		width: width / 1.8
+		backgroundColor: '#fafbfd',
+		width: width / 1.5
 	},
 	maps: {
 		height: height,

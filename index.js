@@ -28,35 +28,36 @@ import Cart from './app/screens/Cart'
 import AddCustomer from './app/screens/AddCustomer'
 import AddCustomerPreview from './app/screens/AddCustomerPreview'
 import Calendar from './app/screens/Calendar'
+import ChoosePic from './app/screens/ChoosePic'
+import AddNewPic from './app/screens/AddNewPic'
 
 const store = Reactotron.createStore(reducers, applyMiddleware(thunk))
 const persistor = persistStore(store)
 
-const App = StackNavigator(
-	{
-		Splash: { screen: Splash },
-		Start: { screen: Start },
-		Home: { screen: Home },
-		AddCustomer: { screen: AddCustomer },
-		Profile: { screen: Profile },
-		CustomerProfile: { screen: CustomerProfile },
-		FirstStepper: { screen: FirstStepper },
-		QuestionPage: { screen: QuestionPage },
-		Notifications: { screen: Notifications },
-		SubProduct: { screen: SubProduct },
-		Settings: { screen: Settings },
-		EditProfile: { screen: EditProfile },
-		ChangePassword: { screen: ChangePassword },
-		ForgotPassword: { screen: ForgotPassword },
-		OrderSummary: { screen: OrderSummary },
-		Cart: { screen: Cart },
-		AddCustomerPreview: { screen: AddCustomerPreview },
-		Calendar: { screen: Calendar }
-	},
-	{
-		headerMode: 'none'
-	}
-)
+const App = StackNavigator({
+  Splash: {screen: Splash},
+  Start: {screen: Start},
+  Home: {screen: Home},
+  AddCustomer: {screen: AddCustomer},
+  Profile: {screen: Profile},
+  CustomerProfile: {screen: CustomerProfile},
+  FirstStepper: {screen: FirstStepper},
+  QuestionPage: {screen: QuestionPage},
+  Notifications: {screen: Notifications},
+  SubProduct: {screen: SubProduct},
+  Settings: {screen: Settings},
+  EditProfile: {screen: EditProfile},
+  ChangePassword: {screen: ChangePassword},
+  ForgotPassword: {screen: ForgotPassword},
+  OrderSummary: {screen: OrderSummary},
+  Cart: {screen: Cart},
+  AddCustomerPreview: {screen: AddCustomerPreview},
+  Calendar: {screen: Calendar},
+  ChoosePic: {screen: ChoosePic},
+  AddNewPic: {screen: AddNewPic}
+}, {
+  headerMode: 'none'
+})
 
 const MyForce = () => (
 	<Provider store={store}>

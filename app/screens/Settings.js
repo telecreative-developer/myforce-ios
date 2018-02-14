@@ -61,11 +61,7 @@ class Settings extends Component {
 					<Body>
 						<Text style={styles.title}>SETTINGS</Text>
 					</Body>
-					<Right>
-						<TouchableHighlight onPress={() => navigate('Notifications')}>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableHighlight>
-					</Right>
+					<Right />
 				</Header>
 				<Content style={styles.container}>
 					<List>

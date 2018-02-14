@@ -48,7 +48,7 @@ export default class AddCustomer extends Component {
 						</Button>
 					</Right>
 				</Header>
-				<Content style={styles.content}>
+				<Content style={styles.content} scrollEnabled={false}>
 					<View style={styles.image}>
 						<Image source={image} />
 					</View>
@@ -66,48 +66,6 @@ export default class AddCustomer extends Component {
 							<Label>Address</Label>
 							<Input multiline={true} style={{ paddingVertical: 15 }} />
 						</Item>
-						<View style={styles.pickerView}>
-							<Text style={styles.pickerText}>PIC Name</Text>
-							<Picker
-								style={styles.picker}
-								mode="dropdown"
-								iosHeader="PIC Name"
-								selectedValue={this.state.picName}
-								onValueChange={picName =>
-									picName === 'Others'
-										? this.setState({ picName: '', picName_other: true })
-										: this.setState({ picName })
-								}>
-								<Item label="Nando Reza Pratama" value="Nando Reza Pratama" />
-								<Item label="Kevon Hermawan" value="Kevin Hermawan" />
-								<Item label="Rendi Simamora" value="Rendi Simamora" />
-								<Item label="Yonathan" value="Yonathan" />
-								<Item label="Dicky" value="Dicky" />
-								<Item label="Others" value="Others" />
-							</Picker>
-						</View>
-						<View
-							style={{ alignItems: 'center', display: 'flex', marginTop: 30 }}>
-							<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-								Create New PIC
-							</Text>
-						</View>
-						<Item stackedLabel style={styles.itemForm}>
-							<Label>New PIC Name</Label>
-							<Input />
-						</Item>
-						<Item stackedLabel style={styles.itemForm}>
-							<Label>PIC Phone Number</Label>
-							<Input />
-						</Item>
-						<Item stackedLabel style={styles.itemForm}>
-							<Label>PIC Email</Label>
-							<Input />
-						</Item>
-						<Item stackedLabel style={styles.itemForm}>
-							<Label>PIC Address</Label>
-							<Input multiline={true} style={{ paddingVertical: 15 }} />
-						</Item>
 					</Form>
 					<View style={styles.buttonView}>
 						<Button
@@ -120,12 +78,12 @@ export default class AddCustomer extends Component {
 							primary
 							style={styles.button}
 							onPress={() =>
-								this.props.navigation.navigate('AddCustomerPreview')
+								this.props.navigation.navigate('ChoosePic')
 							}>
 							<LinearGradient
 								colors={['#20E6CD', '#2D38F9']}
 								style={styles.linearGradient}>
-								<Text style={styles.buttonText}>PREVIEW</Text>
+								<Text style={styles.buttonText}>NEXT</Text>
 							</LinearGradient>
 						</Button>
 					</View>
