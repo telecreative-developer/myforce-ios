@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontWeight: '900',
 		fontSize: 24,
-		marginVertical: 20
+		marginBottom: 20
 	},
 	customerName: {
 		textAlign: 'center',
