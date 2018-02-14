@@ -9,7 +9,8 @@ import {
 	TextInput,
 	Animated,
 	Easing,
-	BackHandler
+	BackHandler,
+	TouchableHighlight
 } from 'react-native'
 import {
 	Container,
@@ -229,11 +230,18 @@ class Activity extends Component {
 							/>
 						))}
 					</MapView>
-					<Animated.View style={[styles.footer, animatedStyleDetail]}>
-						<Text style={styles.find}>Lets Find Your Customer</Text>
-						<Text>{this.props.selectedCustomerPlace.name}</Text>
-						<Text>{this.props.selectedCustomerPlace.formatted_address}</Text>
-						<Button block onPress={() => this.props.setNavigate('AddCustomer', this.props.selectedCustomerPlace)}><Text>Check In</Text></Button>
+					<Animated.View style={[styles.footerConfirmation, animatedStyleDetail]}>
+						<TouchableHighlight style={{width: '100%', alignItems: 'flex-end'}}>
+							<Icon name="ios-close" size={35}/>
+						</TouchableHighlight>
+						<Text style={styles.addCustomer}>Add Customer Confirmation</Text>
+						<Text style={styles.customerName}>{this.props.selectedCustomerPlace.name}</Text>
+						<Text style={styles.customerAddress}>{this.props.selectedCustomerPlace.formatted_address}</Text>
+						<TouchableOpacity style={styles.centerButton} onPress={() => this.props.setNavigate('AddCustomer', this.props.selectedCustomerPlace)}>
+							<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
+								<Text style={styles.buttonText}>CHECK IN</Text>
+							</LinearGradient>
+						</TouchableOpacity>
 					</Animated.View>
 					<Animated.View style={[styles.footer, animatedStyle]}>
 						{this.state.showBoxContent ? (
@@ -308,6 +316,20 @@ const styles = StyleSheet.create({
 		borderTopRightRadius: 10,
 		bottom: 0
 	},
+	footerConfirmation: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		flexDirection: 'column',
+		backgroundColor: '#fff',
+		height: height,
+		width: width / 1.2,
+		position: 'absolute',
+		borderTopLeftRadius: 10,
+		borderTopRightRadius: 10,
+		paddingHorizontal: width / 12,
+		bottom: 0
+	},
 	buttonPicker: {
 		width: width / 3.5,
 		height: height / 6,
@@ -323,6 +345,26 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontWeight: '900',
 		fontSize: 24
+	},
+	addCustomer: {
+		textAlign: 'center',
+		fontWeight: '900',
+		fontSize: 24,
+		marginVertical: 20
+	},
+	customerName: {
+		textAlign: 'center',
+		fontWeight: 'bold',
+		fontSize: 22,
+		marginBottom: 10 
+	},
+	customerAddress: {
+		textAlign: 'center',
+		fontSize: 18,
+		marginBottom: 20,
+	},
+	checkin: {
+		width: '70%'
 	},
 	arrow: {
 		marginVertical: 5,
@@ -370,8 +412,6 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100,
 		borderRadius: 100,
-		position: 'absolute',
-		bottom: height / 12
 	},
 	buttonText: {
 		textAlign: 'center',
