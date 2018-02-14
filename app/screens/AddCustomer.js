@@ -26,9 +26,20 @@ export default class AddCustomer extends Component {
 		super()
 
 		this.state = {
-			picName: 'Nando Reza Pratama'
+			name: '',
+			email: '',
+			address: ''
 		}
 	}
+
+	componentWillMount() {
+		const { params } = this.props.navigation.state
+		this.setState({
+			name: params.name,
+			address: params.formatted_address
+		})
+	}
+
 	render() {
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
@@ -60,11 +71,15 @@ export default class AddCustomer extends Component {
 						</View>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Customer Name</Label>
-							<Input />
+							<Input value={this.state.name} onChangeText={(name) => this.setState({name})} />
+						</Item>
+						<Item stackedLabel style={styles.itemForm}>
+							<Label>Email</Label>
+							<Input value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ paddingVertical: 15 }} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Address</Label>
-							<Input multiline={true} style={{ paddingVertical: 15 }} />
+							<Input disabled value={this.state.address} multiline={true} style={{ paddingVertical: 15 }} />
 						</Item>
 					</Form>
 					<View style={styles.buttonView}>
@@ -78,7 +93,7 @@ export default class AddCustomer extends Component {
 							primary
 							style={styles.button}
 							onPress={() =>
-								this.props.navigation.navigate('ChoosePic')
+								this.props.navigation.navigate('ChoosePic', this.state)
 							}>
 							<LinearGradient
 								colors={['#20E6CD', '#2D38F9']}

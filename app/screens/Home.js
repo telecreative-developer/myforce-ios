@@ -129,6 +129,11 @@ class Home extends Component {
 				this.props.navigate.link,
 				this.props.navigate.data
 			)
+		} else if (this.props.navigate.link === 'AddCustomer') {
+			this.props.navigation.navigate(
+				this.props.navigate.link,
+				this.props.navigate.data
+			)
 		} else if (this.props.navigate.link === 'Profile') {
 			this.props.navigation.navigate(this.props.navigate.link)
 		} else if (this.props.navigate.link === 'CustomerProfile') {

@@ -6,8 +6,8 @@ import {
 	TouchableOpacity,
 	FlatList,
 	Image,
-	TextInput, 
-	Animated, 
+	TextInput,
+	Animated,
 	Easing,
 	BackHandler
 } from 'react-native'
@@ -38,7 +38,7 @@ import HorizontalJoker from '../components/HorizontalJoker'
 import Modal from 'react-native-modal'
 import defaultAvatar from '../assets/images/default-avatar.png'
 import { connect } from 'react-redux'
-import { fetchCustomers } from '../actions/customers'
+import { fetchCustomers, searchCustomersPlace, selectCustomerPlace } from '../actions/customers'
 import { setNavigate } from '../actions/processor'
 import image from '../assets/images/add-user.png'
 import ornament from '../assets/images/ornament.png'
@@ -56,75 +56,61 @@ class Activity extends Component {
 		super()
 
 		this.state = {
-			showImagePicker: false,
-			isModalVisible: false,
-			value:'',
+			viewDetailPlace: false,
+			showBoxContent: false,
+			value: '',
 			image: true,
 			region: {
 				latitude: LATITUDE,
 				longitude: LONGITUDE,
 				latitudeDelta: LATITUDE_DELTA,
 				longitudeDelta: LONGITUDE_DELTA
-			},
-			dataCustomer: [
-				{
-					customerName: 'PT Frisian Flag',
-					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
-				},
-				{
-					customerName: 'PT Frisian Flag',
-					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
-				},
-				{
-					customerName: 'PT Frisian Flag',
-					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
-				},
-				{
-					customerName: 'PT Frisian Flag',
-					customerAddress: 'Jl. Lorem Ipsum dolor sit Amet',
-				}
-			]
-		},
-		this.animatedValue1 = new Animated.Value(400)
-    this.animatedValue2 = new Animated.Value(0)
+			}
+		}
+
+		this.animatedValue = new Animated.Value(400)
+		this.animatedValueDetail = new Animated.Value(0)
 	}
 
-	componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      if(this.state.showImagePicker) {
-        this.handleCloseImagePicker()
-        return true
-      }else{
-        return false
-      }
-    })
-  }
+	handleShowBoxContent() {
+		this.setState({ showBoxContent: true })
+		Animated.spring(this.animatedValue, {
+			toValue: height / 1.25,
+			tension: 50
+		}).start()
+	}
 
-  handleShowImagePicker() {
-    this.setState({showImagePicker: true})
-    Animated.spring(this.animatedValue1, {
-      toValue: height / 1.25,
-      tension: 50
-    }).start()
+	handleCloseBoxContent() {
+		this.setState({ showBoxContent: false })
+		this.setState({ value: '' })
+		Animated.timing(this.animatedValue, {
+			toValue: 400,
+			duration: 200
+		}).start()
+	}
 
-    Animated.spring(this.animatedValue2, {
-      toValue: 120,
-      tension: 50
-    }).start()
-  }
+	async handleOpenDetail(placeId) {
+		await this.props.selectCustomerPlace(placeId)
+		await this.setState({
+			region: {
+				latitude: this.props.selectedCustomerPlace.geometry.location.lat,
+				longitude: this.props.selectedCustomerPlace.geometry.location.lng,
+				latitudeDelta: LATITUDE_DELTA,
+				longitudeDelta: LONGITUDE_DELTA
+			}
+		})
 
-  handleCloseImagePicker() {
-    this.setState({showImagePicker: false, image: true, value: ''})
-    Animated.timing(this.animatedValue1, {
-      toValue: 400,
-			duration: 200,
+		await Animated.timing(this.animatedValue, {
+			toValue: 0,
+			duration: 200
 		}).start()
 
-    Animated.timing(this.animatedValue2, {
-      toValue: 0,
-      duration: 200
-    }).start()
-  }
+		await Animated.timing(this.animatedValueDetail, {
+			toValue: 400,
+			duration: 200
+		}).start()
+		
+	}
 
 	componentDidMount() {
 		this.props.fetchCustomers(this.props.sessionPersistance.accessToken)
@@ -158,56 +144,36 @@ class Activity extends Component {
 		navigator.geolocation.clearWatch(this.watchID)
 	}
 
+	handleTypingSearch(value) {
+		Animated.spring(this.animatedValue, {
+			toValue: height / 1.25,
+			tension: 50
+		}).start()
+		this.setState({ value })
+		this.props.searchCustomersPlace(value)
+	}
+
 	key = (item, index) => index
 
 	renderItemsCustomer = ({ item }) => (
-		<ListItem onPress={() => this.handleCloseImagePicker()}>
-			<Icon name="ios-locate-outline" size={40}/>
+		<ListItem onPress={() => this.handleOpenDetail(item.place_id)}>
+			<Icon name="ios-locate-outline" size={40} />
 			<Body>
-				<Text style={{fontWeight: 'bold', fontSize: 18}}>{item.customerName}</Text>
-				<Text note style={{fontSize: 18}}>{item.customerAddress}</Text>
+				<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+					{item.structured_formatting.main_text}
+				</Text>
+				<Text note style={{ fontSize: 18 }}>
+					{item.structured_formatting.secondary_text}
+				</Text>
 			</Body>
 		</ListItem>
 	)
 
-	handleAddCustomer() {
-		this.props.navigateToAddCustomer()
-		this.setState({ isModalVisible: false })
-	}
-
 	render() {
-		const animatedStyle1 = { height: this.animatedValue1 }
-    const animatedStyle2 = { height: this.animatedValue2 }
+		const animatedStyle = { height: this.animatedValue }
+		const animatedStyleDetail = { height: this.animatedValueDetail }
 		return (
 			<Container>
-				<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
-					<View style={styles.modalWrapper}>
-						<View
-							style={{
-								flex: 1,
-								backgroundColor: 'transparent',
-								justifyContent: 'center',
-								flexDirection: 'column',
-								alignItems: 'center'
-							}}>
-							<Text style={styles.modalTitle}>Confirm Checkin</Text>
-							<Text style={styles.modalAsk}>Checkin at a New Customer ?</Text>
-						</View>
-						<Footer>
-							<FooterTab>
-								<Button
-									onPress={() => this.setState({ isModalVisible: false })}>
-									<Text note style={styles.modalCancelButton}>
-										Cancel
-									</Text>
-								</Button>
-								<Button onPress={() => this.handleAddCustomer()}>
-									<Text style={styles.modalYesButton}>Take the next step.</Text>
-								</Button>
-							</FooterTab>
-						</Footer>
-					</View>
-				</Modal>
 				<Header style={styles.header}>
 					<Left>
 						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
@@ -228,7 +194,7 @@ class Activity extends Component {
 					<Right>
 						<Button
 							transparent
-							onPress={() => this.props.setNavigate({ link: 'Calendar' })}>
+							onPress={() => this.props.setNavigate('Calendar')}>
 							<Icon
 								name="ios-calendar-outline"
 								size={25}
@@ -263,27 +229,51 @@ class Activity extends Component {
 							/>
 						))}
 					</MapView>
-					<Animated.View style={[styles.footer, animatedStyle1]}>
-						{this.state.showImagePicker === true ? 
-						<Icon name="ios-arrow-down" size={35} style={styles.arrow} onPress={() => this.handleCloseImagePicker()}/> :
-						<Icon name="ios-arrow-up" size={35} style={styles.arrow} onPress={() => this.handleShowImagePicker()}/> }
-						<Text style={styles.find}>Let's Find Your Customer</Text>
+					<Animated.View style={[styles.footer, animatedStyleDetail]}>
+						<Text style={styles.find}>Lets Find Your Customer</Text>
+						<Text>{this.props.selectedCustomerPlace.name}</Text>
+						<Text>{this.props.selectedCustomerPlace.formatted_address}</Text>
+						<Button block onPress={() => this.props.setNavigate('AddCustomer', this.props.selectedCustomerPlace)}><Text>Check In</Text></Button>
+					</Animated.View>
+					<Animated.View style={[styles.footer, animatedStyle]}>
+						{this.state.showBoxContent ? (
+							<Icon
+								name="ios-arrow-down"
+								size={35}
+								style={styles.arrow}
+								onPress={() => this.handleCloseBoxContent()}
+							/>
+						) : (
+							<Icon
+								name="ios-arrow-up"
+								size={35}
+								style={styles.arrow}
+								onPress={() => this.handleShowBoxContent()}
+							/>
+						)}
+						<Text style={styles.find}>Lets Find Your Customer</Text>
 						<View style={styles.searchView}>
 							<Item style={styles.searchForm} rounded>
-								<Input placeholder="Search" value={this.state.value} onFocus={() => this.handleShowImagePicker()} onChangeText={(value) => this.setState({value})}/>
-								<Icon size={25} name="ios-search"/>
+								<Input
+									placeholder="Search"
+									onFocus={() => this.handleShowBoxContent()}
+									onChangeText={value => this.handleTypingSearch(value)}
+								/>
+								<Icon size={25} name="ios-search" />
 							</Item>
 						</View>
-						{this.state.image === true && this.state.value === '' ? 
-							<Image source={ornament} style={styles.ornament}/> :
-							<View style={{width: width / 1.5, marginTop: 15, height: height}}>
-								<FlatList 
-									data={this.state.dataCustomer}
+						{this.state.value === '' ? (
+							<Image source={ornament} style={styles.ornament} />
+						) : (
+							<View
+								style={{ width: width / 1.5, marginTop: 15, height: height }}>
+								<FlatList
+									data={this.props.resultCustomersPlace}
 									keyExtractor={this.key}
 									renderItem={this.renderItemsCustomer}
 								/>
 							</View>
-						}
+						)}
 					</Animated.View>
 				</View>
 			</Container>
@@ -291,40 +281,40 @@ class Activity extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		customers: state.customers,
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	customers: state.customers,
+	sessionPersistance: state.sessionPersistance,
+	resultCustomersPlace: state.resultCustomersPlace,
+	selectedCustomerPlace: state.selectedCustomerPlace
+})
 
-const mapDispatchToProps = dispatch => {
-	return {
-		fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
-		setNavigate: (link, data) => dispatch(setNavigate(link, data))
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
+	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
+	selectCustomerPlace: (placeId) => dispatch(selectCustomerPlace(placeId)),
+	searchCustomersPlace: input => dispatch(searchCustomersPlace(input))
+})
 
 const styles = StyleSheet.create({
 	footer: {
-    display: 'flex',
+		display: 'flex',
 		alignItems: 'center',
-    flexDirection: 'column',
-    backgroundColor: '#fff',
+		flexDirection: 'column',
+		backgroundColor: '#fff',
 		height: height,
 		width: width / 1.2,
 		position: 'absolute',
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
 		bottom: 0
-  },
-  buttonPicker: {
-    width: width / 3.5,
-    height: height / 6,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#E0E0E0'
+	},
+	buttonPicker: {
+		width: width / 3.5,
+		height: height / 6,
+		margin: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#E0E0E0'
 	},
 	ornament: {
 		marginTop: 0
@@ -332,7 +322,7 @@ const styles = StyleSheet.create({
 	find: {
 		textAlign: 'center',
 		fontWeight: '900',
-		fontSize: 24,
+		fontSize: 24
 	},
 	arrow: {
 		marginVertical: 5,
