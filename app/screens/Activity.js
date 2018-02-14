@@ -114,7 +114,7 @@ class Activity extends Component {
   }
 
   handleCloseImagePicker() {
-    this.setState({showImagePicker: false})
+    this.setState({showImagePicker: false, image: true, value: ''})
     Animated.timing(this.animatedValue1, {
       toValue: 400,
 			duration: 200,
