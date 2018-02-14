@@ -81,7 +81,7 @@ export default class Cart extends Component {
 				source={{ uri: item.picture }}
 				imageStyle={styles.cardImage}
 				style={styles.item}>
-				<TouchableHighlight>
+				<TouchableHighlight underlayColor={'transparent'}>
 					<Text style={styles.itemText}>{item.key}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooter}>

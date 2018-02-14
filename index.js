@@ -21,7 +21,6 @@ import Notifications from './app/screens/Notifications'
 import SubProduct from './app/screens/SubProduct'
 import Settings from './app/screens/Settings'
 import EditProfile from './app/screens/EditProfile'
-import ChangeEmail from './app/screens/ChangeEmail'
 import ChangePassword from './app/screens/ChangePassword'
 import ForgotPassword from './app/screens/ForgotPassword'
 import OrderSummary from './app/screens/OrderSummary'
@@ -48,7 +47,6 @@ const App = StackNavigator({
   SubProduct: {screen: SubProduct},
   Settings: {screen: Settings},
   EditProfile: {screen: EditProfile},
-  ChangeEmail: {screen: ChangeEmail},
   ChangePassword: {screen: ChangePassword},
   ForgotPassword: {screen: ForgotPassword},
   OrderSummary: {screen: OrderSummary},
