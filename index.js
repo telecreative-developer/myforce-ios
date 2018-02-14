@@ -21,7 +21,6 @@ import Notifications from './app/screens/Notifications'
 import SubProduct from './app/screens/SubProduct'
 import Settings from './app/screens/Settings'
 import EditProfile from './app/screens/EditProfile'
-import ChangeEmail from './app/screens/ChangeEmail'
 import ChangePassword from './app/screens/ChangePassword'
 import ForgotPassword from './app/screens/ForgotPassword'
 import OrderSummary from './app/screens/OrderSummary'
@@ -33,36 +32,38 @@ import Calendar from './app/screens/Calendar'
 const store = Reactotron.createStore(reducers, applyMiddleware(thunk))
 const persistor = persistStore(store)
 
-const App = StackNavigator({
-  Splash: {screen: Splash},
-  Start: {screen: Start},
-  Home: {screen: Home},
-  AddCustomer: {screen: AddCustomer},
-  Profile: {screen: Profile},
-  CustomerProfile: {screen: CustomerProfile},
-  FirstStepper: {screen: FirstStepper},
-  QuestionPage: {screen: QuestionPage},
-  Notifications: {screen: Notifications},
-  SubProduct: {screen: SubProduct},
-  Settings: {screen: Settings},
-  EditProfile: {screen: EditProfile},
-  ChangeEmail: {screen: ChangeEmail},
-  ChangePassword: {screen: ChangePassword},
-  ForgotPassword: {screen: ForgotPassword},
-  OrderSummary: {screen: OrderSummary},
-  Cart: {screen: Cart},
-  AddCustomerPreview: {screen: AddCustomerPreview},
-  Calendar: {screen: Calendar}
-}, {
-  headerMode: 'none'
-})
+const App = StackNavigator(
+	{
+		Splash: { screen: Splash },
+		Start: { screen: Start },
+		Home: { screen: Home },
+		AddCustomer: { screen: AddCustomer },
+		Profile: { screen: Profile },
+		CustomerProfile: { screen: CustomerProfile },
+		FirstStepper: { screen: FirstStepper },
+		QuestionPage: { screen: QuestionPage },
+		Notifications: { screen: Notifications },
+		SubProduct: { screen: SubProduct },
+		Settings: { screen: Settings },
+		EditProfile: { screen: EditProfile },
+		ChangePassword: { screen: ChangePassword },
+		ForgotPassword: { screen: ForgotPassword },
+		OrderSummary: { screen: OrderSummary },
+		Cart: { screen: Cart },
+		AddCustomerPreview: { screen: AddCustomerPreview },
+		Calendar: { screen: Calendar }
+	},
+	{
+		headerMode: 'none'
+	}
+)
 
 const MyForce = () => (
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <App />
-    </PersistGate>
-  </Provider>
+	<Provider store={store}>
+		<PersistGate persistor={persistor}>
+			<App />
+		</PersistGate>
+	</Provider>
 )
 
 AppRegistry.registerComponent('myForce', () => MyForce)

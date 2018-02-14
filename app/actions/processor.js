@@ -12,10 +12,11 @@ export const setLoading = (condition, process_on) => ({
 	process_on
 })
 
-export const setFailed = (condition, process_on) => ({
+export const setFailed = (condition, process_on, message) => ({
 	type: SET_FAILED,
 	condition,
-	process_on
+	process_on,
+	message
 })
 
 export const setSuccess = (condition, process_on) => ({

@@ -65,6 +65,13 @@ class EditProfile extends Component {
 		if (
 			props.loading.condition === false &&
 			props.loading.process_on === 'UPDATE_USER' &&
+			props.failed.condition === true &&
+			props.failed.process_on === 'UPDATE_USER'
+		) {
+			Alert.alert('Failed update profile', props.failed.message)
+		} else if (
+			props.loading.condition === false &&
+			props.loading.process_on === 'UPDATE_USER' &&
 			props.success.condition === true &&
 			props.success.process_on === 'UPDATE_USER'
 		) {
@@ -249,6 +256,7 @@ const mapStateToProps = state => {
 		regions: state.regionals,
 		loading: state.loading,
 		success: state.success,
+		failed: state.failed,
 		sessionPersistance: state.sessionPersistance
 	}
 }

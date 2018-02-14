@@ -29,21 +29,30 @@ export const fetchUsers = accessToken => {
 	}
 }
 
-export const updateUser = (id, data, accessToken) => {
+export const updateUser = (id, item, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'UPDATE_USER'))
 		try {
-			await fetch(`${url}/users/${id}`, {
+			const response = await fetch(`${url}/users/${id}`, {
 				method: 'PATCH',
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
 					Authorization: accessToken
 				},
-				body: JSON.stringify(data)
+				body: JSON.stringify(item)
 			})
-			await dispatch(setSuccess(true, 'UPDATE_USER'))
-			await dispatch(setLoading(false, 'UPDATE_USER'))
+			const data = await response.json()
+			if (data.code === 400 && data.errors[0].path === 'username') {
+				await dispatch(setFailed(true, 'UPDATE_USER', 'Username already used'))
+				await dispatch(setLoading(false, 'UPDATE_USER'))
+			} else if (data.code === 400 && data.errors[0].path === 'email') {
+				await dispatch(setFailed(true, 'UPDATE_USER', 'Email already used'))
+				await dispatch(setLoading(false, 'UPDATE_USER'))
+			} else {
+				await dispatch(setSuccess(true, 'UPDATE_USER'))
+				await dispatch(setLoading(false, 'UPDATE_USER'))
+			}
 		} catch (e) {
 			await dispatch(setFailed(true, 'UPDATE_USER', e))
 			await dispatch(setLoading(false, 'UPDATE_USER'))
