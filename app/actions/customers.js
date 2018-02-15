@@ -9,10 +9,31 @@ import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
 import { GOOGLE_PLACE_QUERY_AUTOCOMPLETE_KEY } from 'react-native-dotenv'
 
+export const addCustomer = (data, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_ADD_CUSTOMER'))
+		try {
+			await fetch(`${url}/customers`, {
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify(data)
+			})
+			await dispatch(setSuccess(false, 'SUCCESS_ADD_CUSTOMER'))
+			await dispatch(setLoading(false, 'LOADING_ADD_CUSTOMER'))
+		} catch (e) {
+			await dispatch(setFailed(true, 'FAILED_ADD_CUSTOMER', e))
+			await dispatch(setLoading(false, 'LOADING_ADD_CUSTOMER'))
+		}
+	}
+}
+
 export const fetchCustomers = accessToken => {
 	return async dispatch => {
-		await dispatch(setLoading(true, 'FETCH_CUSTOMERS'))
-		await dispatch(setFailed(false, 'FETCH_CUSTOMERS'))
+		await dispatch(setLoading(true, 'LOADING_FETCH_CUSTOMERS'))
 		try {
 			const response = await fetch(`${url}/customers`, {
 				method: 'GET',
@@ -24,13 +45,13 @@ export const fetchCustomers = accessToken => {
 			})
 			const data = await response.json()
 			await dispatch(fetchCustomersSuccess(data.data))
-			await dispatch(setSuccess(true, 'FETCH_CUSTOMERS'))
-			await dispatch(setLoading(false, 'FETCH_CUSTOMERS'))
+			await dispatch(setSuccess(true, 'SUCCESS_FETCH_CUSTOMERS'))
+			await dispatch(setLoading(false, 'LOADING_FETCH_CUSTOMERS'))
 		} catch (e) {
 			await dispatch(
-				setFailed(true, 'FETCH_CUSTOMERS', 'Failed get data customers')
+				setFailed(true, 'FAILED_FETCH_CUSTOMERS', 'Failed get data customers')
 			)
-			await dispatch(setLoading(false, 'fetch_customers'))
+			await dispatch(setLoading(false, 'LOADING_FETCH_CUSTOMERS'))
 		}
 	}
 }
