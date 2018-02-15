@@ -53,6 +53,10 @@ export default class AddCustomer extends Component {
               <Input />
             </Item>
             <Item stackedLabel style={styles.itemForm}>
+              <Label>PIC Job</Label>
+              <Input />
+            </Item>
+            <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Phone Number</Label>
               <Input />
             </Item>

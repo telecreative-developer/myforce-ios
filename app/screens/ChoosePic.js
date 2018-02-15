@@ -15,7 +15,8 @@ import {
 	Input,
   Picker,
   List,
-  ListItem
+	ListItem,
+	CheckBox
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
@@ -31,15 +32,18 @@ export default class AddCustomer extends Component {
       data: [
         {
           picName: 'Nando Reza Pratama',
-          picCompany: 'Frisian Flag'
+					picCompany: 'Frisian Flag',
+					checked: true
         },
         {
           picName: 'Nando Reza Pratama',
-          picCompany: 'Frisian Flag'
+					picCompany: 'Frisian Flag',
+					checked: false
         },
         {
           picName: 'Nando Reza Pratama',
-          picCompany: 'Frisian Flag'
+					picCompany: 'Frisian Flag',
+					checked: true
         }
       ]
 		}
@@ -48,17 +52,15 @@ export default class AddCustomer extends Component {
   key = (item, index) => index
   
   renderItems = ({ item }) => (
-    <List>
-      <ListItem>
-        <Left>
-          <Text>{item.picName}</Text>
-        </Left>
-        <Body />
-        <Right>
-          <Text>{item.picCompany}</Text>
-        </Right>
-      </ListItem>
-    </List>
+		<ListItem style={{paddingHorizontal: 10}}>
+			<Body>
+				<Text style={{fontSize: 14, fontWeight: 'bold', textAlign: 'left'}}>{item.picName}</Text>
+				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.picCompany}</Text>
+			</Body>
+			<Right>
+				<CheckBox checked={item.checked} />
+			</Right>
+		</ListItem>
   )
 
 	render() {
