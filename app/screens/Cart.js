@@ -189,5 +189,15 @@ const styles = StyleSheet.create({
 		height: '100%',
 		flexDirection: 'row',
 		borderRadius: 0
-	}
+	},
+	footerButton: {
+		backgroundColor: '#2D38F9',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		flex: 1,
+		height: '100%'
+	},
+	submit: {
+		fontWeight: 'bold'
+	},
 })

@@ -16,6 +16,7 @@ Picker } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
 import LinearGradient from 'react-native-linear-gradient'
+import { isEmpty, isEmail } from 'validator'
 
 const { height, width } = Dimensions.get('window')
 
@@ -41,9 +42,6 @@ export default class AddCustomer extends Component {
             <Text style={styles.title}>ADD NEW PIC</Text>
           </Body>
           <Right>
-            <Button transparent badge onPress={() => navigate('Cart')}>
-              <Icon name="ios-notifications" size={25} />
-            </Button>
           </Right>
         </Header>
         <Content style={styles.content}>

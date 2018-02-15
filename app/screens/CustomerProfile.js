@@ -31,7 +31,8 @@ import {
 	Item,
 	Input,
 	Label,
-	Badge
+	Badge,
+	Picker
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Modal from 'react-native-modal'
@@ -58,7 +59,7 @@ class CustomerProfile extends Component {
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
-			picName: '',
+			picName: 'Nando Reza Pratama',
 			dataPic: [
 				{
 					picName: 'Nando Reza Pratama'
@@ -255,13 +256,20 @@ class CustomerProfile extends Component {
 										onChangeText={pipeline => this.setState({ pipeline })}
 									/>
 								</Item>
-								<Item floatingLabel>
+								<View style={styles.productCategoryView}>
 									<Label>PIC Name</Label>
-									<Input
-										value={this.state.picName}
-										onChangeText={picName => this.setState({ picName })}
-									/>
-								</Item>
+									<Picker
+										style={styles.picker}
+										mode="dropdown"
+										iosHeader="PIC Name"
+										selectedValue={this.state.picName}
+										onValueChange={picName =>
+											this.setState({ picName })
+										}>
+										<Item label="Nando Reza Pratama" value="Nando Reza Pratama" />
+										<Item label="Kevin Hermawan" value="Kevin Hermawan" />
+									</Picker>
+								</View>
 							</Form>
 						</View>
 						<Footer>
@@ -293,12 +301,16 @@ class CustomerProfile extends Component {
 										<Input value="Rizaldi Halim" />
 									</Item>
 									<Item floatingLabel>
-										<Label>Position</Label>
+										<Label>Job</Label>
 										<Input value="Branch Manager" />
 									</Item>
 									<Item floatingLabel>
 										<Label>Phone Number</Label>
 										<Input value="+62 859 8006 4003" />
+									</Item>
+									<Item floatingLabel>
+										<Label>Email</Label>
+										<Input value="nando@gmail.com" />
 									</Item>
 									<Item floatingLabel>
 										<Label>Address</Label>
@@ -377,12 +389,12 @@ class CustomerProfile extends Component {
 						<Text style={styles.title}>CUSTOMER PROFILE</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity onPress={() => navigate('Notification')}>
-							<Icon name="ios-notifications" size={25} />
+						<TouchableOpacity onPress={() => navigate('OrderSummary')}>
+							<Icon name="ios-folder-open" size={25} />
 						</TouchableOpacity>
 					</Right>
 				</Header>
-				<View style={styles.newsWrapper}>
+				{/* <View style={styles.newsWrapper}>
 					<View style={styles.newsDirection}>
 						<View style={styles.titleFlex}>
 							<H3 style={styles.newsTitle}>Latest News</H3>
@@ -409,8 +421,8 @@ class CustomerProfile extends Component {
 							<Text style={styles.readMore}>Read More</Text>
 						</TouchableOpacity>
 					</View>
-				</View>
-				<Content style={styles.content}>
+				</View> */}
+				<Content style={styles.content} showsVerticalScrollIndicator={false}>
 					<View style={styles.customerHeader}>
 						<View style={styles.headerDirectionTitle}>
 							<View>
@@ -433,8 +445,8 @@ class CustomerProfile extends Component {
 								/>
 								<TouchableOpacity
 									style={styles.headerDirection}
-									onPress={() => this.setState({ modalPic: true })}>
-									<Icon name="md-add" size={15} color={'#'}/>
+									onPress={() => navigate('ChoosePic')}>
+									<Icon name="md-add" size={15} color={'#2D38F9'}/>
 									<Text style={styles.dataAddPic}>Add More PIC</Text>
 								</TouchableOpacity>
 							</View>
@@ -504,6 +516,13 @@ const mapDispatchToProps = dispatch => {
 }
 
 const styles = StyleSheet.create({
+	productCategoryView: {
+		marginLeft: 15,
+		marginTop: 30
+	},
+	picker: {
+		marginLeft: -15
+	},
 	card: {
 		display: 'flex',
 		width: width / 1.2,
@@ -522,7 +541,8 @@ const styles = StyleSheet.create({
 	content: {
 		paddingRight: 40,
 		paddingLeft: 40,
-		paddingBottom: 40
+		paddingBottom: 40,
+		paddingTop: 20
 	},
 	footerWrap: {
 		height: 70
@@ -666,7 +686,7 @@ const styles = StyleSheet.create({
 	},
 	modalWrapperAddPipeline: {
 		width: width / 1.1,
-		height: height / 2.2,
+		height: height / 1.9,
 		backgroundColor: '#ffffff',
 		borderRadius: 5,
 		display: 'flex'

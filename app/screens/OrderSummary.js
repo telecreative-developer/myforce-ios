@@ -91,7 +91,8 @@ export default class OrderSummary extends Component {
 		super()
 
 		this.state = {
-			productCategory: 'Fuji Xerox'
+			productCategory: 'Fuji Xerox',
+			picName: 'Nando Reza Pratama'
 		}
 	}
 
@@ -142,10 +143,20 @@ export default class OrderSummary extends Component {
 						<Image source={image} />
 					</View>
 					<Form>
-						<Item floatingLabel>
+						<View style={styles.productCategoryView}>
 							<Label>PIC Name</Label>
-							<Input />
-						</Item>
+							<Picker
+								style={styles.picker}
+								mode="dropdown"
+								iosHeader="PIC Name"
+								selectedValue={this.state.picName}
+								onValueChange={picName =>
+									this.setState({ picName })
+								}>
+								<Item label="Nando Reza Pratama" value="Nando Reza Pratama" />
+								<Item label="Kevin Hermawan" value="Kevin Hermawan" />
+							</Picker>
+						</View>
 						<View style={styles.productCategoryView}>
 							<Label style={styles.productCategory}>Product Category</Label>
 							<Picker
@@ -170,8 +181,8 @@ export default class OrderSummary extends Component {
 					/>
 				</Content>
 				<Footer>
-					<Button full style={styles.footerButton}>
-						<Text style={styles.submit}>SUBMIT</Text>
+					<Button full style={styles.footerButton} onPress={() => navigate('Cart')}>
+						<Text style={styles.submit}>ADD TO CART</Text>
 					</Button>
 				</Footer>
 			</Container>
