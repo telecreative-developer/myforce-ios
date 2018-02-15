@@ -43,7 +43,6 @@ class CustomerList extends Component {
 			onPress={() => this.props.setNavigate('CustomerProfile', item)}>
 			<ContactCard
 				title={item.name}
-				person={item.pics[0].name}
 				description={item.description}
 				avatar={item.avatar}
 			/>
