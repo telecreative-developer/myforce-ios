@@ -100,6 +100,7 @@ class Login extends Component {
 					<Item floatingLabel>
 						<Label>Email</Label>
 						<Input
+							autoCapitalize = 'none'
 							value={this.state.email}
 							onChangeText={email => this.setState({ email })}
 						/>

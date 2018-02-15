@@ -18,6 +18,7 @@ import image from '../assets/images/add-user.png'
 import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
 import { addPIC } from  '../actions/pics'
+import { isEmpty, isEmail } from 'validator'
 
 const { height, width } = Dimensions.get('window')
 
@@ -62,9 +63,6 @@ class AddNewPic extends Component {
             <Text style={styles.title}>ADD NEW PIC</Text>
           </Body>
           <Right>
-            <Button transparent badge onPress={() => navigate('Cart')}>
-              <Icon name="ios-notifications" size={25} />
-            </Button>
           </Right>
         </Header>
         <Content style={styles.content}>
