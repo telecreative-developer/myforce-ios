@@ -239,21 +239,16 @@ class Home extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		sessionPersistance: state.sessionPersistance,
-		activePageHome: state.activePageHome,
-		navigate: state.navigate
-	}
-}
+const mapStateToProps = state => ({
+	sessionPersistance: state.sessionPersistance,
+	activePageHome: state.activePageHome,
+	navigate: state.navigate
+})
 
-const mapDispatchToProps = dispatch => {
-	return {
-		fetchUsers: accessToken => dispatch(fetchUsers(accessToken)),
-		setActivePageHome: activePageHome =>
-			dispatch(setActivePageHome(activePageHome))
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	fetchUsers: accessToken => dispatch(fetchUsers(accessToken)),
+	setActivePageHome: activePageHome => dispatch(setActivePageHome(activePageHome))
+})
 
 const styles = StyleSheet.create({
 	footerWrap: {

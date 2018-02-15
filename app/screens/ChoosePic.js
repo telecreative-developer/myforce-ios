@@ -21,41 +21,35 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
 import LinearGradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux'
+import { fetchPICs, choosePIC } from '../actions/pics'
 
 const { height, width } = Dimensions.get('window')
 
-export default class AddCustomer extends Component {
-	constructor() {
-		super()
+class ChoosePic extends Component {
 
-		this.state = {
-      data: [
-        {
-          picName: 'Nando Reza Pratama',
-					picCompany: 'Frisian Flag',
-					checked: true
-        },
-        {
-          picName: 'Nando Reza Pratama',
-					picCompany: 'Frisian Flag',
-					checked: false
-        },
-        {
-          picName: 'Nando Reza Pratama',
-					picCompany: 'Frisian Flag',
-					checked: true
-        }
-      ]
+	componentWillMount() {
+		this.props.fetchPICs(this.props.sessionPersistance.accessToken)
+	}
+
+	handleChoosePIC(data, checked) {
+		if(!data.checked) {
+			if(this.props.pics.filter(d => d.checked === true).length < 3) {
+				this.props.choosePIC(data, true)
+			}
+		}else if(data.checked) {
+			this.props.choosePIC(data, false)
 		}
-  }
+	}
 
-  key = (item, index) => index
+  key = (item, index) => item.id_pic
   
   renderItems = ({ item }) => (
-		<ListItem style={{paddingHorizontal: 10}}>
+		<ListItem style={{paddingHorizontal: 10}} onPress={() => this.handleChoosePIC(item, item.checked ? false : true)}>
 			<Body>
-				<Text style={{fontSize: 14, fontWeight: 'bold', textAlign: 'left'}}>{item.picName}</Text>
-				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.picCompany}</Text>
+				<Text style={{fontSize: 14, fontWeight: 'bold', textAlign: 'left'}}>{item.name}</Text>
+				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.job}</Text>
+				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.company}</Text>
 			</Body>
 			<Right>
 				<CheckBox checked={item.checked} />
@@ -74,7 +68,7 @@ export default class AddCustomer extends Component {
 						</Button>
 					</Left>
 					<Body>
-						<Text style={styles.title}>CHOOSE PIC</Text>
+						<Text style={styles.title}>CHOOSE PIC ({this.props.pics.filter(d => d.checked === true).length})</Text>
 					</Body>
 					<Right>
 						<Button transparent badge onPress={() => this.props.navigation.navigate('AddCustomerPreview')} style={{paddingRight: 0}}>
@@ -84,9 +78,7 @@ export default class AddCustomer extends Component {
 				</Header>
         <View style={styles.searchView}>
           <Item style={styles.searchForm} rounded>
-            <Input
-              placeholder="Search"
-            />
+            <Input placeholder="Search" />
             <Icon size={25} name="ios-search" />
           </Item>
         </View>
@@ -101,7 +93,7 @@ export default class AddCustomer extends Component {
         </View>
 				<Content style={styles.content}>
           <FlatList 
-            data={this.state.data}
+            data={this.props.pics.sort((a, b) => a.id_pic - b.id_pic)}
             keyExtractor={this.key}
             renderItem={this.renderItems}
           />
@@ -110,6 +102,16 @@ export default class AddCustomer extends Component {
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+	sessionPersistance: state.sessionPersistance,
+	pics: state.pics
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	fetchPICs: (accessToken) => dispatch(fetchPICs(accessToken)),
+	choosePIC: (data, status) => dispatch(choosePIC(data, status))
+})
 
 const styles = StyleSheet.create({
 	backHeader: {
@@ -197,3 +199,5 @@ const styles = StyleSheet.create({
 		width: width / 1.5
 	}
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)

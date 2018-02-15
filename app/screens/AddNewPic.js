@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, View, Image } from 'react-native' 
+import { StyleSheet, Dimensions, Alert, View, Image } from 'react-native' 
 import { Container,
 Content,
 Header,
@@ -15,18 +15,39 @@ Input,
 Picker } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
+import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
+import { addPIC } from  '../actions/pics'
 
 const { height, width } = Dimensions.get('window')
 
-export default class AddCustomer extends Component {
+class AddNewPic extends Component {
   constructor() {
     super()
 
     this.state = {
-      picName: "Nando Reza Pratama",
+      name: '',
+      phone: '',
+      email: '',
+      address: '',
+      job: ''
     }
   }
+
+  componentWillReceiveProps(props) {
+    if(props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_PIC') {
+      Alert.alert('Success', 'New PIC successfully added')
+      this.props.navigation.goBack()
+    }
+  }
+
+  handleAddPic() {
+    const { name, email, phone, address, job } = this.state
+    const { accessToken } = this.props.sessionPersistance
+
+    this.props.addPIC({name, company: this.props.selectedCustomerPlace.name, job, email, phone, address}, accessToken)
+  }
+
   render() {
     return (
       <Container style={{backgroundColor:'#ffffff'}}>
@@ -50,30 +71,34 @@ export default class AddCustomer extends Component {
           <Form>
             <Item stackedLabel style={styles.itemForm}>
               <Label>New PIC Name</Label>
-              <Input />
+              <Input value={this.state.name} onChangeText={(name) => this.setState({name})} />
+            </Item>
+            <Item stackedLabel style={styles.itemForm}>
+              <Label>PIC Company</Label>
+              <Input disabled value={this.props.selectedCustomerPlace.name} />
             </Item>
             <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Job</Label>
-              <Input />
+              <Input value={this.state.job} onChangeText={(job) => this.setState({job})} />
             </Item>
             <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Phone Number</Label>
-              <Input />
+              <Input value={this.state.phone} onChangeText={(phone) => this.setState({phone})} />
             </Item>
             <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Email</Label>
-              <Input />
+              <Input value={this.state.email} onChangeText={(email) => this.setState({email})} />
             </Item>
             <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Address</Label>
-              <Input multiline={true} style={{paddingVertical: 15}}/>
+              <Input multiline={true} style={{paddingVertical: 15}} value={this.state.address} onChangeText={(address) => this.setState({address})} />
             </Item>
           </Form>
           <View style={styles.buttonView}>
-            <Button primary style={styles.buttonBack} onPress={() => this.props.navigation.navigate('Activity')}>
+            <Button primary style={styles.buttonBack} onPress={() => this.props.navigation.goBack()}>
               <Text style={styles.buttonText}>BACK</Text>
             </Button>
-            <Button primary style={styles.button} onPress={() => this.props.navigation.navigate('AddCustomerPreview')}>
+            <Button primary style={styles.button} onPress={() => this.handleAddPic()}>
               <LinearGradient 
                 colors={['#20E6CD', '#2D38F9']} 
                 style={styles.linearGradient}>
@@ -86,6 +111,16 @@ export default class AddCustomer extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  success: state.success,
+  sessionPersistance: state.sessionPersistance,
+  selectedCustomerPlace: state.selectedCustomerPlace
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  addPIC: (data, accessToken) => dispatch(addPIC(data, accessToken))
+})
 
 const styles = StyleSheet.create({
   backHeader: {
@@ -160,3 +195,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewPic)
