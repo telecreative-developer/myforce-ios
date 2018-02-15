@@ -110,7 +110,18 @@ class Activity extends Component {
 			toValue: 400,
 			duration: 200
 		}).start()
-		
+	}
+
+	async handleCloseDetail() {
+		await Animated.timing(this.animatedValueDetail, {
+			toValue: 0,
+			duration: 200
+		}).start()
+
+		await Animated.timing(this.animatedValue, {
+			toValue: height / 1.25,
+			duration: 200
+		}).start()
 	}
 
 	componentDidMount() {
@@ -232,7 +243,7 @@ class Activity extends Component {
 					</MapView>
 					<Animated.View style={[styles.footerConfirmation, animatedStyleDetail]}>
 						<View style={{width: '100%',alignItems: 'flex-end'}}>
-							<TouchableHighlight>
+							<TouchableHighlight onPress={() => this.handleCloseDetail()}>
 								<Icon name="ios-close" size={35}/>
 							</TouchableHighlight>
 						</View>
