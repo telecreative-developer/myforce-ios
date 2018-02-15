@@ -231,9 +231,11 @@ class Activity extends Component {
 						))}
 					</MapView>
 					<Animated.View style={[styles.footerConfirmation, animatedStyleDetail]}>
-						<TouchableHighlight style={{width: '100%', alignItems: 'flex-end'}}>
-							<Icon name="ios-close" size={35}/>
-						</TouchableHighlight>
+						<View style={{width: '100%',alignItems: 'flex-end'}}>
+							<TouchableHighlight>
+								<Icon name="ios-close" size={35}/>
+							</TouchableHighlight>
+						</View>
 						<Text style={styles.addCustomer}>Add Customer Confirmation</Text>
 						<Text style={styles.customerName}>{this.props.selectedCustomerPlace.name}</Text>
 						<Text style={styles.customerAddress}>{this.props.selectedCustomerPlace.formatted_address}</Text>

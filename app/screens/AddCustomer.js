@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, View, Image } from 'react-native'
+import { StyleSheet, Dimensions, View, Image, Alert } from 'react-native'
 import {
 	Container,
 	Content,
@@ -18,6 +18,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
 import LinearGradient from 'react-native-linear-gradient'
+import { isEmpty, isEmail } from 'validator'
 
 const { height, width } = Dimensions.get('window')
 
@@ -38,6 +39,43 @@ export default class AddCustomer extends Component {
 			name: params.name,
 			address: params.formatted_address
 		})
+	}
+
+	renderButton() {
+		const { name, email } = this.state
+		if (!isEmpty(name) && !isEmpty(email) && isEmail(email)) {
+			return (
+				<Button
+					primary
+					style={styles.button}
+					onPress={() =>
+						this.validationLogin()
+					}>
+					<LinearGradient
+						colors={['#20E6CD', '#2D38F9']}
+						style={styles.linearGradient}>
+						<Text style={styles.buttonText}>NEXT</Text>
+					</LinearGradient>
+				</Button>
+			)
+		} else {
+			return (
+				<Button
+					primary
+					style={styles.buttonBefore}>
+						<Text style={styles.buttonText}>NEXT</Text>
+				</Button>
+			)
+		}
+	}
+
+	validationLogin() {
+		const { email, password } = this.state
+		if (!isEmail(email)) {
+			Alert.alert('Gagal', 'Silahkan masukan alamat email yang valid')
+		} else {
+			this.props.navigation.navigate('ChoosePic', this.state)
+		}
 	}
 
 	render() {
@@ -89,18 +127,7 @@ export default class AddCustomer extends Component {
 							onPress={() => this.props.navigation.navigate('Activity')}>
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
-						<Button
-							primary
-							style={styles.button}
-							onPress={() =>
-								this.props.navigation.navigate('ChoosePic', this.state)
-							}>
-							<LinearGradient
-								colors={['#20E6CD', '#2D38F9']}
-								style={styles.linearGradient}>
-								<Text style={styles.buttonText}>NEXT</Text>
-							</LinearGradient>
-						</Button>
+						{this.renderButton()}
 					</View>
 				</Content>
 			</Container>
@@ -155,6 +182,17 @@ const styles = StyleSheet.create({
 		width: '30%',
 		paddingTop: 0,
 		paddingBottom: 0
+	},
+	buttonBefore: {
+		width: '30%',
+		paddingTop: 0,
+		paddingBottom: 0,
+		borderRadius: 0,
+		backgroundColor: 'transparent',
+		borderColor: '#2D38F9',
+		borderWidth: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	buttonText: {
 		fontWeight: '900',
