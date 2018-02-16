@@ -30,6 +30,7 @@ import AddCustomerPreview from './app/screens/AddCustomerPreview'
 import Calendar from './app/screens/Calendar'
 import ChoosePic from './app/screens/ChoosePic'
 import AddNewPic from './app/screens/AddNewPic'
+import NewEvent from './app/screens/NewEvent'
 
 const store = Reactotron.createStore(reducers, applyMiddleware(thunk))
 const persistor = persistStore(store)
@@ -54,7 +55,8 @@ const App = StackNavigator({
   AddCustomerPreview: {screen: AddCustomerPreview},
   Calendar: {screen: Calendar},
   ChoosePic: {screen: ChoosePic},
-  AddNewPic: {screen: AddNewPic}
+  AddNewPic: {screen: AddNewPic},
+  NewEvent: {screen: NewEvent}
 }, {
   headerMode: 'none'
 })

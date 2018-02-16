@@ -30,7 +30,7 @@ export default class Calendar extends Component {
   }
 
   render() {
-    const { goBack } = this.props.navigation
+    const { navigate, goBack } = this.props.navigation
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
@@ -44,7 +44,7 @@ export default class Calendar extends Component {
             <Text style={styles.title}>EVENT CALENDAR</Text>
           </Body>
           <Right style={styles.newEvent}>
-            <Button transparent style={{paddingRight: 0, marginRight: 0}} onPress={() => goBack()}>
+            <Button transparent style={{paddingRight: 0, marginRight: 0}} onPress={() => navigate('NewEvent')}>
               <Icon name="ios-add" size={25} color="#000000"/>
               <Text style={styles.new}>New Event</Text>
             </Button>
