@@ -33,7 +33,8 @@ export const success = (state = [], action) => {
 		case SET_SUCCESS:
 			return {
 				condition: action.condition,
-				process_on: action.process_on
+				process_on: action.process_on,
+				payload: action.payload
 			}
 		default:
 			return state

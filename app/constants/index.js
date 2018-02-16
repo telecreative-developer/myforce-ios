@@ -34,3 +34,5 @@ export const CHECK_CUSTOMER = 'CHECK_CUSTOMER'
 
 export const ADD_PIC = 'ADD_PIC'
 export const REMOVE_PIC = 'REMOVE_PIC'
+
+export const PICS_CUSTOMERS = 'PICS_CUSTOMERS'

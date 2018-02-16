@@ -26,7 +26,7 @@ export const postCustomer = (data, dataPIC, accessToken) => {
 			})
 			const dataCustomer = await response.json()
 			await dataPIC.forEach((data, index) => {
-				dispatch(postPICS({...data, id_customer: dataCustomer.id_customer}, accessToken))
+				dispatch(postPICS({...data, id_customer: dataCustomer.id_customer}, dataCustomer, accessToken))
 			})
 			await dispatch(setSuccess(false, 'SUCCESS_ADD_CUSTOMER'))
 			await dispatch(setLoading(false, 'LOADING_ADD_CUSTOMER'))

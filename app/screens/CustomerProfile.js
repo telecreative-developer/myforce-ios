@@ -38,6 +38,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import PipelineProgress from '../components/PipelineProgress'
+import { fetchPicsWithIDCustomer } from '../actions/pics'
 import {
 	fetchPipelines,
 	postPipeline,
@@ -59,20 +60,16 @@ class CustomerProfile extends Component {
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
-			picName: 'Nando Reza Pratama',
-			dataPic: [
-				{
-					picName: 'Nando Reza Pratama'
-				},
-				{
-					picName: 'Kevin Hermawan'
-				}
-			]
+			picName: 'Nando Reza Pratama'
 		}
 	}
 
 	componentWillMount() {
 		this.props.fetchPipelines(
+			this.props.navigation.state.params.id_customer,
+			this.props.sessionPersistance.accessToken
+		)
+		this.props.fetchPicsWithIDCustomer(
 			this.props.navigation.state.params.id_customer,
 			this.props.sessionPersistance.accessToken
 		)
@@ -89,7 +86,8 @@ class CustomerProfile extends Component {
 				{
 					pipeline: this.state.pipeline,
 					id_status: 0,
-					id_customer: this.props.navigation.state.params.id_customer
+					id_customer: this.props.navigation.state.params.id_customer,
+					id: this.props.sessionPersistance.id
 				},
 				this.props.sessionPersistance.accessToken
 			)
@@ -233,7 +231,7 @@ class CustomerProfile extends Component {
 			style={styles.headerDirection}
 			onPress={() => this.setState({ modalPic: true })}>
 			<Icon name="md-contact" size={15} />
-			<Text style={styles.data}>{item.picName}</Text>
+			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
 	)
 
@@ -337,7 +335,6 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
-
 				<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
 					<View style={styles.modalWrapper}>
 						<View>
@@ -434,21 +431,21 @@ class CustomerProfile extends Component {
 								<View style={styles.headerDirection}>
 									<Icon name="md-pin" size={15} />
 									<Text style={styles.data}>
-										Jl. Lorem Ipsum No.13 Sudirman, Jakarta Selatan
+										{state.params.address}
 									</Text>
 								</View>
 								<Text style={{fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>PIC List:</Text>
 								<FlatList 
-									data={this.state.dataPic}
+									data={this.props.picsCustomers}
 									keyExtractor={this.key}
 									renderItem={this.renderItemsPic}
 								/>
-								<TouchableOpacity
+								{/* <TouchableOpacity
 									style={styles.headerDirection}
 									onPress={() => navigate('ChoosePic')}>
 									<Icon name="md-add" size={15} color={'#2D38F9'}/>
 									<Text style={styles.dataAddPic}>Add More PIC</Text>
-								</TouchableOpacity>
+								</TouchableOpacity> */}
 							</View>
 						</View>
 					</View>
@@ -499,19 +496,18 @@ class CustomerProfile extends Component {
 const mapStateToProps = state => {
 	return {
 		pipelines: state.pipelines,
-		sessionPersistance: state.sessionPersistance
+		sessionPersistance: state.sessionPersistance,
+		picsCustomers: state.picsCustomers
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-		fetchPipelines: (id, accessToken) =>
-			dispatch(fetchPipelines(id, accessToken)),
-		fetchPipelinesRealtime: (id, accessToken) =>
-			dispatch(fetchPipelinesRealtime(id, accessToken)),
-		postPipeline: (data, accessToken) =>
-			dispatch(postPipeline(data, accessToken))
+		fetchPipelines: (id, accessToken) => dispatch(fetchPipelines(id, accessToken)),
+		fetchPipelinesRealtime: (id, accessToken) => dispatch(fetchPipelinesRealtime(id, accessToken)),
+		postPipeline: (data, accessToken) => dispatch(postPipeline(data, accessToken)),
+		fetchPicsWithIDCustomer: (id, accessToken) => dispatch(fetchPicsWithIDCustomer(id, accessToken))
 	}
 }
 

@@ -13,7 +13,7 @@ import { products } from './products'
 import { subproducts } from './subproducts'
 import { users, userRegionRank, userNationRank } from './users'
 import { pipelines } from './pipelines'
-import { pics } from './pics'
+import { pics, picsCustomers } from './pics'
 
 const config = {
 	key: 'root',
@@ -38,7 +38,8 @@ const reducers = persistCombineReducers(config, {
 	products,
 	subproducts,
 	users,
-	pics
+	pics,
+	picsCustomers
 })
 
 export default reducers

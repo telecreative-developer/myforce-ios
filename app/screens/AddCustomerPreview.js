@@ -39,8 +39,8 @@ class AddCustomerPreview extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_CUSTOMER') {
-			this.props.navigation.navigate('CustomerProfile')
+		if(props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_PIC') {
+			props.navigation.navigate('CustomerProfile', props.success.payload)
 		}
 	}
 
@@ -145,6 +145,8 @@ class AddCustomerPreview extends Component {
 }
 
 const mapStateToProps = (state) => ({
+	success: state.success,
+	loading: state.loading,
 	sessionPersistance: state.sessionPersistance,
 	pics: state.pics
 })

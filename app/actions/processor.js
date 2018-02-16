@@ -19,10 +19,11 @@ export const setFailed = (condition, process_on, message) => ({
 	message
 })
 
-export const setSuccess = (condition, process_on) => ({
+export const setSuccess = (condition, process_on, data) => ({
 	type: SET_SUCCESS,
 	condition,
-	process_on
+	process_on,
+	payload: data
 })
 
 export const setNavigate = (link, data) => ({
