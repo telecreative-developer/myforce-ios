@@ -145,6 +145,8 @@ class Home extends Component {
 			this.props.navigation.navigate(this.props.navigate.link)
 		} else if (this.props.navigate.link === 'Notifications') {
 			this.props.navigation.navigate(this.props.navigate.link)
+		} else if (this.props.navigate.link === 'NewEvent') {
+			this.props.navigation.navigate(this.props.navigate.link)
 		} 
 		return (
 			<Container>

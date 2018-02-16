@@ -27,28 +27,15 @@ export default class AddCustomer extends Component {
 		super()
 
 		this.state = {
-			name: '',
-			email: '',
-			phone: '',
-			address: '',
-			latitude: '',
-			longitude: ''
+			event: '',
+			description: '',
+			date: '',
 		}
 	}
 
-	componentWillMount() {
-		const { params } = this.props.navigation.state
-		this.setState({
-			name: params.name,
-			address: params.formatted_address,
-			latitude: params.geometry.location.lat,
-			longitude: params.geometry.location.lng
-		})
-	}
-
 	renderButton() {
-		const { name, email, phone } = this.state
-		if (!isEmpty(name) && !isEmpty(email) && !isEmpty(phone) && isEmail(email)) {
+		const { event, description, date } = this.state
+		if (!isEmpty(event) && !isEmpty(description) && !isEmpty(date)) {
 			return (
 				<Button
 					primary
@@ -72,15 +59,6 @@ export default class AddCustomer extends Component {
 		)
 	}
 
-	validationEmail() {
-		const { email, password } = this.state
-		if (!isEmail(email)) {
-			Alert.alert('Gagal', 'Silahkan masukan alamat email yang valid')
-		} else {
-			this.props.navigation.navigate('ChoosePic', this.state)
-		}
-	}
-
 	render() {
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
@@ -92,7 +70,7 @@ export default class AddCustomer extends Component {
 						</Button>
 					</Left>
 					<Body>
-						<Text style={styles.title}>ADD NEW CUSTOMER</Text>
+						<Text style={styles.title}>NEW EVENT</Text>
 					</Body>
 					<Right>
 						<Button transparent badge onPress={() => navigate('Cart')}>
@@ -105,26 +83,17 @@ export default class AddCustomer extends Component {
 						<Image source={image} />
 					</View>
 					<Form>
-						<View style={{ alignItems: 'center', display: 'flex' }}>
-							<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-								Customer Data
-							</Text>
-						</View>
 						<Item stackedLabel style={styles.itemForm}>
-							<Label>Customer Name</Label>
-							<Input value={this.state.name} onChangeText={(name) => this.setState({name})} />
+							<Label>Event Name</Label>
+							<Input value={this.state.event} onChangeText={(event) => this.setState({event})} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
-							<Label>Email</Label>
-							<Input value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ paddingVertical: 15 }} autoCapitalize = 'none' uppercase={false}/>
+							<Label>Description</Label>
+							<Input value={this.state.description} multiline={true} onChangeText={(description) => this.setState({description})} style={{ paddingVertical: 15 }} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
-							<Label>Phone</Label>
-							<Input value={this.state.phone} onChangeText={(phone) => this.setState({phone})} style={{ paddingVertical: 15 }} keyboardType='numeric'/>
-						</Item>
-						<Item stackedLabel style={styles.itemForm}>
-							<Label>Address</Label>
-							<Input disabled value={this.state.address} multiline={true} style={{ paddingVertical: 15 }} />
+							<Label>Date</Label>
+							<Input value={this.state.date} onChangeText={(date) => this.setState({date})} style={{ paddingVertical: 15 }} keyboardType='numeric'/>
 						</Item>
 					</Form>
 					<View style={styles.buttonView}>

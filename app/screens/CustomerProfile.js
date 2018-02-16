@@ -436,7 +436,7 @@ class CustomerProfile extends Component {
 								</TouchableHighlight>
 								<View style={styles.headerDirection}>
 									<Icon name="md-pin" size={15} />
-									<Text style={styles.data}>
+									<Text style={styles.dataAddress}>
 										{state.params.address}
 									</Text>
 								</View>
@@ -657,6 +657,12 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: '#181818',
 		marginLeft: 5
+	},
+	dataAddress: {
+		fontSize: 12,
+		color: '#181818',
+		marginLeft: 5,
+		maxWidth: width / 1.5
 	},
 	dataAddPic: {
 		fontSize: 12,
