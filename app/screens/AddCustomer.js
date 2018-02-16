@@ -29,7 +29,10 @@ export default class AddCustomer extends Component {
 		this.state = {
 			name: '',
 			email: '',
-			address: ''
+			phone: '',
+			address: '',
+			latitude: '',
+			longitude: ''
 		}
 	}
 
@@ -37,7 +40,9 @@ export default class AddCustomer extends Component {
 		const { params } = this.props.navigation.state
 		this.setState({
 			name: params.name,
-			address: params.formatted_address
+			address: params.formatted_address,
+			latitude: params.geometry.location.lat,
+			longitude: params.geometry.location.lng
 		})
 	}
 
@@ -48,9 +53,7 @@ export default class AddCustomer extends Component {
 				<Button
 					primary
 					style={styles.button}
-					onPress={() =>
-						this.validationLogin()
-					}>
+					onPress={() => this.validationEmail()}>
 					<LinearGradient
 						colors={['#20E6CD', '#2D38F9']}
 						style={styles.linearGradient}>
@@ -58,18 +61,18 @@ export default class AddCustomer extends Component {
 					</LinearGradient>
 				</Button>
 			)
-		} else {
-			return (
-				<Button
-					primary
-					style={styles.buttonBefore}>
-						<Text style={styles.buttonText}>NEXT</Text>
-				</Button>
-			)
 		}
+
+		return (
+			<Button
+				primary
+				style={styles.buttonBefore}>
+					<Text style={styles.buttonText}>NEXT</Text>
+			</Button>
+		)
 	}
 
-	validationLogin() {
+	validationEmail() {
 		const { email, password } = this.state
 		if (!isEmail(email)) {
 			Alert.alert('Gagal', 'Silahkan masukan alamat email yang valid')
@@ -116,6 +119,10 @@ export default class AddCustomer extends Component {
 							<Input value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ paddingVertical: 15 }} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
+							<Label>Phone</Label>
+							<Input value={this.state.phone} onChangeText={(phone) => this.setState({phone})} style={{ paddingVertical: 15 }} />
+						</Item>
+						<Item stackedLabel style={styles.itemForm}>
 							<Label>Address</Label>
 							<Input disabled value={this.state.address} multiline={true} style={{ paddingVertical: 15 }} />
 						</Item>
@@ -124,7 +131,7 @@ export default class AddCustomer extends Component {
 						<Button
 							primary
 							style={styles.buttonBack}
-							onPress={() => this.props.navigation.navigate('Activity')}>
+							onPress={() => this.props.navigation.goBack()}>
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
 						{this.renderButton()}

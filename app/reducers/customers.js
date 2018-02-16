@@ -4,7 +4,8 @@ import {
 	FILTER_CUSTOMERS_WITH_NAME,
 	RECEIVE_CUSTOMER_PLACES,
 	SELECTED_CUSTOMER_PLACE,
-	INPUT_DATA_TO_CUSTOMER
+	INPUT_DATA_TO_CUSTOMER,
+	CHECK_CUSTOMER
 } from '../constants'
 
 export const customers = (state = [], action) => {
@@ -18,6 +19,15 @@ export const customers = (state = [], action) => {
 				...state,
 				action.payload
 			]
+		default:
+			return state
+	}
+}
+
+export const resultCheckCustomer = (state = [], action) => {
+	switch (action.type) {
+		case CHECK_CUSTOMER:
+			return action.payload
 		default:
 			return state
 	}

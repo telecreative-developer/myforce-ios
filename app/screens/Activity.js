@@ -10,7 +10,8 @@ import {
 	Animated,
 	Easing,
 	BackHandler,
-	TouchableHighlight
+	TouchableHighlight,
+	Alert
 } from 'react-native'
 import {
 	Container,
@@ -39,7 +40,7 @@ import HorizontalJoker from '../components/HorizontalJoker'
 import Modal from 'react-native-modal'
 import defaultAvatar from '../assets/images/default-avatar.png'
 import { connect } from 'react-redux'
-import { fetchCustomers, searchCustomersPlace, selectCustomerPlace } from '../actions/customers'
+import { fetchCustomers, searchCustomersPlace, selectCustomerPlace, checkCustomer } from '../actions/customers'
 import { setNavigate } from '../actions/processor'
 import image from '../assets/images/add-user.png'
 import ornament from '../assets/images/ornament.png'
@@ -71,6 +72,27 @@ class Activity extends Component {
 
 		this.animatedValue = new Animated.Value(400)
 		this.animatedValueDetail = new Animated.Value(0)
+	}
+
+	componentWillReceiveProps(props) {
+		if(props.loading.condition === false &&
+			props.loading.process_on === 'LOADING_CHECK_CUSTOMER' &&
+			props.success.condition === true &&
+			props.success.process_on === 'SUCCESS_CHECK_CUSTOMER') {
+			if(props.resultCheckCustomer.length === 0) {
+				Alert.alert(
+					'Customer not found',
+					`Can't found customer ${props.selectedCustomerPlace.name}, are you want to create new customer?`,
+					[
+						{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+						{text: 'Create New', onPress: () => props.setNavigate('AddCustomer', props.selectedCustomerPlace)},
+					],
+					{ cancelable: false }
+				)
+			}else{
+				Alert.alert('Success', 'Ada data')
+			}
+		}
 	}
 
 	handleShowBoxContent() {
@@ -165,6 +187,12 @@ class Activity extends Component {
 		this.props.searchCustomersPlace(value)
 	}
 
+	handleCheckCustomer() {
+		const { lat, lng } = this.props.selectedCustomerPlace.geometry.location
+		const { accessToken } = this.props.sessionPersistance
+		this.props.checkCustomer(lat, lng, accessToken)
+	}
+
 	key = (item, index) => index
 
 	renderItemsCustomer = ({ item }) => (
@@ -250,9 +278,13 @@ class Activity extends Component {
 						<Text style={styles.addCustomer}>Add Customer Confirmation</Text>
 						<Text style={styles.customerName}>{this.props.selectedCustomerPlace.name}</Text>
 						<Text style={styles.customerAddress}>{this.props.selectedCustomerPlace.formatted_address}</Text>
-						<TouchableOpacity style={styles.centerButton} onPress={() => this.props.setNavigate('AddCustomer', this.props.selectedCustomerPlace)}>
+						<TouchableOpacity style={styles.centerButton} onPress={() => this.handleCheckCustomer()}>
 							<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
-								<Text style={styles.buttonText}>CHECK IN</Text>
+								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_CHECK_CUSTOMER' ? (
+									<Text style={styles.buttonText}>LOADING...</Text>
+								) : (
+									<Text style={styles.buttonText}>CHECK IN</Text>
+								)}
 							</LinearGradient>
 						</TouchableOpacity>
 					</Animated.View>
@@ -304,16 +336,20 @@ class Activity extends Component {
 
 const mapStateToProps = state => ({
 	customers: state.customers,
+	loading: state.loading,
+	success: state.success,
 	sessionPersistance: state.sessionPersistance,
 	resultCustomersPlace: state.resultCustomersPlace,
-	selectedCustomerPlace: state.selectedCustomerPlace
+	selectedCustomerPlace: state.selectedCustomerPlace,
+	resultCheckCustomer: state.resultCheckCustomer
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 	selectCustomerPlace: (placeId) => dispatch(selectCustomerPlace(placeId)),
-	searchCustomersPlace: input => dispatch(searchCustomersPlace(input))
+	searchCustomersPlace: input => dispatch(searchCustomersPlace(input)),
+	checkCustomer: (lat, lng, accessToken) => dispatch(checkCustomer(lat, lng, accessToken))
 })
 
 const styles = StyleSheet.create({

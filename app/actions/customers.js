@@ -3,17 +3,19 @@ import {
 	FILTER_CUSTOMERS_WITH_ID,
 	RECEIVE_CUSTOMER_PLACES,
 	SELECTED_CUSTOMER_PLACE,
-	INPUT_DATA_TO_CUSTOMER
+	INPUT_DATA_TO_CUSTOMER,
+	CHECK_CUSTOMER
 } from '../constants'
 import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
 import { GOOGLE_PLACE_QUERY_AUTOCOMPLETE_KEY } from 'react-native-dotenv'
+import { postPICS } from '../actions/pics'
 
-export const addCustomer = (data, accessToken) => {
+export const postCustomer = (data, dataPIC, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_ADD_CUSTOMER'))
 		try {
-			await fetch(`${url}/customers`, {
+			const response = await fetch(`${url}/customers`, {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
@@ -21,6 +23,10 @@ export const addCustomer = (data, accessToken) => {
 					Authorization: accessToken
 				},
 				body: JSON.stringify(data)
+			})
+			const dataCustomer = await response.json()
+			await dataPIC.forEach((data, index) => {
+				dispatch(postPICS({...data, id_customer: dataCustomer.id_customer}, accessToken))
 			})
 			await dispatch(setSuccess(false, 'SUCCESS_ADD_CUSTOMER'))
 			await dispatch(setLoading(false, 'LOADING_ADD_CUSTOMER'))
@@ -125,4 +131,33 @@ export const inputDataToCustomer = (data) => ({
 		latitude: data.geometry.location.lat,
 		longitude: data.geometry.location.lng
 	}
+})
+
+export const checkCustomer = (lat, lng, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_CHECK_CUSTOMER'))
+		try {
+			const response = await fetch(`${url}/customers?latitude=${lat}&longitude=${lng}`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				}
+			})
+			const data = await response.json()
+			await dispatch(checkCustomerSuccess(data.data))
+			await dispatch(setSuccess(true, 'SUCCESS_CHECK_CUSTOMER'))
+			await dispatch(setLoading(false, 'LOADING_CHECK_CUSTOMER'))
+			await dispatch(setSuccess(false, 'SUCCESS_CHECK_CUSTOMER'))
+		} catch (e) {
+			await dispatch(setFailed(true, 'FAILED_CHECK_CUSTOMER', e))
+			await dispatch(setLoading(false, 'LOADING_CHECK_CUSTOMER'))
+		}
+	}
+}
+
+const checkCustomerSuccess = (data) => ({
+	type: CHECK_CUSTOMER,
+	payload: data
 })

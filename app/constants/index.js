@@ -30,4 +30,7 @@ export const INPUT_DATA_TO_CUSTOMER = 'INPUT_DATA_TO_CUSTOMER'
 
 export const RECEIVE_PICS_SUCCESS = 'RECEIVE_PICS_SUCCESS'
 
-export const CHOOSE_PIC = 'CHOOSE_PIC'
+export const CHECK_CUSTOMER = 'CHECK_CUSTOMER'
+
+export const ADD_PIC = 'ADD_PIC'
+export const REMOVE_PIC = 'REMOVE_PIC'

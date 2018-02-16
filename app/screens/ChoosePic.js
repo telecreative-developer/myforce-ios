@@ -16,43 +16,31 @@ import {
   Picker,
   List,
 	ListItem,
-	CheckBox
+	CheckBox,
+	Icon
 } from 'native-base'
-import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
-import { fetchPICs, choosePIC } from '../actions/pics'
+import { removePic } from '../actions/pics'
 
 const { height, width } = Dimensions.get('window')
 
 class ChoosePic extends Component {
 
-	componentWillMount() {
-		this.props.fetchPICs(this.props.sessionPersistance.accessToken)
-	}
-
-	handleChoosePIC(data, checked) {
-		if(!data.checked) {
-			if(this.props.pics.filter(d => d.checked === true).length < 3) {
-				this.props.choosePIC(data, true)
-			}
-		}else if(data.checked) {
-			this.props.choosePIC(data, false)
-		}
-	}
-
-  key = (item, index) => item.id_pic
+  key = (item, index) => index
   
   renderItems = ({ item }) => (
-		<ListItem style={{paddingHorizontal: 10}} onPress={() => this.handleChoosePIC(item, item.checked ? false : true)}>
+		<ListItem style={{paddingHorizontal: 10}}>
 			<Body>
 				<Text style={{fontSize: 14, fontWeight: 'bold', textAlign: 'left'}}>{item.name}</Text>
 				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.job}</Text>
 				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.company}</Text>
 			</Body>
 			<Right>
-				<CheckBox checked={item.checked} />
+				<Button onPress={() => this.props.removePic(item)}>
+					<Icon name='close' />
+				</Button>
 			</Right>
 		</ListItem>
   )
@@ -68,20 +56,20 @@ class ChoosePic extends Component {
 						</Button>
 					</Left>
 					<Body>
-						<Text style={styles.title}>CHOOSE PIC ({this.props.pics.filter(d => d.checked === true).length})</Text>
+						<Text style={styles.title}>CHOOSE PIC ({this.props.pics.length})</Text>
 					</Body>
 					<Right>
-						<Button transparent badge onPress={() => this.props.navigation.navigate('AddCustomerPreview')} style={{paddingRight: 0}}>
-              <Text style={styles.back}>Save</Text>
-						</Button>
+						{this.props.pics.length === 0 ? (
+							<Button transparent badge style={{paddingRight: 0}}>
+								<Text note style={styles.back}>Preview</Text>
+							</Button>
+						) : (
+							<Button transparent badge onPress={() => this.props.navigation.navigate('AddCustomerPreview', this.props.navigation.state.params)} style={{paddingRight: 0}}>
+								<Text note style={styles.back}>Preview</Text>
+							</Button>
+						)}
 					</Right>
 				</Header>
-        <View style={styles.searchView}>
-          <Item style={styles.searchForm} rounded>
-            <Input placeholder="Search" />
-            <Icon size={25} name="ios-search" />
-          </Item>
-        </View>
         <View style={styles.buttonView}>
           <Button
             bordered
@@ -93,7 +81,7 @@ class ChoosePic extends Component {
         </View>
 				<Content style={styles.content}>
           <FlatList 
-            data={this.props.pics.sort((a, b) => a.id_pic - b.id_pic)}
+            data={this.props.pics.reverse()}
             keyExtractor={this.key}
             renderItem={this.renderItems}
           />
@@ -109,8 +97,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-	fetchPICs: (accessToken) => dispatch(fetchPICs(accessToken)),
-	choosePIC: (data, status) => dispatch(choosePIC(data, status))
+	removePic: (data) => dispatch(removePic(data))
 })
 
 const styles = StyleSheet.create({

@@ -16,28 +16,46 @@ import {
 	Picker
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 import image from '../assets/images/add-user.png'
 import LinearGradient from 'react-native-linear-gradient'
+import { postCustomer } from '../actions/customers'
 
 const { height, width } = Dimensions.get('window')
 
-export default class AddCustomerPreview extends Component {
+class AddCustomerPreview extends Component {
 	constructor() {
 		super()
 
 		this.state = {
-			data: [
-				{
-					picName: 'Nando Reza Pratama'
-				},
-				{
-					picName: 'Nando Reza Pratama'
-				},
-				{
-					picName: 'Nando Reza Pratama'
-				}
-			]
+			id: '',
+			name: '',
+			email: '',
+			phone: '',
+			address: '',
+			latitude: '',
+			longitude: ''
 		}
+	}
+
+	componentWillReceiveProps(props) {
+		if(props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_CUSTOMER') {
+			this.props.navigation.navigate('CustomerProfile')
+		}
+	}
+
+	componentWillMount() {
+		const { params } = this.props.navigation.state
+		const { id } = this.props.sessionPersistance
+		this.setState({
+			id: id,
+			name: params.name,
+			email: params.email,
+			phone: params.phone,
+			address: params.address,
+			latitude: params.latitude,
+			longitude: params.longitude
+		})
 	}
 
 	key = (item,index) => index
@@ -45,9 +63,14 @@ export default class AddCustomerPreview extends Component {
 	renderItems = ({item}) => (
 		<View style={styles.headerDirection}>
 			<Icon name="md-contact" size={18} />
-			<Text style={styles.data}>{item.picName}</Text>
+			<Text style={styles.data}>{item.name}</Text>
 		</View>
 	)
+
+	async handlePostCustomer() {
+		const { sessionPersistance } = await this.props
+		await this.props.postCustomer(this.state, this.props.pics, sessionPersistance.accessToken)
+	}
 
 	render() {
 		return (
@@ -72,34 +95,42 @@ export default class AddCustomerPreview extends Component {
 					<Form>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label>Customer Name</Label>
-							<Input value="PT Udemy" />
+							<Input disabled value={this.state.name} />
+						</Item>
+						<Item stackedLabel disabled style={styles.itemForm}>
+							<Label>Email</Label>
+							<Input disabled value={this.state.email} />
+						</Item>
+						<Item stackedLabel disabled style={styles.itemForm}>
+							<Label>Phone</Label>
+							<Input disabled value={this.state.phone} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label>Address</Label>
 							<Input
+								disabled
 								multiline={true}
-								value="Jl. Boulevard Six"
+								value={this.state.address}
 								style={{ paddingVertical: 15 }}
 							/>
 						</Item>
 					</Form>
 					<Text style={{color: '#575757', fontSize: 14, marginLeft: 15, marginTop: 20, marginBottom: 5}}>PIC Name</Text>
 					<FlatList 
-							data={this.state.data}
-							keyExtractor={this.key}
-							renderItem={this.renderItems}
-						/>
+						data={this.props.pics}
+						keyExtractor={this.key}
+						renderItem={this.renderItems} />
 					<View style={styles.buttonView}>
 						<Button
 							primary
 							style={styles.buttonBack}
-							onPress={() => this.props.navigation.navigate('AddCustomer')}>
+							onPress={() => this.props.navigation.goBack()}>
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
 						<Button
 							primary
 							style={styles.button}
-							onPress={() => this.props.navigation.navigate('CustomerProfile')}>
+							onPress={() => this.handlePostCustomer()}>
 							<LinearGradient
 								colors={['#20E6CD', '#2D38F9']}
 								style={styles.linearGradient}>
@@ -112,6 +143,15 @@ export default class AddCustomerPreview extends Component {
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+	sessionPersistance: state.sessionPersistance,
+	pics: state.pics
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	postCustomer: (data, dataPic, accessToken) => dispatch(postCustomer(data, dataPic, accessToken))
+})
 
 const styles = StyleSheet.create({
 	backHeader: {
@@ -203,3 +243,5 @@ const styles = StyleSheet.create({
 		marginTop: 10
 	},
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerPreview)

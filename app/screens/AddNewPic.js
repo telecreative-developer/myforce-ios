@@ -35,18 +35,12 @@ class AddNewPic extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    if(props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_PIC') {
-      Alert.alert('Success', 'New PIC successfully added')
-      this.props.navigation.goBack()
-    }
-  }
-
   handleAddPic() {
     const { name, email, phone, address, job } = this.state
     const { accessToken } = this.props.sessionPersistance
 
     this.props.addPIC({name, company: this.props.selectedCustomerPlace.name, job, email, phone, address}, accessToken)
+    this.props.navigation.goBack()
   }
 
   render() {

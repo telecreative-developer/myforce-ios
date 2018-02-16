@@ -4,7 +4,8 @@ import { loading, success, failed, navigate, activePageHome } from './processor'
 import {
 	customers,
 	resultCustomersPlace,
-	selectedCustomerPlace
+	selectedCustomerPlace,
+	resultCheckCustomer
 } from './customers'
 import { sessionPersistance } from './session'
 import { regionals } from './regionals'
@@ -31,6 +32,7 @@ const reducers = persistCombineReducers(config, {
 	customers,
 	resultCustomersPlace,
 	selectedCustomerPlace,
+	resultCheckCustomer,
 	sessionPersistance,
 	regionals,
 	products,
