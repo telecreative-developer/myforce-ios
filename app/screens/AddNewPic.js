@@ -33,6 +33,31 @@ class AddNewPic extends Component {
       address: '',
       job: ''
     }
+  } 
+
+  renderButton() {
+    const { name, email, phone, address, job } = this.state
+    if (!isEmpty(name) && !isEmpty(job) && !isEmpty(phone) && !isEmpty(email) && !isEmpty(address) && isEmail(email)) {
+      return (
+        <Button
+          primary
+          style={styles.button}
+          onPress={() => this.handleAddPic()}>
+          <LinearGradient
+            colors={['#20E6CD', '#2D38F9']}
+            style={styles.linearGradient}>
+            <Text style={styles.buttonText}>NEXT</Text>
+          </LinearGradient>
+        </Button>
+      )
+    }
+    return (
+      <Button
+        primary
+        style={styles.buttonBefore}>
+          <Text style={styles.buttonText}>NEXT</Text>
+      </Button>
+    )
   }
 
   handleAddPic() {
@@ -79,7 +104,7 @@ class AddNewPic extends Component {
             </Item>
             <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Email</Label>
-              <Input value={this.state.email} onChangeText={(email) => this.setState({email})} />
+              <Input value={this.state.email} onChangeText={(email) => this.setState({email})} autoCapitalize='none'/>
             </Item>
             <Item stackedLabel style={styles.itemForm}>
               <Label>PIC Address</Label>
@@ -90,13 +115,7 @@ class AddNewPic extends Component {
             <Button primary style={styles.buttonBack} onPress={() => this.props.navigation.goBack()}>
               <Text style={styles.buttonText}>BACK</Text>
             </Button>
-            <Button primary style={styles.button} onPress={() => this.handleAddPic()}>
-              <LinearGradient 
-                colors={['#20E6CD', '#2D38F9']} 
-                style={styles.linearGradient}>
-                <Text style={styles.buttonText}>SUBMIT</Text>
-              </LinearGradient>
-            </Button>
+            {this.renderButton()}
           </View>
         </Content>
       </Container>
@@ -162,6 +181,17 @@ const styles = StyleSheet.create({
     paddingTop: 0, 
     paddingBottom: 0,
   },
+  buttonBefore: {
+		width: '30%',
+		paddingTop: 0,
+		paddingBottom: 0,
+		borderRadius: 0,
+		backgroundColor: 'transparent',
+		borderColor: '#2D38F9',
+		borderWidth: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
   buttonText: {
     fontWeight: '900', 
     fontSize: 16, 

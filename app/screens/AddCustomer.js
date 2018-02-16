@@ -47,8 +47,8 @@ export default class AddCustomer extends Component {
 	}
 
 	renderButton() {
-		const { name, email } = this.state
-		if (!isEmpty(name) && !isEmpty(email) && isEmail(email)) {
+		const { name, email, phone } = this.state
+		if (!isEmpty(name) && !isEmpty(email) && !isEmpty(phone) && isEmail(email)) {
 			return (
 				<Button
 					primary
@@ -116,11 +116,11 @@ export default class AddCustomer extends Component {
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Email</Label>
-							<Input value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ paddingVertical: 15 }} />
+							<Input value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ paddingVertical: 15 }} autoCapitalize = 'none' uppercase={false}/>
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Phone</Label>
-							<Input value={this.state.phone} onChangeText={(phone) => this.setState({phone})} style={{ paddingVertical: 15 }} />
+							<Input value={this.state.phone} onChangeText={(phone) => this.setState({phone})} style={{ paddingVertical: 15 }} keyboardType='numeric'/>
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Address</Label>
