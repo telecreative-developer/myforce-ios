@@ -14,9 +14,9 @@ const ContactCard = props => {
 					<H3 style={styles.textTitle}>{props.title}</H3>
 					<View style={styles.viewPerson}>
 						<Icon name="ios-person" color="#000000" size={15} />
-						<Text style={styles.textPerson}>{props.person}</Text>
+						<Text style={styles.textPerson}>{props.pics}</Text>
 					</View>
-					<Text style={styles.text}>{props.description}</Text>
+					<Text style={styles.text}>{props.pipelines}</Text>
 				</View>
 			</View>
 		</View>

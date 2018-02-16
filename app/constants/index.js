@@ -36,3 +36,5 @@ export const ADD_PIC = 'ADD_PIC'
 export const REMOVE_PIC = 'REMOVE_PIC'
 
 export const PICS_CUSTOMERS = 'PICS_CUSTOMERS'
+
+export const FETCH_PICS_SUCCESS = 'FETCH_PICS_SUCCESS'

@@ -1,4 +1,4 @@
-import { ADD_PIC, REMOVE_PIC, PICS_CUSTOMERS } from '../constants'
+import { ADD_PIC, REMOVE_PIC, PICS_CUSTOMERS, FETCH_PICS_SUCCESS } from '../constants'
 
 export const pics = (state = [], action) => {
 	switch (action.type) {
@@ -8,7 +8,16 @@ export const pics = (state = [], action) => {
 				action.payload
 			]
 		case REMOVE_PIC:
-			return state.filter(data => data.id_pic !== action.payload.id_pic)
+			return state.filter(data => data.pic_id !== action.payload.pic_id)
+		default:
+			return state
+	}
+}
+
+export const resultPics = (state = [], action) => {
+	switch (action.type) {
+		case FETCH_PICS_SUCCESS:
+			return action.payload
 		default:
 			return state
 	}

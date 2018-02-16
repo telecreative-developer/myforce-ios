@@ -55,6 +55,7 @@ class CustomerProfile extends Component {
 		super()
 
 		this.state = {
+			id_pic: '',
 			isModalVisible: false,
 			modalNewPipeline: false,
 			modalPic: false,
@@ -64,19 +65,20 @@ class CustomerProfile extends Component {
 		}
 	}
 
-	componentWillMount() {
-		this.props.fetchPipelines(
+	async componentWillMount() {
+		await this.props.fetchPipelines(
 			this.props.navigation.state.params.id_customer,
 			this.props.sessionPersistance.accessToken
 		)
-		this.props.fetchPicsWithIDCustomer(
+		await this.props.fetchPicsWithIDCustomer(
 			this.props.navigation.state.params.id_customer,
 			this.props.sessionPersistance.accessToken
 		)
-		this.props.fetchPipelinesRealtime(
+		await this.props.fetchPipelinesRealtime(
 			this.props.navigation.state.params.id_customer,
 			this.props.sessionPersistance.accessToken
 		)
+		await this.setState({id_pic: this.props.picsCustomers[0].id_pic})
 	}
 
 	async handleSubmitPipeline() {
@@ -87,6 +89,7 @@ class CustomerProfile extends Component {
 					pipeline: this.state.pipeline,
 					id_status: 0,
 					id_customer: this.props.navigation.state.params.id_customer,
+					id_pic: this.state.id_pic,
 					id: this.props.sessionPersistance.id
 				},
 				this.props.sessionPersistance.accessToken
@@ -137,9 +140,9 @@ class CustomerProfile extends Component {
 
 	key = (item, index) => index
 
-	handleBackButton() {
-		this.props.setNavigate('')
-		this.props.navigation.goBack()
+	async handleBackButton() {
+		await this.props.setNavigate('')
+		await this.props.navigation.navigate('Home')
 	}
 
 	renderItemsActive = ({ item }) => (
@@ -157,7 +160,9 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						<Text style={styles.data}>{item.pic}</Text>
+						{item.pics.map(data => (
+							<Text style={styles.data}>{data.name}</Text>
+						))}
 					</View>
 				</View>
 				<View>
@@ -185,7 +190,9 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						<Text style={styles.data}>{item.pic}</Text>
+						{item.pics.map(data => (
+							<Text style={styles.data}>{data.name}</Text>
+						))}
 					</View>
 				</View>
 				<View>
@@ -213,7 +220,9 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						<Text style={styles.data}>{item.pic}</Text>
+						{item.pics.map(data => (
+							<Text style={styles.data}>{data.name}</Text>
+						))}
 					</View>
 				</View>
 				<View>
@@ -227,9 +236,7 @@ class CustomerProfile extends Component {
 	)
 
 	renderItemsPic = ({ item }) => (
-		<TouchableOpacity
-			style={styles.headerDirection}
-			onPress={() => this.setState({ modalPic: true })}>
+		<TouchableOpacity style={styles.headerDirection}>
 			<Icon name="md-contact" size={15} />
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
@@ -260,12 +267,11 @@ class CustomerProfile extends Component {
 										style={styles.picker}
 										mode="dropdown"
 										iosHeader="PIC Name"
-										selectedValue={this.state.picName}
-										onValueChange={picName =>
-											this.setState({ picName })
-										}>
-										<Item label="Nando Reza Pratama" value="Nando Reza Pratama" />
-										<Item label="Kevin Hermawan" value="Kevin Hermawan" />
+										selectedValue={this.state.id_pic}
+										onValueChange={id_pic => this.setState({ id_pic })}>
+										{this.props.picsCustomers.map((data, index) => (
+											<Item key={index} label={data.name} value={data.id_pic} />
+										))}
 									</Picker>
 								</View>
 							</Form>
