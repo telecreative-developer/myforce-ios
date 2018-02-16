@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import ContactCard from '../components/ContactCard'
 import { connect } from 'react-redux'
 import { filterCustomersWithId } from '../actions/customers'
-import { fetchPipelines } from '../actions/pipelines'
+import { fetchPipelinesWithUserId } from '../actions/pipelines'
 import { fetchPics } from '../actions/pics'
 import FlatList from 'searchable-flatlist'
 import { setNavigate } from '../actions/processor'
@@ -39,7 +39,7 @@ class CustomerList extends Component {
 		const { id, accessToken } = this.props.sessionPersistance
 		this.props.filterCustomersWithId(id)
 		this.props.fetchPics(accessToken)
-		this.props.fetchPipelines(id, accessToken)
+		this.props.fetchPipelinesWithUserId(id, accessToken)
 	}
 
 	key = (item, index) => index
@@ -57,8 +57,8 @@ class CustomerList extends Component {
 								<Text style={styles.textPerson}>{d.name}</Text>
 							</View>
 						))}
-						{this.props.pipelines.filter(data => data.id_customer === item.id_customer).map((d, index) => (
-							<Text key={index} style={styles.text}>{d.name}</Text>
+						{this.props.pipelinesWithUserId.filter(data => data.id_customer === item.id_customer).splice(0, 1).map((d, index) => (
+							<Text style={styles.text}>{d.pipeline}</Text>
 						))}
 					</View>
 				</View>
@@ -121,7 +121,7 @@ const mapStateToProps = state => {
 		customers: state.customers,
 		sessionPersistance: state.sessionPersistance,
 		resultPics: state.resultPics,
-		pipelines: state.pipelines
+		pipelinesWithUserId: state.pipelinesWithUserId
 	}
 }
 
@@ -131,7 +131,7 @@ const mapDispatchToProps = dispatch => {
 		filterCustomersWithId: id => dispatch(filterCustomersWithId(id)),
 		filterCustomersWithName: name => dispatch(filterCustomersWithName(name)),
 		fetchPics: (accessToken) => dispatch(fetchPics(accessToken)),
-		fetchPipelines: (id, accessToken) => dispatch(fetchPipelines(id, accessToken))
+		fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
 	}
 }
 

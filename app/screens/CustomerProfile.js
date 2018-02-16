@@ -160,8 +160,8 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						{item.pics.map(data => (
-							<Text style={styles.data}>{data.name}</Text>
+						{item.pics.map((data, index) => (
+							<Text key={index} style={styles.data}>{data.name}</Text>
 						))}
 					</View>
 				</View>
@@ -190,8 +190,8 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						{item.pics.map(data => (
-							<Text style={styles.data}>{data.name}</Text>
+						{item.pics.map((data, index) => (
+							<Text key={index} style={styles.data}>{data.name}</Text>
 						))}
 					</View>
 				</View>
@@ -220,8 +220,8 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						{item.pics.map(data => (
-							<Text style={styles.data}>{data.name}</Text>
+						{item.pics.map((data, index) => (
+							<Text key={index} style={styles.data}>{data.name}</Text>
 						))}
 					</View>
 				</View>

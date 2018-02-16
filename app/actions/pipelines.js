@@ -1,4 +1,4 @@
-import { FETCH_PIPELINES_SUCCESS } from '../constants'
+import { FETCH_PIPELINES_SUCCESS, FETCH_PIPELINES_WITH_USER_ID_SUCCESS } from '../constants'
 import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
 import { app } from '../lib/socket'
@@ -51,6 +51,32 @@ export const fetchPipelines = (id, accessToken) => {
 	}
 }
 
+export const fetchPipelinesWithUserId = (id, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
+		try {
+			const response = await fetch(
+				`${url}/pipelines?id=${id}&$sort[createdAt]=-1`,
+				{
+					method: 'GET',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+						Authorization: accessToken
+					}
+				}
+			)
+			const data = await response.json()
+			await dispatch(fetchPipelinesWithUserIdSuccess(data.data))
+			await dispatch(setSuccess(false, 'SUCCESS_FETCH_PIPELINES_WITH_USER_ID'))
+			await dispatch(setLoading(false, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
+		} catch (e) {
+			await dispatch(setFailed(true, 'FAILED_FETCH_PIPELINES_WITH_USER_ID', e))
+			await dispatch(setLoading(false, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
+		}
+	}
+}
+
 export const fetchPipelinesRealtime = (id, accessToken) => {
 	return async dispatch => {
 		const pipelines = await app.service('pipelines')
@@ -66,6 +92,13 @@ export const fetchPipelinesRealtime = (id, accessToken) => {
 export const fetchPipelinesSuccess = data => {
 	return {
 		type: FETCH_PIPELINES_SUCCESS,
+		payload: data
+	}
+}
+
+export const fetchPipelinesWithUserIdSuccess = data => {
+	return {
+		type: FETCH_PIPELINES_WITH_USER_ID_SUCCESS,
 		payload: data
 	}
 }

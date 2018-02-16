@@ -12,7 +12,7 @@ import { regionals } from './regionals'
 import { products } from './products'
 import { subproducts } from './subproducts'
 import { users, userRegionRank, userNationRank } from './users'
-import { pipelines } from './pipelines'
+import { pipelines, pipelinesWithUserId } from './pipelines'
 import { pics, picsCustomers, resultPics } from './pics'
 
 const config = {
@@ -24,6 +24,7 @@ const reducers = persistCombineReducers(config, {
 	userRegionRank,
 	userNationRank,
 	pipelines,
+	pipelinesWithUserId,
 	loading,
 	success,
 	failed,
