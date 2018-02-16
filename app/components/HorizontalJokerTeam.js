@@ -28,10 +28,9 @@ const HorizontalJoker = props => {
 				<View style={styles.content}>
 					<Thumbnail source={{ uri: props.avatar }} />
 					<View style={styles.cardHeader}>
-						<H3 style={styles.textTitle}>{props.title}</H3>
+						<H3 style={styles.textTitle}>{props.person}</H3>
 						<View style={styles.viewLocation}>
-							<Icon name="ios-person" color="#ffffff" size={15} />
-							<Text style={styles.textLocation}>{props.person}</Text>
+							<Text style={styles.textLocation}>{props.title}</Text>
 						</View>
 						<View style={styles.cardText}>
 							<Text style={styles.text}>{props.description}</Text>
@@ -70,7 +69,6 @@ const styles = StyleSheet.create({
 	},
 	textLocation: {
 		color: '#ffffff',
-		marginLeft: 5
 	},
 	text: {
 		color: '#ffffff',
