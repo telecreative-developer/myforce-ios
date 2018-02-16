@@ -15,6 +15,7 @@ import {
 	Input,
 	Picker
 } from 'native-base'
+import { NavigationActions } from 'react-navigation'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import image from '../assets/images/add-user.png'
@@ -39,8 +40,12 @@ class AddCustomerPreview extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_PIC') {
-			props.navigation.navigate('CustomerProfile', props.success.payload)
+		if(props.loading.condition === false && props.loading.process_on === 'LOADING_ADD_PIC' && props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_PIC') {
+			const resetAction = NavigationActions.reset({
+				index: 0,
+				actions: [NavigationActions.navigate({ routeName: 'CustomerProfile', params: props.success.payload})]
+			})
+			props.navigation.dispatch(resetAction)
 		}
 	}
 
@@ -53,8 +58,8 @@ class AddCustomerPreview extends Component {
 			email: params.email,
 			phone: params.phone,
 			address: params.address,
-			latitude: params.latitude,
-			longitude: params.longitude
+			latitude: parseFloat(params.latitude).toPrecision(6),
+			longitude: parseFloat(params.longitude).toPrecision(6)
 		})
 	}
 
@@ -127,16 +132,28 @@ class AddCustomerPreview extends Component {
 							onPress={() => this.props.navigation.goBack()}>
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
-						<Button
-							primary
-							style={styles.button}
-							onPress={() => this.handlePostCustomer()}>
-							<LinearGradient
-								colors={['#20E6CD', '#2D38F9']}
-								style={styles.linearGradient}>
-								<Text style={styles.buttonText}>SUBMIT</Text>
-							</LinearGradient>
-						</Button>
+						{this.props.loading.condition === true ? (
+							<Button
+								primary
+								style={styles.button}>
+								<LinearGradient
+									colors={['#20E6CD', '#2D38F9']}
+									style={styles.linearGradient}>
+									<Text style={styles.buttonText}>LOADING...</Text>
+								</LinearGradient>
+							</Button>
+						) : (
+							<Button
+								primary
+								style={styles.button}
+								onPress={() => this.handlePostCustomer()}>
+								<LinearGradient
+									colors={['#20E6CD', '#2D38F9']}
+									style={styles.linearGradient}>
+									<Text style={styles.buttonText}>SUBMIT</Text>
+								</LinearGradient>
+							</Button>
+						)}
 					</View>
 				</Content>
 			</Container>

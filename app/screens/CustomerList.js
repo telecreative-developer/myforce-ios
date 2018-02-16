@@ -5,6 +5,7 @@ import {
 	Content,
 	Header,
 	Left,
+	H3,
 	Body,
 	Right,
 	Thumbnail,
@@ -17,6 +18,8 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import ContactCard from '../components/ContactCard'
 import { connect } from 'react-redux'
 import { filterCustomersWithId } from '../actions/customers'
+import { fetchPipelinesWithUserId } from '../actions/pipelines'
+import { fetchPics } from '../actions/pics'
 import FlatList from 'searchable-flatlist'
 import { setNavigate } from '../actions/processor'
 import defaultAvatar from '../assets/images/default-avatar.png'
@@ -33,7 +36,10 @@ class CustomerList extends Component {
 	}
 
 	componentDidMount() {
-		this.props.filterCustomersWithId(this.props.sessionPersistance.id)
+		const { id, accessToken } = this.props.sessionPersistance
+		this.props.filterCustomersWithId(id)
+		this.props.fetchPics(accessToken)
+		this.props.fetchPipelinesWithUserId(id, accessToken)
 	}
 
 	key = (item, index) => index
@@ -41,11 +47,22 @@ class CustomerList extends Component {
 	renderItems = ({ item }) => (
 		<TouchableOpacity
 			onPress={() => this.props.setNavigate('CustomerProfile', item)}>
-			<ContactCard
-				title={item.name}
-				description={item.description}
-				avatar={item.avatar}
-			/>
+			<View style={styles.card}>
+				<View style={styles.content}>
+					<View style={styles.cardHeader}>
+						<H3 style={styles.textTitle}>{item.name}</H3>
+						{this.props.resultPics.filter(data => data.id_customer === item.id_customer).map((d, index) => (
+							<View style={styles.viewPerson} key={index}>
+								<Icon name="ios-person" color="#000000" size={15} />
+								<Text style={styles.textPerson}>{d.name}</Text>
+							</View>
+						))}
+						{this.props.pipelinesWithUserId.filter(data => data.id_customer === item.id_customer).splice(0, 1).map((d, index) => (
+							<Text style={styles.text}>{d.pipeline}</Text>
+						))}
+					</View>
+				</View>
+			</View>
 		</TouchableOpacity>
 	)
 
@@ -102,7 +119,9 @@ class CustomerList extends Component {
 const mapStateToProps = state => {
 	return {
 		customers: state.customers,
-		sessionPersistance: state.sessionPersistance
+		sessionPersistance: state.sessionPersistance,
+		resultPics: state.resultPics,
+		pipelinesWithUserId: state.pipelinesWithUserId
 	}
 }
 
@@ -110,11 +129,54 @@ const mapDispatchToProps = dispatch => {
 	return {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		filterCustomersWithId: id => dispatch(filterCustomersWithId(id)),
-		filterCustomersWithName: name => dispatch(filterCustomersWithName(name))
+		filterCustomersWithName: name => dispatch(filterCustomersWithName(name)),
+		fetchPics: (accessToken) => dispatch(fetchPics(accessToken)),
+		fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
 	}
 }
 
 const styles = StyleSheet.create({
+	card: {
+		flex: 1,
+		display: 'flex',
+		justifyContent: 'center',
+		borderRadius: 5,
+		height: height / 8,
+		backgroundColor: '#ffffff',
+		marginBottom: '3%'
+	},
+	content: {
+		display: 'flex',
+		flexDirection: 'row',
+		paddingRight: 90,
+		paddingLeft: 20
+	},
+	viewPerson: {
+		flexDirection: 'row',
+		marginTop: 3
+	},
+	textTitle: {
+		color: '#000000',
+		fontSize: 18,
+		fontWeight: 'bold'
+	},
+	textPerson: {
+		color: '#000000',
+		marginLeft: 5,
+		fontSize: 14
+	},
+	text: {
+		color: '#000000',
+		fontSize: 11,
+		marginTop: 5
+	},
+	cardHeader: {
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		marginLeft: 15,
+		paddingBottom: 5
+	},
 	header: {
 		height: 70
 	},

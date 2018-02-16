@@ -1,6 +1,8 @@
-import { ADD_PIC, REMOVE_PIC, PICS_CUSTOMERS } from '../constants'
+import { ADD_PIC, REMOVE_PIC, PICS_CUSTOMERS, FETCH_PICS_SUCCESS } from '../constants'
 import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
+
+let initialIdPic = 0 
 
 export const postPICS = (data, dataCustomer, accessToken) => {
 	return async dispatch => {
@@ -17,7 +19,6 @@ export const postPICS = (data, dataCustomer, accessToken) => {
 			})
 			await dispatch(setSuccess(true, 'SUCCESS_ADD_PIC', dataCustomer))
 			await dispatch(setLoading(false, 'LOADING_ADD_PIC'))
-			await dispatch(setSuccess(false, 'SUCCESS_ADD_PIC'))
 		} catch (e) {
 			await dispatch(setFailed(true, 'FAILED_ADD_PIC', e))
 			await dispatch(setLoading(false, 'LOADING_ADD_PIC'))
@@ -27,7 +28,7 @@ export const postPICS = (data, dataCustomer, accessToken) => {
 
 export const addPIC = (data) => ({
 	type: ADD_PIC,
-	payload: data
+	payload: {pic_id: initialIdPic++, ...data}
 })
 
 export const removePic = (data) => ({
@@ -62,5 +63,33 @@ export const fetchPicsWithIDCustomer = (id_customer, accessToken) => {
 
 export const fetchPicsWithIDCustomerSuccess = (data) => ({
 	type: PICS_CUSTOMERS,
+	payload: data
+})
+
+export const fetchPics = (accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_FETCH_PICS'))
+		try {
+			const response = await fetch(`${url}/pics`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				}
+			})
+			const data = await response.json()
+			await dispatch(fetchPicsSuccess(data.data))
+			await dispatch(setSuccess(true, 'SUCCESS_FETCH_PICS'))
+			await dispatch(setLoading(false, 'LOADING_FETCH_PICS'))
+		} catch (e) {
+			await dispatch(setFailed(true, 'FAILED_FETCH_PICS', e))
+			await dispatch(setLoading(false, 'LOADING_FETCH_PICS'))
+		}
+	}
+}
+
+export const fetchPicsSuccess = (data) => ({
+	type: FETCH_PICS_SUCCESS,
 	payload: data
 })

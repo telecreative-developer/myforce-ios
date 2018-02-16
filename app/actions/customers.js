@@ -137,7 +137,7 @@ export const checkCustomer = (lat, lng, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_CHECK_CUSTOMER'))
 		try {
-			const response = await fetch(`${url}/customers?latitude=${lat}&longitude=${lng}`, {
+			const response = await fetch(`${url}/customers?latitude=${parseFloat(lat).toPrecision(6)}&longitude=${parseFloat(lng).toPrecision(6)}`, {
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',
