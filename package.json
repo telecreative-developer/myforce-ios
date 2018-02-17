@@ -9,7 +9,7 @@
   "dependencies": {
     "feathers-client": "^2.4.0",
     "moment": "^2.20.1",
-    "native-base": "^2.3.5",
+    "native-base": "^2.3.9",
     "react": "16.0.0",
     "react-native": "0.51.0",
     "react-native-linear-gradient": "^2.4.0",
@@ -19,15 +19,15 @@
     "react-native-pathjs-charts": "0.0.33",
     "react-native-step-indicator": "0.0.7",
     "react-native-timeline-listview": "^0.2.2",
-    "react-native-vector-icons": "^4.4.3",
-    "react-navigation": "^1.0.0-beta.22",
+    "react-native-vector-icons": "^4.5.0",
+    "react-navigation": "^1.0.3",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "redux-persist": "^5.4.0",
+    "redux-persist": "^5.8.0",
     "redux-thunk": "^2.2.0",
     "searchable-flatlist": "0.0.3",
     "socket.io-client": "^2.0.4",
-    "validator": "^9.2.0"
+    "validator": "^9.4.0"
   },
   "devDependencies": {
     "babel-jest": "22.0.4",

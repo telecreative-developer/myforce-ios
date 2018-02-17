@@ -16,6 +16,7 @@ export const postPipeline = (data, accessToken) => {
 				},
 				body: JSON.stringify(data)
 			})
+			await dispatch(fetchPipelines(data.id_customer, accessToken))
 			await dispatch(setSuccess(false, 'POST_PIPELINE'))
 			await dispatch(setLoading(false, 'POST_PIPELINE'))
 		} catch (e) {
