@@ -58,7 +58,7 @@ class CustomerList extends Component {
 							</View>
 						))}
 						{this.props.pipelinesWithUserId.filter(data => data.id_customer === item.id_customer).splice(0, 1).map((d, index) => (
-							<Text style={styles.text}>{d.pipeline}</Text>
+							<Text key={index} style={styles.text}>{d.pipeline}</Text>
 						))}
 					</View>
 				</View>

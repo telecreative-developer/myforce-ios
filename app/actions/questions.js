@@ -18,7 +18,7 @@ export const fetchQuestionWithStep = (step, accessToken) => {
 				}
 			)
 			const data = await response.json()
-			await dispatch(fetchQuestionsSuccess(data.data))
+			await dispatch(fetchQuestionsSuccess(data.data[0]))
 			await dispatch(setSuccess(false, 'SUCCESS_FETCH_QUESTION_WITH_STEP'))
 			await dispatch(setLoading(false, 'LOADING_FETCH_QUESTION_WITH_STEP'))
 		} catch (e) {

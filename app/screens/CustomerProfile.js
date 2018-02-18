@@ -61,7 +61,8 @@ class CustomerProfile extends Component {
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
-			picName: 'Nando Reza Pratama'
+			id_pipeline: '',
+			step: ''
 		}
 	}
 
@@ -81,6 +82,12 @@ class CustomerProfile extends Component {
 		await this.setState({id_pic: this.props.picsCustomers[0].id_pic})
 	}
 
+	componentWillReceiveProps(props) {
+		if(props.success.condition === true && props.success.process_on === 'POST_PIPELINE') {
+			Alert.alert('Success Add Pipeline', 'Your pipeline has been added')
+		}
+	}
+
 	async handleSubmitPipeline() {
 		if (!isEmpty(this.state.pipeline)) {
 			await this.setState({ modalNewPipeline: false })
@@ -93,7 +100,6 @@ class CustomerProfile extends Component {
 				},
 				this.props.sessionPersistance.accessToken
 			)
-			await Alert.alert('Success Add Pipeline', 'Your pipeline has been added')
 			await this.setState({ pipeline: '' })
 		}
 	}
@@ -144,6 +150,15 @@ class CustomerProfile extends Component {
 		await this.props.navigation.navigate('Home')
 	}
 
+	handleSetStep(step, id_pipeline) {
+		this.setState({isModalVisible: true, step, id_pipeline})
+	}
+
+	confirmToNextStep() {
+		this.setState({ isModalVisible: false })
+		this.props.navigation.navigate('Stepper', {step: this.state.step, id_pipeline: this.state.id_pipeline})
+	}
+
 	renderItemsActive = ({ item }) => (
 		<View style={styles.customerPipeline}>
 			<View style={styles.pipelineContent}>
@@ -166,9 +181,8 @@ class CustomerProfile extends Component {
 				</View>
 				<View>
 					<PipelineProgress
-						onPress={() => this.setState({ isModalVisible: true })}
-						currentPosition={item.step-1}
-					/>
+						onPress={() => this.handleSetStep(item.step, item.id_pipeline)}
+						currentPosition={item.step-1} />
 				</View>
 			</View>
 		</View>
@@ -196,7 +210,7 @@ class CustomerProfile extends Component {
 				</View>
 				<View>
 					<PipelineProgress
-						onPress={() => this.setState({ isModalVisible: true })}
+						onPress={() => this.handleSetStep(item.step, item.id_pipeline)}
 						currentPosition={item.step-1}
 					/>
 				</View>
@@ -226,7 +240,7 @@ class CustomerProfile extends Component {
 				</View>
 				<View>
 					<PipelineProgress
-						onPress={() => this.setState({ isModalVisible: true })}
+						onPress={() => this.handleSetStep(item.step, item.id_pipeline)}
 						currentPosition={item.step-1}
 					/>
 				</View>
@@ -290,7 +304,6 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
-
 				<Modal isVisible={this.state.modalPic}>
 					<View style={styles.modalWrapperAddPipeline}>
 						<View style={styles.imageModal}>
@@ -349,8 +362,7 @@ class CustomerProfile extends Component {
 										'https://4.imimg.com/data4/TA/RW/MY-5777330/xerox-photocopier-machine-250x250.jpg'
 								}}
 								imageStyle={styles.cardImage}
-								style={styles.card}
-							/>
+								style={styles.card} />
 							<View
 								style={{
 									flex: 1,
@@ -369,17 +381,13 @@ class CustomerProfile extends Component {
 									</Text>
 								</Button>
 								<Button
-									onPress={() => {
-										this.setState({ isModalVisible: false })
-										navigate('FirstStepper')
-									}}>
+									onPress={() => this.confirmToNextStep()}>
 									<Text style={styles.modalYesButton}>Take the next step.</Text>
 								</Button>
 							</FooterTab>
 						</Footer>
 					</View>
 				</Modal>
-
 				<Header style={styles.header}>
 					<Left style={{ flexDirection: 'row' }}>
 						<Button transparent onPress={() => this.handleBackButton()}>
@@ -502,7 +510,8 @@ const mapStateToProps = state => {
 	return {
 		pipelines: state.pipelines,
 		sessionPersistance: state.sessionPersistance,
-		picsCustomers: state.picsCustomers
+		picsCustomers: state.picsCustomers,
+		success: state.success
 	}
 }
 

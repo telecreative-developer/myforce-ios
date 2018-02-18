@@ -15,7 +15,7 @@ import Start from './app/screens/Start'
 import Home from './app/screens/Home'
 import Profile from './app/screens/Profile'
 import CustomerProfile from './app/screens/CustomerProfile'
-import FirstStepper from './app/screens/FirstStepper'
+import Stepper from './app/screens/Stepper'
 import QuestionPage from './app/screens/QuestionPage'
 import Notifications from './app/screens/Notifications'
 import SubProduct from './app/screens/SubProduct'
@@ -42,7 +42,7 @@ const App = StackNavigator({
   AddCustomer: {screen: AddCustomer},
   Profile: {screen: Profile},
   CustomerProfile: {screen: CustomerProfile},
-  FirstStepper: {screen: FirstStepper},
+  Stepper: {screen: Stepper},
   QuestionPage: {screen: QuestionPage},
   Notifications: {screen: Notifications},
   SubProduct: {screen: SubProduct},

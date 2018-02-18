@@ -24,14 +24,17 @@ import {
 	Body,
 	input,
 	Label,
-	CheckBox
+	CheckBox,
+	Spinner
 } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { NavigationActions } from 'react-navigation'
 import bg from '../assets/images/meeting.jpg'
 import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import { fetchQuestionWithStep } from '../actions/questions'
+import { postAnswer } from '../actions/answers'
 
 const { width, height } = Dimensions.get('window')
 
@@ -40,7 +43,24 @@ class QuestionPage extends Component {
 		super()
 
 		this.state = {
-			isModalVisible: false
+			isModalVisible: false,
+			nextActivityDesc: false,
+			answer: '',
+			activity_desc: ''
+		}
+	}
+
+	componentWillReceiveProps(props) {
+		if(props.loading.condition === true &&
+			props.loading.process_on === 'LOADING_POST_ANSWER' &&
+			props.success.condition === true &&
+			props.success.process_on === 'SUCCESS_POST_ANSWER') {
+				const resetAction = NavigationActions.reset({
+					index: 0,
+					actions: [NavigationActions.navigate({ routeName: 'CustomerProfile', params: props.success.payload})]
+				})
+				props.navigation.dispatch(resetAction)
+				this.setState({isModalVisible: false})
 		}
 	}
 
@@ -50,44 +70,69 @@ class QuestionPage extends Component {
 		await this.props.fetchQuestionWithStep(params.step, sessionPersistance.accessToken)
 	}
 
+	handlePostAnswer() {
+		const { answer, activity_desc } = this.state
+		const { step, id_pipeline } = this.props.navigation.state.params
+		const { questionWithStep } = this.props
+		const { id, accessToken } = this.props.sessionPersistance
+		this.props.postAnswer({
+			answer, activity_desc, step, id_pipeline, id, id_question: questionWithStep.id_question
+		}, accessToken)
+	}
+
 	render() {
 		const { navigate, goBack } = this.props.navigation
+		const { sessionPersistance, questionWithStep, loading } = this.props
 		return (
 			<Container>
-				<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
-					<View style={styles.modalWrapper}>
-						<View
-							style={{
-								flex: 1,
-								backgroundColor: 'transparent',
-								justifyContent: 'center',
-								flexDirection: 'column',
-								alignItems: 'center'
-							}}>
-							<Text style={styles.modalTitle}>Confirm Answer</Text>
-							<Text style={styles.modalAsk}>
-								Are you sure to submit your answer ?
-							</Text>
+				{loading.condition === true && loading.process_on === 'LOADING_POST_ANSWER' ? (
+					<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
+						<View style={styles.modalWrapper}>
+							<View
+								style={{
+									flex: 1,
+									backgroundColor: 'transparent',
+									justifyContent: 'center',
+									flexDirection: 'column',
+									alignItems: 'center'
+								}}>
+								<Spinner />
+							</View>
 						</View>
-						<Footer>
-							<FooterTab>
-								<Button
-									onPress={() => this.setState({ isModalVisible: false })}>
-									<Text note style={styles.modalCancelButton}>
-										Cancel
-									</Text>
-								</Button>
-								<Button
-									onPress={() => {
-										navigate('CustomerProfile')
-										this.setState({ isModalVisible: false })
-									}}>
-									<Text style={styles.modalYesButton}>Yes, Submit Answer</Text>
-								</Button>
-							</FooterTab>
-						</Footer>
-					</View>
-				</Modal>
+					</Modal>
+				) : (
+					<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
+						<View style={styles.modalWrapper}>
+							<View
+								style={{
+									flex: 1,
+									backgroundColor: 'transparent',
+									justifyContent: 'center',
+									flexDirection: 'column',
+									alignItems: 'center'
+								}}>
+								<Text style={styles.modalTitle}>Confirm Answer</Text>
+								<Text style={styles.modalAsk}>
+									Are you sure to submit your answer ?
+								</Text>
+							</View>
+							<Footer>
+								<FooterTab>
+									<Button
+										onPress={() => this.setState({ isModalVisible: false })}>
+										<Text note style={styles.modalCancelButton}>
+											Cancel
+										</Text>
+									</Button>
+									<Button
+										onPress={() => this.handlePostAnswer()}>
+										<Text style={styles.modalYesButton}>Yes, Submit Answer</Text>
+									</Button>
+								</FooterTab>
+							</Footer>
+						</View>
+					</Modal>
+				)}
 				<Header hasTabs style={styles.header}>
 					<Left style={styles.backHeader}>
 						<Button transparent onPress={() => goBack()}>
@@ -99,38 +144,70 @@ class QuestionPage extends Component {
 				<View style={styles.contentWrapper}>
 					<Image source={bg} style={styles.cardImage} />
 					<View style={styles.questionBox}>
-						<Text style={styles.greeting}>{`Hai, ${this.props.sessionPersistance.first_name}`}</Text>
-						<Text style={styles.question}>
-							Kriteria apa saja yang mereka butuhkan dari solusi yang akan kita
-							tawarkan?
-						</Text>
+						<Text style={styles.greeting}>{`Hai, ${sessionPersistance.first_name}`}</Text>
+						{this.state.nextActivityDesc ? (
+							<Text style={styles.question}>Deskripsikan aktivitas anda dalam step ini pada kolom dibawah</Text>
+						) : (
+							<Text style={styles.question}>{questionWithStep.question}</Text>
+						)}
 						<View style={styles.container}>
 							<Item bordered regular>
-								<Input
-									multiline={true}
-									placeholder="Silahkan isi dengan jawaban anda"
-									style={styles.answer}
-								/>
+								{this.state.nextActivityDesc ? (
+									<Input
+										multiline={true}
+										value={this.state.activity_desc}
+										onChangeText={(e) => this.setState({activity_desc: e})}
+										placeholder="Silahkan deskripsikan dikolom ini"
+										style={styles.answer} />
+								) : (
+									<Input
+										multiline={true}
+										value={this.state.answer}
+										onChangeText={(e) => this.setState({answer: e})}
+										placeholder="Silahkan isi dengan jawaban anda"
+										style={styles.answer} />
+								)}
 							</Item>
 						</View>
-						<View style={styles.buttonView}>
-							<Button
-								primary
-								style={styles.buttonBack}
-								onPress={() => navigate('QuestionPage1')}>
-								<Text style={styles.buttonText}>BACK</Text>
-							</Button>
-							<Button
-								primary
-								style={styles.button}
-								onPress={() => this.setState({ isModalVisible: true })}>
-								<LinearGradient
-									colors={['#20E6CD', '#2D38F9']}
-									style={styles.linearGradient}>
-									<Text style={styles.buttonText}>FINISH</Text>
-								</LinearGradient>
-							</Button>
-						</View>
+						{this.state.nextActivityDesc ? (
+							<View style={styles.buttonView}>
+								<Button
+									primary
+									style={styles.buttonBack}
+									onPress={() => this.setState({nextActivityDesc: false})}>
+									<Text style={styles.buttonText}>BACK</Text>
+								</Button>
+								<Button
+									primary
+									style={styles.button}
+									onPress={() => this.setState({isModalVisible: true})}>
+									<LinearGradient
+										colors={['#20E6CD', '#2D38F9']}
+										style={styles.linearGradient}>
+										<Text style={styles.buttonText}>FINISH</Text>
+									</LinearGradient>
+								</Button>
+							</View>
+						) : (
+							<View style={styles.buttonView}>
+								<Button
+									primary
+									style={styles.buttonBack}
+									onPress={() => goBack()}>
+									<Text style={styles.buttonText}>BACK</Text>
+								</Button>
+								<Button
+									primary
+									style={styles.button}
+									onPress={() => this.setState({nextActivityDesc: true})}>
+									<LinearGradient
+										colors={['#20E6CD', '#2D38F9']}
+										style={styles.linearGradient}>
+										<Text style={styles.buttonText}>NEXT</Text>
+									</LinearGradient>
+								</Button>
+							</View>
+						)}
 					</View>
 				</View>
 			</Container>
@@ -139,11 +216,14 @@ class QuestionPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
+	loading: state.loading,
+	success: state.success,
 	sessionPersistance: state.sessionPersistance,
 	questionWithStep: state.questionWithStep
 })
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = (dispatch) => ({
+	postAnswer: (data, accessToken) => dispatch(postAnswer(data, accessToken)),
 	fetchQuestionWithStep: (step, accessToken) => dispatch(fetchQuestionWithStep(step, accessToken))
 })
 

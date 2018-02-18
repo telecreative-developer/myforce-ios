@@ -9,14 +9,25 @@ import {
 } from 'react-native'
 import { Container, Text, Header, Left, Button, H3 } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux'
+import { fetchSellingProcessWithStep } from '../actions/sellingprocess'
 import Icon from 'react-native-vector-icons/Ionicons'
 import bg from '../assets/images/meeting.jpg'
 
 const { width, height } = Dimensions.get('window')
 
-export default class FirstStepper extends Component {
+class Stepper extends Component {
+
+	componentWillMount() {
+		const { params } = this.props.navigation.state
+		const { accessToken } = this.props.sessionPersistance
+		this.props.fetchSellingProcessWithStep(params.step, accessToken)
+	}
+
 	render() {
 		const { navigate, goBack } = this.props.navigation
+		const { sellingProcessWithStep } = this.props
+		const { params } = this.props.navigation.state
 		return (
 			<Container>
 				<Header hasTabs style={styles.header}>
@@ -31,21 +42,19 @@ export default class FirstStepper extends Component {
 					<Image source={bg} style={styles.cardImage} />
 					<View style={styles.contentView}>
 						<View style={styles.content}>
-							<Text style={styles.step}>STEP 1</Text>
-							<Text style={styles.title}>DEVELOP CRITERIA</Text>
-							<Text style={styles.description}>Client Buying Process: Recognize Change</Text>
+							<Text style={styles.step}>STEP {sellingProcessWithStep.step}</Text>
+							<Text style={styles.title}>{sellingProcessWithStep.title}</Text>
+							<Text style={styles.description}>Client Buying Process: {sellingProcessWithStep.buying_process}</Text>
 							<View style={styles.activityContentView}>
-								<Text style={styles.contentDescription}> - Pada kondisi ini, Client Anda mulai merasakan adanya ketidakberesan, rasa kurang nyaman, dan keinginan untuk berubah dari kondisi dan cara kerja saat ini. Mungkin karena mereka merasa agak boros, kurang simple, atau mulai kerepotan dengan semakin meningkatnya load pekerjaan mereka.
-								- Dari permasalahan itu, tidak semua Client Anda mengerti solusi apa yang terbaik untuk menyelesaikannya. Disinilah mereka memulai Buying Process, ketika mereka mulai memiliki keinginan untuk keluar dari masalah mereka.
-								</Text>
-								<Text style={styles.goal}>Your Goal:  Mengidentifikasi adanya kesempatan untuk membantu mereka</Text>
-								<Text style={styles.advice}>Kesempatan ini mungkin tidak secara lugas akan disampaikan oleh Client Anda, sebaliknya, tugas Anda untuk selalu mencari dan terus mencari, hingga banyak peluang terbuka bagi Anda.</Text>
+								<Text style={styles.contentDescription}>{sellingProcessWithStep.description}</Text>
+								<Text style={styles.goal}>Your Goal: {sellingProcessWithStep.goal}</Text>
+								<Text style={styles.advice}>{sellingProcessWithStep.advice}</Text>
 							</View>
 						</View>
 					</View>
 					<TouchableOpacity
 						style={styles.centerButton}
-						onPress={() => navigate('QuestionPage')}>
+						onPress={() => navigate('QuestionPage', {step: params.step, id_pipeline: params.id_pipeline})}>
 						<LinearGradient
 							colors={['#20E6CD', '#2D38F9']}
 							style={styles.linearGradient}>
@@ -57,6 +66,17 @@ export default class FirstStepper extends Component {
 		)
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		sessionPersistance: state.sessionPersistance,
+		sellingProcessWithStep: state.sellingProcessWithStep
+	}
+}
+
+const mapDispatchToProps = (dispatch) => ({
+	fetchSellingProcessWithStep: (step, accessToken) => dispatch(fetchSellingProcessWithStep(step, accessToken))
+})
 
 const styles = StyleSheet.create({
 	header: {
@@ -198,3 +218,5 @@ const styles = StyleSheet.create({
 		marginTop: 30
 	}
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(Stepper)
