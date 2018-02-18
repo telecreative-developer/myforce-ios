@@ -165,6 +165,53 @@ class CustomerProfile extends Component {
 		this.props.navigation.navigate('Stepper', {step: this.state.step, id_pipeline: this.state.id_pipeline})
 	}
 
+	renderTextSellingProccess() {
+		const { step } = this.state
+		if(step === 1) {
+			return (
+				<View>
+					<Text style={styles.step}>STEP 1</Text>
+					<Text style={styles.title}>Identify Opportunities</Text>
+				</View>
+			)
+		}else if(step === 2) {
+			return (
+				<View>
+					<Text style={styles.step}>STEP 2</Text>
+					<Text style={styles.title}>Clarify Needs</Text>
+				</View>
+			)
+		}else if(step === 3) {
+			return (
+				<View>
+					<Text style={styles.step}>STEP 3</Text>
+					<Text style={styles.title}>IDENTIFY OPPORTUNITIES</Text>
+				</View>
+			)
+		}else if(step === 4) {
+			return (
+				<View>
+					<Text style={styles.step}>STEP 4</Text>
+					<Text style={styles.title}>Develop Criteria</Text>
+				</View>
+			)
+		}else if(step === 5) {
+			return (
+				<View>
+					<Text style={styles.step}>STEP 5</Text>
+					<Text style={styles.title}>Gain Commitment</Text>
+				</View>
+			)
+		}else if(step === 6) {
+			return (
+				<View>
+					<Text style={styles.step}>STEP 6</Text>
+					<Text style={styles.title}>Manage Implementation</Text>
+				</View>
+			)
+		}
+	}
+
 	renderItemsActive = ({ item }) => (
 		<View style={styles.customerPipeline}>
 			<View style={styles.pipelineContent}>
@@ -366,8 +413,7 @@ class CustomerProfile extends Component {
 								source={bg}
 								imageStyle={styles.cardImage}
 								style={styles.card}>
-								<Text style={styles.step}>STEP 1</Text>
-								<Text style={styles.title}>IDENTIFY OPPORTUNITIES</Text>
+								{this.renderTextSellingProccess()}
 							</ImageBackground>
 						</View>
 						<Footer>
@@ -504,14 +550,12 @@ class CustomerProfile extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		pipelines: state.pipelines,
-		sessionPersistance: state.sessionPersistance,
-		picsCustomers: state.picsCustomers,
-		success: state.success
-	}
-}
+const mapStateToProps = state => ({
+	pipelines: state.pipelines,
+	sessionPersistance: state.sessionPersistance,
+	picsCustomers: state.picsCustomers,
+	success: state.success
+})
 
 const mapDispatchToProps = dispatch => {
 	return {
