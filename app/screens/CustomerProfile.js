@@ -47,6 +47,7 @@ import {
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { setNavigate } from '../actions/processor'
+import bg from '../assets/images/meeting.jpg'
 
 const { height, width } = Dimensions.get('window')
 
@@ -357,20 +358,12 @@ class CustomerProfile extends Component {
 					<View style={styles.modalWrapper}>
 						<View>
 							<ImageBackground
-								source={{
-									uri:
-										'https://4.imimg.com/data4/TA/RW/MY-5777330/xerox-photocopier-machine-250x250.jpg'
-								}}
+								source={bg}
 								imageStyle={styles.cardImage}
-								style={styles.card} />
-							<View
-								style={{
-									flex: 1,
-									backgroundColor: 'transparent',
-									justifyContent: 'center'
-								}}>
-								<PipelineProgress />
-							</View>
+								style={styles.card}>
+								<Text style={styles.step}>STEP 1</Text>
+								<Text style={styles.title}>IDENTIFY OPPORTUNITIES</Text>
+							</ImageBackground>
 						</View>
 						<Footer>
 							<FooterTab>
@@ -536,7 +529,8 @@ const styles = StyleSheet.create({
 	card: {
 		display: 'flex',
 		width: width / 1.2,
-		height: 170,
+		justifyContent: 'center',
+		flex: 1,
 		backgroundColor: '#000000'
 	},
 	cardImage: {
@@ -763,7 +757,23 @@ const styles = StyleSheet.create({
 	picAddress: {
 		borderRadius: 0,
 		height: 50
-	}
+	},
+	step: {
+		fontSize: 35,
+		fontWeight: '900',
+		color: '#db0000',
+		fontStyle: 'italic', 
+		textAlign: 'center',
+		backgroundColor: 'transparent'
+	},
+	title: {
+		fontSize: 35,
+		fontWeight: '900',
+		color: '#ffffff',
+		fontStyle: 'italic', 
+		textAlign: 'center',
+		backgroundColor: 'transparent'
+	},
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerProfile)

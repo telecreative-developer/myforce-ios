@@ -187,9 +187,9 @@ class Club extends Component {
 								keyExtractor={this.key}
 								renderItem={this.renderItemUsers}
 							/>
-							<TouchableOpacity>
+							{/* <TouchableOpacity>
 								<Text style={styles.see}>See Complete Table</Text>
-							</TouchableOpacity>
+							</TouchableOpacity> */}
 						</View>
 						<View style={styles.leaderboard}>
 							<Text style={styles.leaderboardTitle}>National Leaderboard</Text>
@@ -198,9 +198,9 @@ class Club extends Component {
 								keyExtractor={this.key}
 								renderItem={this.renderItemUsers}
 							/>
-							<TouchableOpacity>
+							{/* <TouchableOpacity>
 								<Text style={styles.see}>See Complete Table</Text>
-							</TouchableOpacity>
+							</TouchableOpacity> */}
 						</View>
 					</View>
 					<View style={styles.team}>
