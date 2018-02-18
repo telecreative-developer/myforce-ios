@@ -87,7 +87,6 @@ class CustomerProfile extends Component {
 			await this.props.postPipeline(
 				{
 					pipeline: this.state.pipeline,
-					id_status: 0,
 					id_customer: this.props.navigation.state.params.id_customer,
 					id_pic: this.state.id_pic,
 					id: this.props.sessionPersistance.id
@@ -113,7 +112,7 @@ class CustomerProfile extends Component {
 						</Button>
 					</View>
 					<FlatList
-						data={this.props.pipelines.filter(p => p.id_status !== 7)}
+						data={this.props.pipelines.filter(p => p.step !== 6)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
 					/>
@@ -122,7 +121,7 @@ class CustomerProfile extends Component {
 		} else if (this.state.pipelineTabs === 'close') {
 			return (
 				<FlatList
-					data={this.props.pipelines.filter(p => p.id_status === 7)}
+					data={this.props.pipelines.filter(p => p.step === 6)}
 					keyExtractor={this.key}
 					renderItem={this.renderItemsClose}
 				/>
@@ -130,7 +129,7 @@ class CustomerProfile extends Component {
 		} else if (this.state.pipelineTabs === 'lose') {
 			return (
 				<FlatList
-					data={this.props.pipelines.filter(p => p.id_status === 7)}
+					data={this.props.pipelines.filter(p => p.step === 6)}
 					keyExtractor={this.key}
 					renderItem={this.renderItemsLose}
 				/>
@@ -168,7 +167,7 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress
 						onPress={() => this.setState({ isModalVisible: true })}
-						currentPosition={item.id_status}
+						currentPosition={item.step-1}
 					/>
 				</View>
 			</View>
@@ -198,7 +197,7 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress
 						onPress={() => this.setState({ isModalVisible: true })}
-						currentPosition={item.id_status}
+						currentPosition={item.step-1}
 					/>
 				</View>
 			</View>
@@ -228,7 +227,7 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress
 						onPress={() => this.setState({ isModalVisible: true })}
-						currentPosition={item.id_status}
+						currentPosition={item.step-1}
 					/>
 				</View>
 			</View>
@@ -462,7 +461,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'active' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.id_status !== 5).length
+											this.props.pipelines.filter(p => p.step !== 4).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>ACTIVE</Text>
@@ -473,7 +472,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'close' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.id_status === 5).length
+											this.props.pipelines.filter(p => p.step === 4).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>CLOSE</Text>
@@ -484,7 +483,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.id_status === 7).length
+											this.props.pipelines.filter(p => p.step === 6).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>

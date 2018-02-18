@@ -30,15 +30,24 @@ import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/Ionicons'
 import bg from '../assets/images/meeting.jpg'
 import Modal from 'react-native-modal'
+import { connect } from 'react-redux'
+import { fetchQuestionWithStep } from '../actions/questions'
 
 const { width, height } = Dimensions.get('window')
 
-export default class QuestionPage extends Component {
-	constructor(props) {
-		super(props)
+class QuestionPage extends Component {
+	constructor() {
+		super()
+
 		this.state = {
 			isModalVisible: false
 		}
+	}
+
+	async componentWillMount() {
+		const { params } = await this.props.navigation.state
+		const { sessionPersistance } = await this.props
+		await this.props.fetchQuestionWithStep(params.step, sessionPersistance.accessToken)
 	}
 
 	render() {
@@ -90,10 +99,7 @@ export default class QuestionPage extends Component {
 				<View style={styles.contentWrapper}>
 					<Image source={bg} style={styles.cardImage} />
 					<View style={styles.questionBox}>
-						<Text style={styles.greeting}>Hai, Ridho</Text>
-						<Text style={styles.command}>
-							Pada tahap ini coba lengkapi pertanyaan berikut yaa...
-						</Text>
+						<Text style={styles.greeting}>{`Hai, ${this.props.sessionPersistance.first_name}`}</Text>
 						<Text style={styles.question}>
 							Kriteria apa saja yang mereka butuhkan dari solusi yang akan kita
 							tawarkan?
@@ -125,17 +131,21 @@ export default class QuestionPage extends Component {
 								</LinearGradient>
 							</Button>
 						</View>
-						<View style={styles.save}>
-							<TouchableOpacity>
-								<Text style={styles.saveText}>Save My Answer</Text>
-							</TouchableOpacity>
-						</View>
 					</View>
 				</View>
 			</Container>
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+	sessionPersistance: state.sessionPersistance,
+	questionWithStep: state.questionWithStep
+})
+
+const mapDispatchToProps = () => ({
+	fetchQuestionWithStep: (step, accessToken) => dispatch(fetchQuestionWithStep(step, accessToken))
+})
 
 const styles = StyleSheet.create({
 	header: {
@@ -346,3 +356,5 @@ const styles = StyleSheet.create({
 		marginBottom: 3
 	}
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionPage)
