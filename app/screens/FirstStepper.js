@@ -27,39 +27,21 @@ export default class FirstStepper extends Component {
 						</Button>
 					</Left>
 				</Header>
-				<View style={styles.newsWrapper}>
-					<View style={styles.newsDirection}>
-						<View style={styles.titleFlex}>
-							<H3 style={styles.newsTitle}>Latest News</H3>
-						</View>
-						<TouchableOpacity style={styles.iconFlex}>
-							<Icon
-								style={styles.closeIcon}
-								name="ios-close-circle-outline"
-								size={20}
-								color={'#ffffff'}
-							/>
-						</TouchableOpacity>
-					</View>
-					<View>
-						<Text style={styles.newsText}>
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s. when an unknown printer took a galley of
-							type and scrambled it.
-						</Text>
-						<TouchableOpacity>
-							<Text style={styles.readMore}>Read More</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
 				<View style={styles.contentWrapper}>
 					<Image source={bg} style={styles.cardImage} />
-					<View style={styles.titleView}>
-						<Text style={styles.title}>DEVELOP CRITERIA</Text>
-						<Text style={styles.description}>
-							Lorem Ipsum is simply dummy text of the printing.
-						</Text>
+					<View style={styles.contentView}>
+						<View style={styles.content}>
+							<Text style={styles.step}>STEP 1</Text>
+							<Text style={styles.title}>DEVELOP CRITERIA</Text>
+							<Text style={styles.description}>Client Buying Process: Recognize Change</Text>
+							<View style={styles.activityContentView}>
+								<Text style={styles.contentDescription}> - Pada kondisi ini, Client Anda mulai merasakan adanya ketidakberesan, rasa kurang nyaman, dan keinginan untuk berubah dari kondisi dan cara kerja saat ini. Mungkin karena mereka merasa agak boros, kurang simple, atau mulai kerepotan dengan semakin meningkatnya load pekerjaan mereka.
+								- Dari permasalahan itu, tidak semua Client Anda mengerti solusi apa yang terbaik untuk menyelesaikannya. Disinilah mereka memulai Buying Process, ketika mereka mulai memiliki keinginan untuk keluar dari masalah mereka.
+								</Text>
+								<Text style={styles.goal}>Your Goal:  Mengidentifikasi adanya kesempatan untuk membantu mereka</Text>
+								<Text style={styles.advice}>Kesempatan ini mungkin tidak secara lugas akan disampaikan oleh Client Anda, sebaliknya, tugas Anda untuk selalu mencari dan terus mencari, hingga banyak peluang terbuka bagi Anda.</Text>
+							</View>
+						</View>
 					</View>
 					<TouchableOpacity
 						style={styles.centerButton}
@@ -89,34 +71,40 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 		zIndex: -20,
-		backgroundColor: '#000000'
+		backgroundColor: '#000000',
 	},
 	cardImage: {
 		width: '100%',
 		height: '100%',
 		opacity: 0.5
 	},
-	titleView: {
+	contentView: {
 		position: 'absolute',
 		zIndex: 2,
-		top: 0,
+		top: height / 10,
 		left: 0,
 		right: 0,
 		bottom: 0,
-		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: 'transparent'
+	},
+	content: {
+		width: width / 1.2,
+		minHeight: height / 1.5,
+		height: 'auto',
 	},
 	title: {
 		fontSize: 40,
 		fontWeight: '900',
 		color: '#ffffff',
-		fontStyle: 'italic'
+		fontStyle: 'italic', 
+		textAlign: 'center'
 	},
 	description: {
-		fontSize: 14,
+		fontSize: 18,
 		color: '#ffffff',
-		marginTop: 10
+		marginTop: 10,
+		textAlign: 'center'
 	},
 	buttonText: {
 		textAlign: 'center',
@@ -136,7 +124,7 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100,
 		borderRadius: 100,
-		bottom: height / 3,
+		bottom: height / 5,
 		zIndex: 30
 	},
 	newsWrapper: {
@@ -187,5 +175,26 @@ const styles = StyleSheet.create({
 	},
 	backHeader: {
 		flexDirection: 'row'
+	},
+	step: {
+		fontSize: 40,
+		fontWeight: '900',
+		color: '#db0000',
+		fontStyle: 'italic', 
+		textAlign: 'center'
+	},
+	activityContentView: {
+		marginTop: 30
+	},
+	contentDescription: {
+		color: '#fff'
+	},
+	goal: {
+		color: '#fff',
+		marginTop: 30
+	},
+	advice: {
+		color: '#fff',
+		marginTop: 30
 	}
 })
