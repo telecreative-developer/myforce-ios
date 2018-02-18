@@ -104,6 +104,14 @@ class CustomerProfile extends Component {
 		}
 	}
 
+	handleCheckStepper(step, id_pipeline, in_process) {
+		if(in_process) {
+			Alert.alert('Pipeline in Progress', 'Please wait a confirmation from your manager to take the next step')
+		}else{
+			this.handleSetStep(step, id_pipeline)
+		}
+	}
+
 	renderPipelineTabs() {
 		if (this.state.pipelineTabs === 'active') {
 			return (
@@ -118,27 +126,24 @@ class CustomerProfile extends Component {
 						</Button>
 					</View>
 					<FlatList
-						data={this.props.pipelines.filter(p => p.step !== 6)}
+						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false)}
 						keyExtractor={this.key}
-						renderItem={this.renderItemsActive}
-					/>
+						renderItem={this.renderItemsActive} />
 				</View>
 			)
 		} else if (this.state.pipelineTabs === 'close') {
 			return (
 				<FlatList
-					data={this.props.pipelines.filter(p => p.step === 6)}
+					data={this.props.pipelines.filter(p => p.step === 7 && p.lose === false)}
 					keyExtractor={this.key}
-					renderItem={this.renderItemsClose}
-				/>
+					renderItem={this.renderItemsClose} />
 			)
 		} else if (this.state.pipelineTabs === 'lose') {
 			return (
 				<FlatList
-					data={this.props.pipelines.filter(p => p.step === 6)}
+					data={this.props.pipelines.filter(p => p.lose === true)}
 					keyExtractor={this.key}
-					renderItem={this.renderItemsLose}
-				/>
+					renderItem={this.renderItemsLose} />
 			)
 		}
 	}
@@ -168,9 +173,11 @@ class CustomerProfile extends Component {
 							<H2>{item.pipeline}</H2>
 						</View>
 						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>In process</Text>
+								</Badge>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
@@ -181,7 +188,7 @@ class CustomerProfile extends Component {
 				</View>
 				<View>
 					<PipelineProgress
-						onPress={() => this.handleSetStep(item.step, item.id_pipeline)}
+						onPress={() => this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)}
 						currentPosition={item.step-1} />
 				</View>
 			</View>
@@ -197,9 +204,11 @@ class CustomerProfile extends Component {
 							<H2>{item.pipeline}</H2>
 						</View>
 						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>In process</Text>
+								</Badge>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
@@ -209,10 +218,7 @@ class CustomerProfile extends Component {
 					</View>
 				</View>
 				<View>
-					<PipelineProgress
-						onPress={() => this.handleSetStep(item.step, item.id_pipeline)}
-						currentPosition={item.step-1}
-					/>
+					<PipelineProgress currentPosition={item.step-1} />
 				</View>
 			</View>
 		</View>
@@ -227,9 +233,11 @@ class CustomerProfile extends Component {
 							<H2>{item.pipeline}</H2>
 						</View>
 						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>In process</Text>
+								</Badge>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
@@ -239,10 +247,7 @@ class CustomerProfile extends Component {
 					</View>
 				</View>
 				<View>
-					<PipelineProgress
-						onPress={() => this.handleSetStep(item.step, item.id_pipeline)}
-						currentPosition={item.step-1}
-					/>
+					<PipelineProgress currentPosition={item.step-1} />
 				</View>
 			</View>
 		</View>
@@ -469,7 +474,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'active' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.step !== 4).length
+											this.props.pipelines.filter(p => p.step !== 7).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>ACTIVE</Text>
@@ -480,7 +485,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'close' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.step === 4).length
+											this.props.pipelines.filter(p => p.step === 7 && p.lose === false).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>CLOSE</Text>
@@ -491,7 +496,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.step === 6).length
+											this.props.pipelines.filter(p => p.lose === true).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
