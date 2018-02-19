@@ -19,10 +19,12 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
 import LinearGradient from 'react-native-linear-gradient'
 import { isEmpty, isEmail } from 'validator'
+import { connect } from 'react-redux'
+import { setNavigate } from '../actions/processor'
 
 const { height, width } = Dimensions.get('window')
 
-export default class AddCustomer extends Component {
+class AddCustomer extends Component {
 	constructor() {
 		super()
 
@@ -67,7 +69,7 @@ export default class AddCustomer extends Component {
 			<Button
 				primary
 				style={styles.buttonBefore}>
-					<Text style={styles.buttonText}>NEXT</Text>
+				<Text style={styles.buttonText}>NEXT</Text>
 			</Button>
 		)
 	}
@@ -81,12 +83,17 @@ export default class AddCustomer extends Component {
 		}
 	}
 
+	handleBack() {
+		this.props.navigation.goBack()
+		this.props.setNavigate('', '')
+	}
+
 	render() {
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
 				<Header style={styles.header}>
 					<Left style={styles.backHeader}>
-						<Button transparent onPress={() => this.props.navigation.goBack()}>
+						<Button transparent onPress={() => this.handleBack()}>
 							<Icon name="ios-arrow-back" size={25} color="#000000" />
 							<Text style={styles.back}>Back</Text>
 						</Button>
@@ -94,11 +101,7 @@ export default class AddCustomer extends Component {
 					<Body>
 						<Text style={styles.title}>ADD NEW CUSTOMER</Text>
 					</Body>
-					<Right>
-						<Button transparent badge onPress={() => navigate('Cart')}>
-							<Icon name="ios-notifications" size={25} />
-						</Button>
-					</Right>
+					<Right />
 				</Header>
 				<Content style={styles.content} scrollEnabled={false}>
 					<View style={styles.image}>
@@ -131,7 +134,7 @@ export default class AddCustomer extends Component {
 						<Button
 							primary
 							style={styles.buttonBack}
-							onPress={() => this.props.navigation.goBack()}>
+							onPress={() => this.handleBack()}>
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
 						{this.renderButton()}
@@ -141,6 +144,10 @@ export default class AddCustomer extends Component {
 		)
 	}
 }
+
+const mapDispatchToProps = (dispatch) => ({
+	setNavigate: (link, data) => dispatch(setNavigate(link, data))
+})
 
 const styles = StyleSheet.create({
 	backHeader: {
@@ -226,3 +233,5 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	}
 })
+
+export default connect(null, mapDispatchToProps)(AddCustomer)
