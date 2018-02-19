@@ -29,6 +29,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import HorizontalJoker from '../components/HorizontalJokerTeam'
 import { fetchUsers } from '../actions/users'
+import { fetchTeamUpdatesWithBranch } from '../actions/updates'
 import defaultAvatar from '../assets/images/default-avatar.png'
 
 const { height, width } = Dimensions.get('window')
@@ -42,16 +43,21 @@ class Club extends Component {
 		}
 	}
 
+	componentWillMount() {
+		const { sessionPersistance } = this.props
+		this.props.fetchTeamUpdatesWithBranch(sessionPersistance.id_branch, sessionPersistance.accessToken)
+	}
+
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
 		<TouchableOpacity>
 			<HorizontalJoker
-				title={item.title}
-				person={item.person}
-				description={item.description}
-				avatar={item.avatar}
-			/>
+				name={item.users[0].first_name}
+				company={item.customers[0].name}
+				pipeline={item.pipelines[0].pipeline}
+				avatar={item.users[0].avatar}
+				step={item.pipelines[0].step} />
 		</TouchableOpacity>
 	)
 
@@ -173,7 +179,7 @@ class Club extends Component {
 						<FlatList
 							horizontal={true}
 							showsHorizontalScrollIndicator={false}
-							data={this.state.dataJoker}
+							data={this.props.teamUpdatesWithBranch}
 							keyExtractor={this.key}
 							renderItem={this.renderItems} />
 					</View>
@@ -183,11 +189,13 @@ class Club extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	users: state.users,
-	teamUpdatesWithBranch: state.teamUpdatesWithBranch,
-	sessionPersistance: state.sessionPersistance
-})
+const mapStateToProps = state => {
+	return {
+		users: state.users,
+		teamUpdatesWithBranch: state.teamUpdatesWithBranch,
+		sessionPersistance: state.sessionPersistance
+	}
+}
 
 const mapDispatchToProps = dispatch => ({
 	fetchTeamUpdatesWithBranch: (id_branch, accessToken) => dispatch(fetchTeamUpdatesWithBranch(id_branch, accessToken)),

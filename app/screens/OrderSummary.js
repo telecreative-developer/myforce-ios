@@ -29,46 +29,12 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/shopping-cart.png'
 import LinearGradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux'
+import { fetchProducts } from '../actions/products'
+import { fetchSubproducts } from '../actions/subproducts'
+import { addProductToCart, removeProductFromCart } from '../actions/cart'
 
 const { width, height } = Dimensions.get('window')
-
-const data = [
-	{
-		key: 'Fuji Xerox C3020',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-C3020-Multifunctional-Photocopier.jpg'
-	},
-	{
-		key: 'Fuji Xerox 2204N Mono Photocopier',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-2204N-Mono-Photocopier.jpg'
-	},
-	{
-		key: 'Fuji Xerox 2004N Mono Photocopier',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-2004N-Mono-Photocopier.jpg'
-	},
-	{
-		key: 'Fuji Xerox C3020',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-2002-Multifunctional-Photocopier.jpg'
-	},
-	{
-		key: 'Fuji Xerox C3020 Multifunctional',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-2202N-Multifunctional-Photocopier.jpg'
-	},
-	{
-		key: 'Fuji Xerox 2204N Mono Photocopier',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-ADVANCE-6255-Multifunctional-Photocopier.jpg'
-	},
-	{
-		key: 'Fuji Xerox 2204N Mono Photocopier',
-		picture:
-			'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-ADVANCE-6255-Multifunctional-Photocopier.jpg'
-	}
-]
 
 const formatData = (data, numColumns) => {
 	const numberOfFullRows = Math.floor(data.length / numColumns)
@@ -86,30 +52,40 @@ const formatData = (data, numColumns) => {
 }
 
 const numColumns = 3
-export default class OrderSummary extends Component {
+
+class OrderSummary extends Component {
 	constructor() {
 		super()
 
 		this.state = {
-			productCategory: 'Fuji Xerox',
-			picName: 'Nando Reza Pratama'
+			id_product: ''
 		}
 	}
 
+	async componentWillMount() {
+		const { accessToken } = await this.props.sessionPersistance
+		await this.props.fetchProducts(accessToken)
+		await this.setState({id_product: this.props.products[0].id_product})
+		await this.props.fetchSubproducts(this.props.products[0].id_product, accessToken)
+	}
+
+	handleSelectCategory(id_product) {
+		const { accessToken } = this.props.sessionPersistance
+		this.props.fetchSubproducts(id_product, accessToken)
+		this.setState({id_product})
+	}
+
 	renderItem = ({ item, index }) => {
-		if (item.empty === true) {
-			return <View style={[styles.item, styles.itemInvisible]} />
-		}
 		return (
 			<ImageBackground
-				source={{ uri: item.picture }}
+				source={{uri: item.picture}}
 				imageStyle={styles.cardImage}
 				style={styles.item}>
 				<TouchableHighlight>
-					<Text style={styles.itemText}>{item.key}</Text>
+					<Text style={styles.itemText}>{item.subproduct}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooter}>
-					<Button full style={styles.cardButton}>
+					<Button full style={styles.cardButton} onPress={() => this.props.addProductToCart(item)}>
 						<Icon name="md-add" size={20} color={'#ffffff'} />
 						<Text>Add</Text>
 					</Button>
@@ -133,8 +109,12 @@ export default class OrderSummary extends Component {
 						<Text style={styles.title}>ORDER SUMMARY</Text>
 					</Body>
 					<Right>
-						<Button transparent badge onPress={() => navigate('Cart')}>
-							<Icon name="ios-cart" size={25} />
+						<Button transparent>
+							{this.props.cartProducts.length !== 0 ? (
+								<Badge><Text>{this.props.cartProducts.length}</Text></Badge>
+							) : (
+								<Icon name="ios-cart" size={25} />
+							)}
 						</Button>
 					</Right>
 				</Header>
@@ -144,51 +124,51 @@ export default class OrderSummary extends Component {
 					</View>
 					<Form>
 						<View style={styles.productCategoryView}>
-							<Label>PIC Name</Label>
-							<Picker
-								style={styles.picker}
-								mode="dropdown"
-								iosHeader="PIC Name"
-								selectedValue={this.state.picName}
-								onValueChange={picName =>
-									this.setState({ picName })
-								}>
-								<Item label="Nando Reza Pratama" value="Nando Reza Pratama" />
-								<Item label="Kevin Hermawan" value="Kevin Hermawan" />
-							</Picker>
-						</View>
-						<View style={styles.productCategoryView}>
 							<Label style={styles.productCategory}>Product Category</Label>
 							<Picker
 								style={styles.picker}
 								mode="dropdown"
 								iosHeader="Product Category"
-								selectedValue={this.state.productCategory}
-								onValueChange={productCategory =>
-									this.setState({ productCategory })
-								}>
-								<Item label="Fuji Xerox" value="Fuji Xerox" />
-								<Item label="DocuPrint" value="DocuPrint" />
-								<Item label="Phaser" value="Phaser" />
+								selectedValue={this.state.id_product}
+								onValueChange={id_product => this.handleSelectCategory(id_product)}>
+								{this.props.products.map((data, index) => (
+									<Item key={index} label={data.product} value={data.id_product} />
+								))}
 							</Picker>
 						</View>
 					</Form>
 					<FlatList
-						data={formatData(data, numColumns)}
+						data={formatData(this.props.subproducts, numColumns)}
 						style={styles.container}
+						keyExtractor={(item, index) => index}
 						renderItem={this.renderItem}
-						numColumns={numColumns}
-					/>
+						numColumns={numColumns} />
 				</Content>
 				<Footer>
 					<Button full style={styles.footerButton} onPress={() => navigate('Cart')}>
-						<Text style={styles.submit}>ADD TO CART</Text>
+						<Text style={styles.submit}>SUBMIT</Text>
 					</Button>
 				</Footer>
 			</Container>
 		)
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		sessionPersistance: state.sessionPersistance,
+		products: state.products,
+		subproducts: state.subproducts,
+		cartProducts: state.cartProducts
+	}
+}
+
+const mapDispatchToProps = (dispatch) => ({
+	addProductToCart: (data) => dispatch(addProductToCart(data)),
+	removeProductFromCart: (id_subproduct) => dispatch(removeProductFromCart(id_subproduct)),
+	fetchProducts: (accessToken) => dispatch(fetchProducts(accessToken)),
+	fetchSubproducts: (id, accessToken) => dispatch(fetchSubproducts(id, accessToken))
+})
 
 const styles = StyleSheet.create({
 	content: {
@@ -276,3 +256,5 @@ const styles = StyleSheet.create({
 		borderRadius: 0
 	}
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderSummary)

@@ -24,8 +24,16 @@ class Stepper extends Component {
 		this.props.fetchSellingProcessWithStep(params.step, accessToken)
 	}
 
+	handleGo(data) {
+		if(data.step === 4) {
+			this.props.navigation.navigate('OrderSummary', data)
+		}else{
+			this.props.navigation.navigate('QuestionPage', data)
+		}
+	}
+
 	render() {
-		const { navigate, goBack } = this.props.navigation
+		const { goBack } = this.props.navigation
 		const { sellingProcessWithStep } = this.props
 		const { params } = this.props.navigation.state
 		return (
@@ -54,7 +62,7 @@ class Stepper extends Component {
 					</View>
 					<TouchableOpacity
 						style={styles.centerButton}
-						onPress={() => navigate('QuestionPage', {step: params.step, id_pipeline: params.id_pipeline})}>
+						onPress={() => this.handleGo({step: params.step, id_pipeline: params.id_pipeline})}>
 						<LinearGradient
 							colors={['#20E6CD', '#2D38F9']}
 							style={styles.linearGradient}>

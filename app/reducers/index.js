@@ -16,6 +16,8 @@ import { pipelines, pipelinesWithUserId } from './pipelines'
 import { pics, picsCustomers, resultPics } from './pics'
 import { questionWithStep } from './questions'
 import { sellingProcessWithStep } from './sellingprocess'
+import { teamUpdatesWithBranch } from './updates'
+import { cartProducts } from './cart'
 
 const config = {
 	key: 'root',
@@ -45,7 +47,9 @@ const reducers = persistCombineReducers(config, {
 	picsCustomers,
 	resultPics,
 	questionWithStep,
-	sellingProcessWithStep
+	sellingProcessWithStep,
+	teamUpdatesWithBranch,
+	cartProducts
 })
 
 export default reducers
