@@ -62,7 +62,7 @@ class Stepper extends Component {
 					</View>
 					<TouchableOpacity
 						style={styles.centerButton}
-						onPress={() => this.handleGo({step: params.step, id_pipeline: params.id_pipeline})}>
+						onPress={() => this.handleGo({step: params.step, id_pipeline: params.id_pipeline, id_customer: params.id_customer})}>
 						<LinearGradient
 							colors={['#20E6CD', '#2D38F9']}
 							style={styles.linearGradient}>

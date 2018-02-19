@@ -35,6 +35,7 @@ import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import { fetchQuestionWithStep } from '../actions/questions'
 import { postAnswer } from '../actions/answers'
+import { sendProductsOnCart } from '../actions/cart'
 
 const { width, height } = Dimensions.get('window')
 
@@ -51,7 +52,7 @@ class QuestionPage extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.loading.condition === true &&
+		if(props.loading.condition === false &&
 			props.loading.process_on === 'LOADING_POST_ANSWER' &&
 			props.success.condition === true &&
 			props.success.process_on === 'SUCCESS_POST_ANSWER') {
@@ -72,12 +73,23 @@ class QuestionPage extends Component {
 
 	handlePostAnswer() {
 		const { answer, activity_desc } = this.state
-		const { step, id_pipeline } = this.props.navigation.state.params
-		const { questionWithStep } = this.props
+		const { step, id_pipeline, id_customer } = this.props.navigation.state.params
+		const { questionWithStep, cartProducts } = this.props
 		const { id, accessToken } = this.props.sessionPersistance
-		this.props.postAnswer({
-			answer, activity_desc, step, id_pipeline, id, id_question: questionWithStep.id_question
-		}, accessToken)
+		if(step === 4) {
+			cartProducts.forEach((data) => {
+				this.props.sendProductsOnCart({
+					id_pipeline, id_customer, id, id_product: data.id_product, id_subproduct: data.id_subproduct
+				}, accessToken)
+			})
+			this.props.postAnswer({
+				answer, activity_desc, step, id_pipeline, id, id_question: questionWithStep.id_question
+			}, accessToken)
+		}else{
+			this.props.postAnswer({
+				answer, activity_desc, step, id_pipeline, id, id_question: questionWithStep.id_question
+			}, accessToken)
+		}
 	}
 
 	render() {
@@ -219,10 +231,12 @@ const mapStateToProps = (state) => ({
 	loading: state.loading,
 	success: state.success,
 	sessionPersistance: state.sessionPersistance,
-	questionWithStep: state.questionWithStep
+	questionWithStep: state.questionWithStep,
+	cartProducts: state.cartProducts
 })
 
 const mapDispatchToProps = (dispatch) => ({
+	sendProductsOnCart: (data, accessToken) => dispatch(sendProductsOnCart(data, accessToken)),
 	postAnswer: (data, accessToken) => dispatch(postAnswer(data, accessToken)),
 	fetchQuestionWithStep: (step, accessToken) => dispatch(fetchQuestionWithStep(step, accessToken))
 })

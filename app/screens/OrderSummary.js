@@ -60,24 +60,7 @@ class OrderSummary extends Component {
 
 		this.state = {
 			id_product: '',
-			isModalVisibleCart: false,
-			data: [
-				{
-					key: 'Fuji Xerox C3020',
-					picture:
-						'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-C3020-Multifunctional-Photocopier.jpg'
-				},
-				{
-					key: 'Fuji Xerox 2204N Mono Photocopier',
-					picture:
-						'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-2204N-Mono-Photocopier.jpg'
-				},
-				{
-					key: 'Fuji Xerox 2004N Mono Photocopier',
-					picture:
-						'https://lscdn.blob.core.windows.net/products/photocopier/images/Canon-imageRUNNER-2004N-Mono-Photocopier.jpg'
-				},
-			]
+			isModalVisibleCart: false
 		}
 	}
 
@@ -104,7 +87,7 @@ class OrderSummary extends Component {
 					<Text style={styles.itemText}>{item.subproduct}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooter}>
-					<Button full style={styles.cardButton}>
+					<Button full style={styles.cardButton} onPress={() => this.props.addProductToCart(item)}>
 						<Icon name="md-add" size={20} color={'#ffffff'} />
 						<Text>Add</Text>
 					</Button>
@@ -120,10 +103,10 @@ class OrderSummary extends Component {
 				imageStyle={styles.cardImage}
 				style={styles.itemCart}>
 				<TouchableHighlight underlayColor={'transparent'}>
-					<Text style={styles.itemText}>{item.key}</Text>
+					<Text style={styles.itemText}>{item.subproduct}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooterCart}>
-					<Button full style={styles.cardButtonCart}>
+					<Button full style={styles.cardButtonCart} onPress={() => this.props.removeProductFromCart(item.id_index)}>
 						<Icon name="ios-close" size={20} color={'#ffffff'} />
 						<Text>Cancel</Text>
 					</Button>
@@ -136,6 +119,7 @@ class OrderSummary extends Component {
 
 	render() {
 		const { navigate, goBack } = this.props.navigation
+		const { params } = this.props.navigation.state
 		return (
 			<Container>
 				<Modal isVisible={this.state.isModalVisibleCart} style={styles.modal}   
@@ -147,15 +131,14 @@ class OrderSummary extends Component {
 							</TouchableHighlight>
 						</View>
 						<Text style={styles.modalTitle}>Order Cart</Text>
-						<Text style={styles.modalTotal}>Total Item: 3</Text>
+						<Text style={styles.modalTotal}>Total Item: {this.props.cartProducts.length}</Text>
 						<View>
 							<FlatList
 								showsVerticalScrollIndicator={false}
-								data={this.state.data}
+								data={this.props.cartProducts}
 								style={styles.container}
 								keyExtractor={this.key}
-								renderItem={this.renderItemCart}
-							/>
+								renderItem={this.renderItemCart} />
 						</View>
 					</View>
         </Modal>
@@ -174,7 +157,7 @@ class OrderSummary extends Component {
 							{this.props.cartProducts.length !== 0 ? (
 								<Badge><Text>{this.props.cartProducts.length}</Text></Badge>
 							) : (
-								<Icon name="ios-cart" size={25}/>
+								<Icon name="ios-cart" size={25} />
 							)}
 						</Button>
 					</Right>
@@ -206,9 +189,15 @@ class OrderSummary extends Component {
 						numColumns={numColumns} />
 				</Content>
 				<Footer>
-					<Button full style={styles.footerButton} onPress={() => navigate('Cart')}>
-						<Text style={styles.submit}>SUBMIT</Text>
-					</Button>
+					{this.props.cartProducts.length !== 0 ? (
+						<Button full style={styles.footerButton} onPress={() => navigate('QuestionPage', {step: params.step, id_pipeline: params.id_pipeline, id_customer: params.id_customer})}>
+							<Text style={styles.submit}>SUBMIT</Text>
+						</Button>
+					) : (
+						<Button full style={[styles.footerButton, {backgroundColor: '#999999'}]}>
+							<Text style={styles.submit}>SUBMIT</Text>
+						</Button>
+					)}
 				</Footer>
 			</Container>
 		)

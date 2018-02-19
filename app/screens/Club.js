@@ -29,6 +29,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import HorizontalJoker from '../components/HorizontalJokerTeam'
 import { fetchUsers } from '../actions/users'
+import { setNavigate } from '../actions/processor'
 import { fetchTeamUpdatesWithBranch } from '../actions/updates'
 import defaultAvatar from '../assets/images/default-avatar.png'
 
@@ -51,7 +52,7 @@ class Club extends Component {
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
-		<TouchableOpacity>
+		<TouchableOpacity onPress={() => this.props.setNavigate('CustomerProfile', item.customers[0])}>
 			<HorizontalJoker
 				name={item.users[0].first_name}
 				company={item.customers[0].name}
@@ -198,6 +199,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 	fetchTeamUpdatesWithBranch: (id_branch, accessToken) => dispatch(fetchTeamUpdatesWithBranch(id_branch, accessToken)),
 })
 

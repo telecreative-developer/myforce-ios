@@ -118,15 +118,17 @@ class CustomerProfile extends Component {
 		if (this.state.pipelineTabs === 'active') {
 			return (
 				<View>
-					<View style={styles.addPipeline}>
-						<Button
-							full
-							style={styles.addPipelineDirection}
-							onPress={() => this.setState({ modalNewPipeline: true })}>
-							<Icon name="md-add" size={20} color={'#ffffff'} />
-							<Text style={styles.addPipelineText}>Add Pipeline</Text>
-						</Button>
-					</View>
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id && (
+						<View style={styles.addPipeline}>
+							<Button
+								full
+								style={styles.addPipelineDirection}
+								onPress={() => this.setState({ modalNewPipeline: true })}>
+								<Icon name="md-add" size={20} color={'#ffffff'} />
+								<Text style={styles.addPipelineText}>Add Pipeline</Text>
+							</Button>
+						</View>
+					)}
 					<FlatList
 						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false)}
 						keyExtractor={this.key}
@@ -163,7 +165,7 @@ class CustomerProfile extends Component {
 
 	confirmToNextStep() {
 		this.setState({ isModalVisible: false })
-		this.props.navigation.navigate('Stepper', {step: this.state.step, id_pipeline: this.state.id_pipeline})
+		this.props.navigation.navigate('Stepper', {step: this.state.step, id_pipeline: this.state.id_pipeline, id_customer: this.props.navigation.state.params.id_customer})
 	}
 
 	renderTextSellingProccess() {
@@ -236,9 +238,13 @@ class CustomerProfile extends Component {
 					</View>
 				</View>
 				<View>
-					<PipelineProgress
-						onPress={() => this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)}
-						currentPosition={item.step-1} />
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() => this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)}
+							currentPosition={item.step-1} />
+					) : (
+						<PipelineProgress currentPosition={item.step-1} />
+					)}
 				</View>
 			</View>
 		</View>
