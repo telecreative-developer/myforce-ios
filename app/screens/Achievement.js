@@ -28,6 +28,9 @@ import PipelineProgress from '../components/PipelineProgress'
 import LinearGradient from 'react-native-linear-gradient'
 import moment from 'moment'
 import defaultAvatar from '../assets/images/default-avatar.png'
+import BarCharts from '../components/BarCharts'
+import PieCharts from '../components/PieCharts'
+import AnimatedBar from "react-native-animated-bar"
 
 const { height, width } = Dimensions.get('window')
 
@@ -36,7 +39,8 @@ class Achievements extends Component {
 		super()
 
 		this.state = {
-			pipelineTabs: 'active'
+			pipelineTabs: 'active',
+			progress: 20
 		}
 	}
 	renderPipelineTabs() {
@@ -223,10 +227,33 @@ class Achievements extends Component {
 					</LinearGradient>
 				</View>
 				<Content style={styles.content}>
-					<View style={styles.chartsDirection}>
-						<View style={styles.leftCharts} />
-						<View style={styles.rightCharts} />
-					</View>
+					<Grid style={styles.chartsDirection}>
+						<Col style={styles.leftCharts}>
+							<PieCharts />
+						</Col>
+						<Col style={styles.rightCharts}>
+							<Text style={styles.chartTitle}>Gross In</Text>
+							<Text style={styles.chartMonth}>Monthly</Text>
+							<Text style={styles.chartPercentage}>80%</Text>
+							<Text style={styles.chartTarget}>8 of 10 unit targets</Text>
+							<AnimatedBar 
+								progress={this.state.progress}
+								style={styles.bar}
+								height={40}
+								borderColor="#DDD"
+								barColor="tomato"
+								borderRadius={5}
+								borderWidth={5}
+							/>
+						</Col>
+					</Grid>
+					<Grid style={styles.chartsDirection}>
+						<Col style={styles.leftCharts}>
+							<PieCharts />
+						</Col>
+						<Col style={styles.rightCharts}>
+						</Col>
+					</Grid>
 					<View style={styles.customerTotal}>
 						<Grid style={{ display: 'flex', alignItems: 'center' }}>
 							<Col>
@@ -336,9 +363,41 @@ const styles = StyleSheet.create({
 	},
 	chartsDirection: {
 		display: 'flex',
-		flexDirection: 'row',
+		height: height / 3,
+		backgroundColor: '#fff',
+		marginBottom: 10,
+	},
+	leftCharts: {
+		flex: 0.5
+	},
+	rightCharts: {
+		flex: 0.5,
 		justifyContent: 'center',
-		paddingBottom: 15
+	},
+	bar: {
+		width: width / 2.5,
+		marginVertical: 10
+	},
+	chartTitle: {
+		fontSize: 28,
+		fontWeight: '900',
+		marginBottom: 15
+	},
+	chartMonth: {
+		fontSize: 22
+	},
+	chartPercentage: {
+		fontSize: 38,
+		fontWeight: 'bold',
+		color: '#e87e04'
+	},
+	chartTarget: {
+		fontSize: 18,
+		fontWeight: 'bold',
+		marginBottom: 10
+	},
+	chartYear: {
+		fontSize: 22
 	},
 	customerTotal: {
 		width: '100%',
@@ -397,17 +456,6 @@ const styles = StyleSheet.create({
 		flex: 0.2,
 		display: 'flex',
 		justifyContent: 'center'
-	},
-	leftCharts: {
-		backgroundColor: '#ffffff',
-		width: width / 2.1,
-		height: height / 4,
-		marginRight: 10
-	},
-	rightCharts: {
-		backgroundColor: '#ffffff',
-		width: width / 2.1,
-		height: height / 4
 	},
 	progressView: {
 		flex: 1
