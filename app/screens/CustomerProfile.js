@@ -97,7 +97,8 @@ class CustomerProfile extends Component {
 					pipeline: this.state.pipeline,
 					id_customer: this.props.navigation.state.params.id_customer,
 					id_pic: this.state.id_pic,
-					id: this.props.sessionPersistance.id
+					id: this.props.sessionPersistance.id,
+					id_branch: this.props.sessionPersistance.id_branch
 				},
 				this.props.sessionPersistance.accessToken
 			)
@@ -171,42 +172,42 @@ class CustomerProfile extends Component {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 1</Text>
-					<Text style={styles.title}>Identify Opportunities</Text>
+					<Text style={styles.titleModal}>Identify Opportunities</Text>
 				</View>
 			)
 		}else if(step === 2) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 2</Text>
-					<Text style={styles.title}>Clarify Needs</Text>
+					<Text style={styles.titleModal}>Clarify Needs</Text>
 				</View>
 			)
 		}else if(step === 3) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 3</Text>
-					<Text style={styles.title}>IDENTIFY OPPORTUNITIES</Text>
+					<Text style={styles.titleModal}>IDENTIFY OPPORTUNITIES</Text>
 				</View>
 			)
 		}else if(step === 4) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 4</Text>
-					<Text style={styles.title}>Develop Criteria</Text>
+					<Text style={styles.titleModal}>Develop Criteria</Text>
 				</View>
 			)
 		}else if(step === 5) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 5</Text>
-					<Text style={styles.title}>Gain Commitment</Text>
+					<Text style={styles.titleModal}>Gain Commitment</Text>
 				</View>
 			)
 		}else if(step === 6) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 6</Text>
-					<Text style={styles.title}>Manage Implementation</Text>
+					<Text style={styles.titleModal}>Manage Implementation</Text>
 				</View>
 			)
 		}
@@ -223,7 +224,7 @@ class CustomerProfile extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In process</Text>
+									<Text>In progress</Text>
 								</Badge>
 							)}
 						</View>
@@ -254,7 +255,7 @@ class CustomerProfile extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In process</Text>
+									<Text>In progress</Text>
 								</Badge>
 							)}
 						</View>
@@ -283,7 +284,7 @@ class CustomerProfile extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In process</Text>
+									<Text>In progress</Text>
 								</Badge>
 							)}
 						</View>
@@ -815,7 +816,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		backgroundColor: 'transparent'
 	},
-	title: {
+	titleModal: {
 		fontSize: 35,
 		fontWeight: '900',
 		color: '#ffffff',

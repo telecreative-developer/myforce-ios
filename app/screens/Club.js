@@ -38,35 +38,7 @@ class Club extends Component {
 		super()
 
 		this.state = {
-			isModalVisible: false,
-			dataJoker: [
-				{
-					title: 'PT Astra Graphia',
-					person: 'M. Ridho',
-					description: '0RS-05-33D-Xerox',
-					avatar:
-						'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv7w-iiNlrMPb2rAFRiPxpTsD6ab9rj7SdbVNv2jqyx-ces0xb'
-				},
-				{
-					title: 'PT Tele Digital Kreatif',
-					person: 'Muhammad Fuadit',
-					description: '0RS-05-33D-Xerox',
-					avatar:
-						'https://media.licdn.com/media-proxy/ext?w=800&h=800&hash=iNhNmsHQG4hyGxyWFupYOY2%2FzJ8%3D&ora=1%2CaFBCTXdkRmpGL2lvQUFBPQ%2CxAVta5g-0R6nlh8Tw1Ek-L7T40O550NJC4HTDy_8DnHzq8jAIiihMNiKMfau41AUfikIhlw_fe2rQia3H82qc9usJdFyi8-sLcu1NhMcUU8A3Wxb2_QuFTMdkZanCbO1MwoI3f5ZMH74YZroQXAcPh0z9t6EPaD0e1EH6GOqb-jQXJ5mRpZU5IAPxBMFlZvVGNII_d1iw2E_41uM7p_jY20957CYBAKKJVsdBkbKKuZW6pu__Aa8wnvMrWb5iKeHXZirMIgXmlCk1s6KckrQ3ktivG4lyyFNg95KE1iA2NlN6W_nDeZfRQ'
-				},
-				{
-					title: 'PT Paris Saint Germain',
-					person: 'Ibrahimovic',
-					description: '0RS-05-33D-Xerox',
-					avatar: 'https://i.imgur.com/vD2bqrih.jpg'
-				},
-				{
-					title: 'PT Paris Saint Germain',
-					person: 'Ibrahimovic',
-					description: '0RS-05-33D-Xerox',
-					avatar: 'https://i.imgur.com/vD2bqrih.jpg'
-				}
-			]
+			isModalVisible: false
 		}
 	}
 
@@ -177,16 +149,9 @@ class Club extends Component {
 								{this.props.sessionPersistance.regionals[0].region} Leaderboard
 							</Text>
 							<FlatList
-								data={this.props.users
-									.filter(
-										u =>
-											u.id_region ===
-											this.props.sessionPersistance.regionals[0].id_region
-									)
-									.slice(0, 5)}
+								data={this.props.users.filter(u => u.id_region === this.props.sessionPersistance.regionals[0].id_region).slice(0, 5)}
 								keyExtractor={this.key}
-								renderItem={this.renderItemUsers}
-							/>
+								renderItem={this.renderItemUsers} />
 							{/* <TouchableOpacity>
 								<Text style={styles.see}>See Complete Table</Text>
 							</TouchableOpacity> */}
@@ -210,8 +175,7 @@ class Club extends Component {
 							showsHorizontalScrollIndicator={false}
 							data={this.state.dataJoker}
 							keyExtractor={this.key}
-							renderItem={this.renderItems}
-						/>
+							renderItem={this.renderItems} />
 					</View>
 				</View>
 			</Container>
@@ -219,12 +183,15 @@ class Club extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		users: state.users,
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	users: state.users,
+	teamUpdatesWithBranch: state.teamUpdatesWithBranch,
+	sessionPersistance: state.sessionPersistance
+})
+
+const mapDispatchToProps = dispatch => ({
+	fetchTeamUpdatesWithBranch: (id_branch, accessToken) => dispatch(fetchTeamUpdatesWithBranch(id_branch, accessToken)),
+})
 
 const styles = StyleSheet.create({
 	header: {
@@ -333,4 +300,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default connect(mapStateToProps)(Club)
+export default connect(mapStateToProps, mapDispatchToProps)(Club)

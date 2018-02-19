@@ -1,22 +1,25 @@
 import { FETCH_PIPELINES_SUCCESS, FETCH_PIPELINES_WITH_USER_ID_SUCCESS } from '../constants'
 import { url } from '../lib/server'
+import { sendUpdate } from './updates'
 import { setLoading, setSuccess, setFailed } from './processor'
 import { app } from '../lib/socket'
 
-export const postPipeline = (data, accessToken) => {
+export const postPipeline = (item, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'POST_PIPELINE'))
 		try {
-			await fetch(`${url}/pipelines`, {
+			const response = await fetch(`${url}/pipelines`, {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
 					Authorization: accessToken
 				},
-				body: JSON.stringify(data)
+				body: JSON.stringify(item)
 			})
-			await dispatch(fetchPipelines(data.id_customer, accessToken))
+			const data = await response.json()
+			await dispatch(sendUpdate({...item, id_pipeline: data.id_pipeline}, accessToken))
+			await dispatch(fetchPipelines(item.id_customer, accessToken))
 			await dispatch(setSuccess(false, 'POST_PIPELINE'))
 			await dispatch(setLoading(false, 'POST_PIPELINE'))
 		} catch (e) {
@@ -26,12 +29,12 @@ export const postPipeline = (data, accessToken) => {
 	}
 }
 
-export const fetchPipelines = (id, accessToken) => {
+export const fetchPipelines = (id_customer, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'FETCH_PIPELINES'))
 		try {
 			const response = await fetch(
-				`${url}/pipelines?id_customer=${id}&$sort[createdAt]=-1`,
+				`${url}/pipelines?id_customer=${id_customer}&$sort[createdAt]=-1`,
 				{
 					method: 'GET',
 					headers: {

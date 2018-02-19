@@ -36,125 +36,37 @@ class Achievements extends Component {
 		super()
 
 		this.state = {
-			pipelineTabs: 'new',
-			dataNew: [
-				{
-					product: 'Fuji Xerox 3400',
-					pic: 'Andreas Pribadi'
-				},
-				{
-					product: 'Fuji Xerox RC Machine',
-					pic: 'Hendro Kartiko'
-				},
-				{
-					product: 'Fuji Xerox RC Machine',
-					pic: 'Hendro Kartiko'
-				},
-				{
-					product: 'Fuji Xerox RC Machine',
-					pic: 'Hendro Kartiko'
-				}
-			],
-			dataActive: [
-				{
-					product: 'Fuji Xerox 3400',
-					pic: 'Andreas Pribadi'
-				},
-				{
-					product: 'Fuji Xerox RC Machine',
-					pic: 'Hendro Kartiko'
-				},
-				{
-					product: 'Fuji Xerox RC Machine',
-					pic: 'Hendro Kartiko'
-				}
-			],
-			dataClose: [
-				{
-					product: 'Fuji Xerox 3400',
-					pic: 'Andreas Pribadi'
-				}
-			],
-			dataLose: [
-				{
-					product: 'Fuji Xerox 3400',
-					pic: 'Andreas Pribadi'
-				},
-				{
-					product: 'Fuji Xerox 3400',
-					pic: 'Andreas Pribadi'
-				}
-			]
+			pipelineTabs: 'active'
 		}
 	}
-
 	renderPipelineTabs() {
-		if (this.state.pipelineTabs === 'new') {
+		if (this.state.pipelineTabs === 'active') {
 			return (
 				<View>
 					<FlatList
-						data={this.state.dataNew}
+						data={this.props.pipelinesWithUserId.filter(p => p.step !== 7 && p.lose === false)}
 						keyExtractor={this.key}
-						renderItem={this.renderItemsNew}
-					/>
-				</View>
-			)
-		} else if (this.state.pipelineTabs === 'active') {
-			return (
-				<View>
-					<FlatList
-						data={this.state.dataActive}
-						keyExtractor={this.key}
-						renderItem={this.renderItemsActive}
-					/>
+						renderItem={this.renderItemsActive} />
 				</View>
 			)
 		} else if (this.state.pipelineTabs === 'close') {
 			return (
 				<FlatList
-					data={this.state.dataClose}
+					data={this.props.pipelinesWithUserId.filter(p => p.step === 7 && p.lose === false)}
 					keyExtractor={this.key}
-					renderItem={this.renderItemsClose}
-				/>
+					renderItem={this.renderItemsClose} />
 			)
 		} else if (this.state.pipelineTabs === 'lose') {
 			return (
 				<FlatList
-					data={this.state.dataLose}
+					data={this.props.pipelinesWithUserId.filter(p => p.lose === true)}
 					keyExtractor={this.key}
-					renderItem={this.renderItemsLose}
-				/>
+					renderItem={this.renderItemsLose} />
 			)
 		}
 	}
 
 	key = (item, index) => index
-
-	renderItemsNew = ({ item }) => (
-		<View style={styles.customerPipeline}>
-			<View style={styles.pipelineContent}>
-				<View style={styles.leftPipeline}>
-					<View style={styles.pipelineTitleDirection}>
-						<View style={styles.titleFlex}>
-							<H2>{item.product}</H2>
-						</View>
-						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={15} />
-						<Text style={styles.data}>{item.pic}</Text>
-					</View>
-				</View>
-				<View>
-					<PipelineProgress />
-				</View>
-			</View>
-		</View>
-	)
 
 	renderItemsActive = ({ item }) => (
 		<View style={styles.customerPipeline}>
@@ -162,21 +74,27 @@ class Achievements extends Component {
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
 						<View style={styles.titleFlex}>
-							<H2>{item.product}</H2>
+							<H2>{item.pipeline}</H2>
 						</View>
 						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>In progress</Text>
+								</Badge>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
 						<Icon name="md-contact" size={15} />
-						<Text style={styles.data}>{item.pic}</Text>
+						<View style={styles.picDirection}>
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.data}>{data.name}</Text>
+							))}
+						</View>
 					</View>
 				</View>
 				<View>
-					<PipelineProgress />
+					<PipelineProgress currentPosition={item.step-1} />
 				</View>
 			</View>
 		</View>
@@ -188,21 +106,27 @@ class Achievements extends Component {
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
 						<View style={styles.titleFlex}>
-							<H2>{item.product}</H2>
+							<H2>{item.pipeline}</H2>
 						</View>
 						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>In progress</Text>
+								</Badge>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
 						<Icon name="md-contact" size={15} />
-						<Text style={styles.data}>{item.pic}</Text>
+						<View style={styles.picDirection}>
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.data}>{data.name}</Text>
+							))}
+						</View>
 					</View>
 				</View>
 				<View>
-					<PipelineProgress />
+					<PipelineProgress currentPosition={item.step-1} />
 				</View>
 			</View>
 		</View>
@@ -214,21 +138,27 @@ class Achievements extends Component {
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
 						<View style={styles.titleFlex}>
-							<H2>{item.product}</H2>
+							<H2>{item.pipeline}</H2>
 						</View>
 						<View style={styles.badgeFlex}>
-							<Badge style={styles.pipelineBadgeNew}>
-								<Text>New Pipeline</Text>
-							</Badge>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>In progress</Text>
+								</Badge>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
 						<Icon name="md-contact" size={15} />
-						<Text style={styles.data}>{item.pic}</Text>
+						<View style={styles.picDirection}>
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.data}>{data.name}</Text>
+							))}
+						</View>
 					</View>
 				</View>
 				<View>
-					<PipelineProgress />
+					<PipelineProgress currentPosition={item.step-1} />
 				</View>
 			</View>
 		</View>
@@ -279,7 +209,7 @@ class Achievements extends Component {
 										</View>
 										<View style={styles.headerDirection}>
 											<Text style={styles.dataPipeline}>
-												20 Pipeline Created
+												{this.props.pipelinesWithUserId.length} Pipeline Created
 											</Text>
 										</View>
 									</View>
@@ -301,18 +231,11 @@ class Achievements extends Component {
 						<Grid style={{ display: 'flex', alignItems: 'center' }}>
 							<Col>
 								<TouchableOpacity
-									onPress={() => this.setState({ pipelineTabs: 'new' })}>
-									<H1 style={styles.totalText}>
-										{JSON.stringify(this.state.dataNew.length)}
-									</H1>
-									<Text style={styles.totalText}>NEW</Text>
-								</TouchableOpacity>
-							</Col>
-							<Col>
-								<TouchableOpacity
 									onPress={() => this.setState({ pipelineTabs: 'active' })}>
 									<H1 style={styles.totalText}>
-										{JSON.stringify(this.state.dataActive.length)}
+										{JSON.stringify(
+											this.props.pipelinesWithUserId.filter(p => p.step !== 7 && p.lose === false).length
+										)}
 									</H1>
 									<Text style={styles.totalText}>ACTIVE</Text>
 								</TouchableOpacity>
@@ -321,7 +244,9 @@ class Achievements extends Component {
 								<TouchableOpacity
 									onPress={() => this.setState({ pipelineTabs: 'close' })}>
 									<H1 style={styles.totalText}>
-										{JSON.stringify(this.state.dataClose.length)}
+										{JSON.stringify(
+											this.props.pipelinesWithUserId.filter(p => p.step === 7 && p.lose === false).length
+										)}
 									</H1>
 									<Text style={styles.totalText}>CLOSE</Text>
 								</TouchableOpacity>
@@ -330,7 +255,9 @@ class Achievements extends Component {
 								<TouchableOpacity
 									onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
-										{JSON.stringify(this.state.dataLose.length)}
+										{JSON.stringify(
+											this.props.pipelinesWithUserId.filter(p => p.lose === true).length
+										)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
 								</TouchableOpacity>
@@ -344,11 +271,14 @@ class Achievements extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	sessionPersistance: state.sessionPersistance,
+	pipelinesWithUserId: state.pipelinesWithUserId
+})
+
+const mapDispatchToProps = dispatch => ({
+	fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
+})
 
 const styles = StyleSheet.create({
 	header: {
@@ -540,4 +470,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default connect(mapStateToProps)(Achievements)
+export default connect(mapStateToProps, mapDispatchToProps)(Achievements)
