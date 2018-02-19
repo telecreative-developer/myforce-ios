@@ -31,6 +31,8 @@ import { connect } from 'react-redux'
 import ThemeContainer from '../components/ThemeContainer'
 import { getUserNationRank, getUserRegionRank } from '../actions/users'
 import { setNavigate } from '../actions/processor'
+import defaultAvatar from '../assets/images/default-avatar.png'
+import ImagePicker from 'react-native-image-picker'
 
 const { width, height } = Dimensions.get('window')
 
@@ -70,53 +72,43 @@ class Profile extends Component {
 		)
 	}
 
-	renderForeground() {
-		return (
-			<View key="parallax-header" style={styles.parallaxHeader}>
-				<Image
-					style={styles.avatar}
-					source={{
-						uri:
-							'https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png',
-						width: AVATAR_SIZE,
-						height: AVATAR_SIZE
-					}}
-				/>
-				<TouchableOpacity style={styles.viewBadge}>
-					<Badge style={styles.changeAvatarBadge}>
-						<Icon name="md-create" color={'#ffffff'} size={20} />
-					</Badge>
-				</TouchableOpacity>
-				<Text style={styles.sectionSpeakerText}>Kevin Hermione</Text>
-				<Text style={styles.sectionTitleText}>
-					CTO of Telecreative, Creative Junky
-				</Text>
-				<TouchableOpacity style={styles.changeCover}>
-					<Badge
-						style={{
-							backgroundColor: '#2A5CF0',
-							alignItems: 'center',
-							justifyContent: 'center',
-							marginTop: 15
-						}}>
-						<Text style={styles.changeCoverText}>Change Cover</Text>
-					</Badge>
-				</TouchableOpacity>
-			</View>
-		)
-	}
-
-	renderStickyHeader() {
-		return (
-			<View key="sticky-header" style={styles.stickySection}>
-				<Text style={styles.stickySectionText}>Kevin Hermione</Text>
-			</View>
-		)
-	}
-
 	handleBackButton() {
 		this.props.setNavigate()
 		this.props.navigation.goBack()
+	}
+
+	handleChangeProfile() {
+		var options = {
+			title: 'Select Avatar',
+			customButtons: [
+				{name: 'fb', title: 'Choose Photo from Facebook'},
+			],
+			storageOptions: {
+				skipBackup: true,
+				path: 'images'
+			}
+		};
+		
+		ImagePicker.showImagePicker(options, (response) => {
+			console.log('Response = ', response);
+		
+			if (response.didCancel) {
+				console.log('User cancelled image picker');
+			}
+			else if (response.error) {
+				console.log('ImagePicker Error: ', response.error);
+			}
+			else if (response.customButton) {
+				console.log('User tapped custom button: ', response.customButton);
+			}
+			else {
+				let source = { uri: response.uri };
+
+				this.setState({
+					avatarSource: source
+				});
+			}
+		});
 	}
 
 	renderFixedHeader = () => {
@@ -174,8 +166,40 @@ class Profile extends Component {
 				parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
 				backgroundSpeed={10}
 				renderBackground={this.renderBackground}
-				renderForeground={this.renderForeground}
-				renderStickyHeader={this.renderStickyHeader}
+				renderForeground={() => (
+					<View key="parallax-header" style={styles.parallaxHeader}>
+						{this.props.sessionPersistance.avatar === '' ? (
+							<Image style={[styles.avatar, {width: AVATAR_SIZE, height: AVATAR_SIZE}]} source={defaultAvatar} />
+						) : (
+							<Image style={styles.avatar} source={{uri: this.props.sessionPersistance.avatar, width: AVATAR_SIZE, height: AVATAR_SIZE}} />
+						)}
+						<TouchableOpacity style={styles.viewBadge} onPress={() => this.handleChangeProfile()}>
+							<Badge style={styles.changeAvatarBadge}>
+								<Icon name="md-create" color={'#ffffff'} size={20} />
+							</Badge>
+						</TouchableOpacity>
+						<Text style={styles.sectionSpeakerText}>{`${this.props.sessionPersistance.first_name} ${sessionPersistance.last_name}`}</Text>
+						<Text style={styles.sectionTitleText}>
+							{sessionPersistance.bio}
+						</Text>
+						<TouchableOpacity style={styles.changeCover}>
+							<Badge
+								style={{
+									backgroundColor: '#2A5CF0',
+									alignItems: 'center',
+									justifyContent: 'center',
+									marginTop: 15
+								}}>
+								<Text style={styles.changeCoverText}>Change Cover</Text>
+							</Badge>
+						</TouchableOpacity>
+					</View>
+				)}
+				renderStickyHeader={() => (
+					<View key="sticky-header" style={styles.stickySection}>
+						<Text style={styles.stickySectionText}>Kevin Hermione</Text>
+					</View>
+				)}
 				renderFixedHeader={this.renderFixedHeader}>
 				<View style={styles.profileInfoView}>
 					<H2 style={styles.profileInfoTitle}>PROFILE INFO</H2>
