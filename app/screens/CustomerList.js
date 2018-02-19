@@ -48,7 +48,7 @@ class CustomerList extends Component {
 		<TouchableOpacity
 			onPress={() => this.props.setNavigate('CustomerProfile', item)}>
 			<View style={styles.card}>
-				<View style={styles.content}>
+				<View style={styles.contentCard}>
 					<View style={styles.cardHeader}>
 						<H3 style={styles.textTitle}>{item.name}</H3>
 						{this.props.resultPics.filter(data => data.id_customer === item.id_customer).map((d, index) => (
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ffffff',
 		marginBottom: '3%'
 	},
-	content: {
+	contentCard: {
 		display: 'flex',
 		flexDirection: 'row',
 		paddingRight: 90,
