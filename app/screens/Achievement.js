@@ -43,6 +43,7 @@ class Achievements extends Component {
 			progress: 20
 		}
 	}
+
 	renderPipelineTabs() {
 		if (this.state.pipelineTabs === 'active') {
 			return (
@@ -235,16 +236,24 @@ class Achievements extends Component {
 							<Text style={styles.chartTitle}>Gross In</Text>
 							<Text style={styles.chartMonth}>Monthly</Text>
 							<Text style={styles.chartPercentage}>80%</Text>
-							<Text style={styles.chartTarget}>8 of 10 unit targets</Text>
+							<Text style={styles.chartTargetUnder}>8 of 10 unit targets</Text>
+							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar 
 								progress={this.state.progress}
 								style={styles.bar}
 								height={40}
 								borderColor="#DDD"
 								barColor="tomato"
+								fillColor="red"	
 								borderRadius={5}
-								borderWidth={5}
-							/>
+								borderWidth={5}>
+									<View style={styles.row}>
+										<Text style={styles.barText}>
+											{this.state.progress}%
+										</Text>
+									</View>
+							</AnimatedBar>
+							<Text style={styles.chartTarget}>8 of 120 unit targets</Text>
 						</Col>
 					</Grid>
 					<Grid style={styles.chartsDirection}>
@@ -252,6 +261,29 @@ class Achievements extends Component {
 							<PieCharts />
 						</Col>
 						<Col style={styles.rightCharts}>
+							<Text style={styles.chartTitle}>Revenue ORS</Text>
+							<Text style={styles.chartMonth}>Monthly</Text>
+							<Text style={styles.chartPercentage}>80%</Text>
+							<Text style={styles.chartTarget}>Rp. 800 Mio of</Text>
+							<Text style={styles.chartTargetUnder}>Rp. 1000 Mio targets</Text>
+							<Text style={styles.chartYear}>Yearly</Text>
+							<AnimatedBar 
+								progress={this.state.progress}
+								style={styles.bar}
+								height={40}
+								borderColor="#DDD"
+								barColor="tomato"
+								fillColor="#f8f8f8"	
+								borderRadius={5}
+								borderWidth={5}>
+									<View style={styles.row}>
+										<Text style={styles.barText}>
+											{this.state.progress}%
+										</Text>
+									</View>
+							</AnimatedBar>
+							<Text style={styles.chartTarget}>Rp. 800 Mio of</Text>
+							<Text style={styles.chartTarget}>Rp. 12000 Mio targets</Text>
 						</Col>
 					</Grid>
 					<View style={styles.customerTotal}>
@@ -376,28 +408,43 @@ const styles = StyleSheet.create({
 	},
 	bar: {
 		width: width / 2.5,
-		marginVertical: 10
+		marginVertical: 10,
+	},
+	barText: {
+		fontSize: 18,
+		backgroundColor: "transparent",
+		color: "#FFF",
+		textAlign: 'center'
+	},
+	row: {
+		display: 'flex',
+		flex: 1,
+		justifyContent: 'center'
 	},
 	chartTitle: {
-		fontSize: 28,
+		fontSize: 26,
 		fontWeight: '900',
 		marginBottom: 15
 	},
 	chartMonth: {
-		fontSize: 22
+		fontSize: 20,
+		fontWeight: 'bold',
 	},
 	chartPercentage: {
-		fontSize: 38,
+		fontSize: 34,
 		fontWeight: 'bold',
 		color: '#e87e04'
 	},
 	chartTarget: {
-		fontSize: 18,
-		fontWeight: 'bold',
-		marginBottom: 10
+		fontSize: 16,
+	},
+	chartTargetUnder: {
+		fontSize: 16,
+		marginBottom: 15
 	},
 	chartYear: {
-		fontSize: 22
+		fontSize: 20,
+		fontWeight: 'bold',
 	},
 	customerTotal: {
 		width: '100%',
