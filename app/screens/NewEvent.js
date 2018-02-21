@@ -99,9 +99,9 @@ class NewEvent extends Component {
 						<Text style={styles.title}>NEW EVENT</Text>
 					</Body>
 					<Right>
-						<Button transparent badge onPress={() => navigate('Cart')}>
+						{/* <Button transparent badge onPress={() => navigate('Cart')}>
 							<Icon name="ios-notifications" size={25} />
-						</Button>
+						</Button> */}
 					</Right>
 				</Header>
 				<Content style={styles.content} scrollEnabled={false}>

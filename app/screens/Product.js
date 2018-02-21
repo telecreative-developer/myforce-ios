@@ -45,6 +45,7 @@ class Product extends Component {
 	renderItems = ({ item }) => {
 		return (
 			<TouchableHighlight
+				underlayColor={'transparent'}
 				onPress={() => this.props.setNavigate('SubProduct', item)}>
 				<ImageBackground
 					source={{ uri: item.picture }}
@@ -72,7 +73,7 @@ class Product extends Component {
 			<Container>
 				<Header style={styles.header}>
 					<Left>
-						<TouchableHighlight>
+						<TouchableHighlight underlayColor={'transparent'}>
 							<Thumbnail
 								small
 								rounded
@@ -84,10 +85,11 @@ class Product extends Component {
 						<Text style={styles.title}>PRODUCTS</Text>
 					</Body>
 					<Right>
-						<TouchableHighlight
+						{/* <TouchableHighlight
+							underlayColor={'transparent'}
 							onPress={() => this.props.setNavigate('Profile')}>
 							<Icon name="ios-notifications" size={25} />
-						</TouchableHighlight>
+						</TouchableHighlight> */}
 					</Right>
 				</Header>
 				<Content style={styles.content}>

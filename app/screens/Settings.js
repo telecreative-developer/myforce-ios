@@ -72,7 +72,7 @@ class Settings extends Component {
 							<Body>
 								<Text>Edit Profile</Text>
 							</Body>
-							<TouchableHighlight>
+							<TouchableHighlight underlayColor={'transparent'}>
 								<Right>
 									<Icon name="ios-arrow-forward" size={25} />
 								</Right>

@@ -91,9 +91,9 @@ class AddCustomerPreview extends Component {
 						<Text style={styles.title}>CUSTOMER PREVIEW</Text>
 					</Body>
 					<Right>
-						<Button transparent badge onPress={() => navigate('Cart')}>
+						{/* <Button transparent badge onPress={() => navigate('Cart')}>
 							<Icon name="ios-notifications" size={25} />
-						</Button>
+						</Button> */}
 					</Right>
 				</Header>
 				<Content style={styles.content}>

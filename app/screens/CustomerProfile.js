@@ -450,9 +450,9 @@ class CustomerProfile extends Component {
 						<Text style={styles.title}>CUSTOMER PROFILE</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity onPress={() => navigate('OrderSummary')}>
+						{/* <TouchableOpacity onPress={() => navigate('OrderSummary')}>
 							<Icon name="ios-folder-open" size={25} />
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</Right>
 				</Header>
 				{/* <View style={styles.newsWrapper}>
@@ -487,7 +487,7 @@ class CustomerProfile extends Component {
 					<View style={styles.customerHeader}>
 						<View style={styles.headerDirectionTitle}>
 							<View>
-								<TouchableHighlight>
+								<TouchableHighlight underlayColor={'transparent'}>
 									<H3 style={styles.headerDirectionTitle}>
 										{state.params.name}
 									</H3>
@@ -817,7 +817,7 @@ const styles = StyleSheet.create({
 	step: {
 		fontSize: 35,
 		fontWeight: '900',
-		color: '#db0000',
+		color: '#20E6CD',
 		fontStyle: 'italic', 
 		textAlign: 'center',
 		backgroundColor: 'transparent'

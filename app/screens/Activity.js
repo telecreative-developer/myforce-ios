@@ -217,7 +217,7 @@ class Activity extends Component {
 				<Header style={styles.header}>
 					<Left>
 						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-							{this.props.sessionPersistance.avatar === '' ? (
+							{this.props.sessionPersistance.avatar === '' && this.props.sessionPersistance.avatar === null ? (
 								<Thumbnail rounded small source={defaultAvatar} />
 							) : (
 								<Thumbnail
@@ -242,16 +242,15 @@ class Activity extends Component {
 								color={'#2D38F9'}
 							/>
 						</Button>
-						<Button
+						{/* <Button
 							transparent
 							onPress={() => this.props.setNavigate({ link: 'Notifications' })}>
 							<Icon name="ios-notifications" size={25} />
-						</Button>
+						</Button> */}
 					</Right>
 				</Header>
 				<View style={styles.wrapperView}>
 					<MapView
-						provider={PROVIDER_GOOGLE}
 						style={styles.maps}
 						showsUserLocation={true}
 						region={this.state.region}
@@ -271,7 +270,7 @@ class Activity extends Component {
 					</MapView>
 					<Animated.View style={[styles.footerConfirmation, animatedStyleDetail]}>
 						<View style={{width: '100%',alignItems: 'flex-end'}}>
-							<TouchableHighlight onPress={() => this.handleCloseDetail()}>
+							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.handleCloseDetail()}>
 								<Icon name="ios-close" size={35}/>
 							</TouchableHighlight>
 						</View>

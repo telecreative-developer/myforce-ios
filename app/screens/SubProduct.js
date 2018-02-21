@@ -42,7 +42,7 @@ class SubProduct extends Component {
 			source={{ uri: item.picture }}
 			imageStyle={styles.cardImage}
 			style={styles.item}>
-			<TouchableHighlight onPress={() => this.props.navigation.navigate('PDFProductViewer', {file: item.file, title: item.subproduct})} style={{flex: 1}}>
+			<TouchableHighlight underlayColor={'transparent'} onPress={() => this.props.navigation.navigate('PDFProductViewer', {file: item.file, title: item.subproduct})} style={{flex: 1}}>
 				<Text style={styles.itemText}>{item.subproduct}</Text>
 			</TouchableHighlight>
 		</ImageBackground>
@@ -83,9 +83,9 @@ class SubProduct extends Component {
 						</Text>
 					</Body>
 					<Right>
-						<TouchableHighlight onPress={() => this.props.setNavigate({link: 'Notifications'})} underlayColor={'transparent'}>
+						{/* <TouchableHighlight onPress={() => this.props.setNavigate({link: 'Notifications'})} underlayColor={'transparent'}>
 							<Icon name="ios-notifications" size={25} />
-						</TouchableHighlight>
+						</TouchableHighlight> */}
 					</Right>
 				</Header>
 				<FlatList

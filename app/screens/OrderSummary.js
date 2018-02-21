@@ -83,7 +83,7 @@ class OrderSummary extends Component {
 				source={{uri: item.picture}}
 				imageStyle={styles.cardImage}
 				style={styles.item}>
-				<TouchableHighlight>
+				<TouchableHighlight underlayColor={'transparent'}>
 					<Text style={styles.itemText}>{item.subproduct}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooter}>
@@ -126,7 +126,7 @@ class OrderSummary extends Component {
 					onBackdropPress={() => this.setState({ isModalVisibleCart: false })}>
 					<View style={styles.cartContent}>
 						<View style={{width: '100%',alignItems: 'flex-end', paddingHorizontal: 20, paddingTop: 10,}}>
-							<TouchableHighlight onPress={() => this.setState({ isModalVisibleCart: false })}>
+							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.setState({ isModalVisibleCart: false })}>
 								<Icon name="ios-close" size={35}/>
 							</TouchableHighlight>
 						</View>

@@ -87,9 +87,9 @@ class CustomerList extends Component {
 						<Text style={styles.title}>CUSTOMERS</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
+						{/* <TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
 							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</Right>
 				</Header>
 				<View style={styles.searchView}>

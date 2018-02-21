@@ -127,19 +127,18 @@ class Profile extends Component {
 				</Col>
 				<Col style={styles.fixHeaderRight}>
 					<View key="fixed-header" style={styles.fixedSection}>
-						<TouchableOpacity
-							onPress={() => this.props.navigation.navigate('Settings')}>
+						<TouchableOpacity>
 							<Icon
 								name="ios-settings"
 								size={25}
-								color="#fff"
+								color="transparent"
 								style={styles.iconSetting}
 							/>
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => this.props.navigation.navigate('Notifications')}>
+							onPress={() => this.props.navigation.navigate('Settings')}>
 							<Icon
-								name="ios-notifications"
+								name="ios-settings"
 								size={25}
 								color="#fff"
 								style={styles.iconBell} />

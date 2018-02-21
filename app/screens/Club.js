@@ -102,9 +102,9 @@ class Club extends Component {
 						<Text style={styles.title}>AG CLUB</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity>
+						{/* <TouchableOpacity>
 							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</Right>
 				</Header>
 				<View style={styles.customerHeader}>
@@ -125,17 +125,17 @@ class Club extends Component {
 											}}
 										/>
 									)}
-									<View>
+									<View style={{justifyContent: 'center'}}>
 										<TouchableOpacity>
 											<H3 style={styles.profileName}>{`${
 												this.props.sessionPersistance.first_name
 											} ${this.props.sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
-										<View style={styles.headerDirection}>
+										{/* <View style={styles.headerDirection}>
 											<Text style={styles.Data}>
 												{this.props.sessionPersistance.bio}
 											</Text>
-										</View>
+										</View> */}
 										<View style={styles.headerDirection}>
 											<Text style={styles.Data}>{this.props.pipelinesWithUserId.length} Pipeline Created</Text>
 										</View>

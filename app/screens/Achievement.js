@@ -31,6 +31,7 @@ import defaultAvatar from '../assets/images/default-avatar.png'
 import BarCharts from '../components/BarCharts'
 import PieCharts from '../components/PieCharts'
 import AnimatedBar from "react-native-animated-bar"
+import { setNavigate } from '../actions/processor'
 
 const { height, width } = Dimensions.get('window')
 
@@ -42,6 +43,10 @@ class Achievements extends Component {
 			pipelineTabs: 'active',
 			progress: 20
 		}
+	}
+
+	componentWillMount() {
+		console.log(this.props.sessionPersistance.avatar)
 	}
 
 	renderPipelineTabs() {
@@ -178,9 +183,9 @@ class Achievements extends Component {
 						<Text style={styles.title}>ACHIEVEMENTS</Text>
 					</Body>
 					<Right>
-						<TouchableOpacity>
+						{/* <TouchableOpacity>
 							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</Right>
 				</Header>
 				<View style={styles.customerHeader}>
@@ -190,7 +195,7 @@ class Achievements extends Component {
 						<Grid>
 							<Col style={styles.leftCol}>
 								<View style={styles.headerDirection}>
-									{this.props.sessionPersistance.avatar === '' ? (
+									{this.props.sessionPersistance.avatar === '' || this.props.sessionPersistance.avatar === null ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
 										<Thumbnail
@@ -201,17 +206,17 @@ class Achievements extends Component {
 											}}
 										/>
 									)}
-									<View>
-										<TouchableOpacity>
+									<View style={{justifyContent: 'center'}}>
+										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
 											<H3 style={styles.profileName}>{`${
 												this.props.sessionPersistance.first_name
 											} ${this.props.sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
-										<View style={styles.headerDirection}>
+										{/* <View style={styles.headerDirection}>
 											<Text style={styles.dataBio}>
 												{this.props.sessionPersistance.bio}
 											</Text>
-										</View>
+										</View> */}
 										<View style={styles.headerDirection}>
 											<Text style={styles.dataPipeline}>
 												{this.props.pipelinesWithUserId.length} Pipeline Created
@@ -334,7 +339,13 @@ const mapStateToProps = state => {
 	return {
 		target: state.target,
 		sessionPersistance: state.sessionPersistance,
-		pipelinesWithUserId: state.pipelinesWithUserId
+		pipelinesWithUserId: state.pipelinesWithUserId,
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+	return{
+		setNavigate: (link, data) => dispatch(setNavigate(link, data))
 	}
 }
 
@@ -564,4 +575,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default connect(mapStateToProps)(Achievements)
+export default connect(mapStateToProps, mapDispatchToProps)(Achievements)
