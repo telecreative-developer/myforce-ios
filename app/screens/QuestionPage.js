@@ -73,13 +73,13 @@ class QuestionPage extends Component {
 
 	handlePostAnswer() {
 		const { answer, activity_desc } = this.state
-		const { step, id_pipeline, id_customer } = this.props.navigation.state.params
+		const { step, id_pipeline, id_customer, total } = this.props.navigation.state.params
 		const { questionWithStep, cartProducts } = this.props
 		const { id, accessToken } = this.props.sessionPersistance
 		if(step === 4) {
 			cartProducts.forEach((data) => {
 				this.props.sendProductsOnCart({
-					id_pipeline, id_customer, id, id_product: data.id_product, id_subproduct: data.id_subproduct
+					id_pipeline, id_customer, id, total, id_product: data.id_product, id_subproduct: data.id_subproduct
 				}, accessToken)
 			})
 			this.props.postAnswer({
