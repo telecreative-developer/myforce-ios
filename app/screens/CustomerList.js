@@ -79,8 +79,7 @@ class CustomerList extends Component {
 								<Thumbnail
 									small
 									rounded
-									source={{ uri: this.props.sessionPersistance.avatar }}
-								/>
+									source={{ uri: this.props.sessionPersistance.avatar }} />
 							)}
 						</TouchableOpacity>
 					</Left>
@@ -97,8 +96,7 @@ class CustomerList extends Component {
 					<Item style={styles.searchForm} rounded>
 						<Input
 							placeholder="Search"
-							onChangeText={name => this.setState({ search: name })}
-						/>
+							onChangeText={name => this.setState({ search: name })} />
 						<Icon size={25} name="ios-search" />
 					</Item>
 				</View>
@@ -116,14 +114,12 @@ class CustomerList extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		customers: state.customers,
-		sessionPersistance: state.sessionPersistance,
-		resultPics: state.resultPics,
-		pipelinesWithUserId: state.pipelinesWithUserId
-	}
-}
+const mapStateToProps = state => ({
+	customers: state.customers,
+	sessionPersistance: state.sessionPersistance,
+	resultPics: state.resultPics,
+	pipelinesWithUserId: state.pipelinesWithUserId
+})
 
 const mapDispatchToProps = dispatch => {
 	return {

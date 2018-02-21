@@ -15,4 +15,8 @@ target 'myForce' do
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
+  pod 'react-native-pdf', :path => '../node_modules/react-native-pdf'
+
 end

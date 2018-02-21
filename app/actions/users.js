@@ -4,6 +4,7 @@ import {
 	GET_USER_NATION_RANK
 } from '../constants'
 import { url } from '../lib/server'
+import { saveSessionForPersistance } from './session'
 import { setLoading, setSuccess, setFailed } from './processor'
 
 export const fetchUsers = accessToken => {
@@ -25,6 +26,49 @@ export const fetchUsers = accessToken => {
 		} catch (e) {
 			await dispatch(setFailed(true, 'FETCH_USERS', e))
 			await dispatch(setLoading(false, 'FETCH_USERS'))
+		}
+	}
+}
+
+export const postAvatar = (id, avatar, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_POST_AVATAR'))
+		try {
+			const responseUploadAvatar = await fetch(`${url}/upload-avatar-user`, {
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify({uri: avatar})
+			})
+			const dataUploadAvatar = await responseUploadAvatar.json()
+			const responseUsers = await fetch(`${url}/users/${id}`, {
+				method: 'PATCH',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify({avatar: `${url}/files/users/avatars/${dataUploadAvatar.id}`})
+			})
+			const dataUsers = await responseUsers.json()
+			const responseUserWithEmail = await fetch(`${url}/users?email=${dataUsers.email}`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				}
+			})
+			const dataUserWithEmail = await responseUserWithEmail.json()
+			await dispatch(saveSessionForPersistance({ ...dataUserWithEmail.data[0], accessToken }))
+			await dispatch(setSuccess(true, 'SUCCESS_POST_AVATAR', {...dataUserWithEmail.data[0]}))
+			await dispatch(setLoading(false, 'LOADING_POST_AVATAR'))
+		} catch (e) {
+			await dispatch(setFailed(true, 'FAILED_POST_AVATAR', e))
+			await dispatch(setLoading(false, 'LOADING_POST_AVATAR'))
 		}
 	}
 }

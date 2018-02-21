@@ -137,7 +137,7 @@ class Club extends Component {
 											</Text>
 										</View>
 										<View style={styles.headerDirection}>
-											<Text style={styles.Data}>20 Pipeline Created</Text>
+											<Text style={styles.Data}>{this.props.pipelinesWithUserId.length} Pipeline Created</Text>
 										</View>
 									</View>
 								</View>
@@ -190,13 +190,12 @@ class Club extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		users: state.users,
-		teamUpdatesWithBranch: state.teamUpdatesWithBranch,
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	users: state.users,
+	teamUpdatesWithBranch: state.teamUpdatesWithBranch,
+	sessionPersistance: state.sessionPersistance,
+	pipelinesWithUserId: state.pipelinesWithUserId
+})
 
 const mapDispatchToProps = dispatch => ({
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),

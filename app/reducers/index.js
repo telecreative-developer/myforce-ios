@@ -18,6 +18,8 @@ import { questionWithStep } from './questions'
 import { sellingProcessWithStep } from './sellingprocess'
 import { teamUpdatesWithBranch } from './updates'
 import { cartProducts } from './cart'
+import { target } from './targets'
+import { events } from './events'
 
 const config = {
 	key: 'root',
@@ -49,7 +51,9 @@ const reducers = persistCombineReducers(config, {
 	questionWithStep,
 	sellingProcessWithStep,
 	teamUpdatesWithBranch,
-	cartProducts
+	cartProducts,
+	target,
+	events
 })
 
 export default reducers

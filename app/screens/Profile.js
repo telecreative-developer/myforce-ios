@@ -29,14 +29,22 @@ import LinearGradient from 'react-native-linear-gradient'
 import Icon, { Button } from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import ThemeContainer from '../components/ThemeContainer'
-import { getUserNationRank, getUserRegionRank } from '../actions/users'
+import { getUserNationRank, getUserRegionRank, postAvatar } from '../actions/users'
 import { setNavigate } from '../actions/processor'
 import defaultAvatar from '../assets/images/default-avatar.png'
+import defaultLoading from '../assets/images/default-loading.gif'
 import ImagePicker from 'react-native-image-picker'
 
 const { width, height } = Dimensions.get('window')
 
 class Profile extends Component {
+	constructor() {
+		super()
+
+		this.state = {
+			avatarBase64: ''
+		}
+	}
 	componentWillMount() {
 		this.props.getUserRegionRank(
 			this.props.users,
@@ -46,6 +54,7 @@ class Profile extends Component {
 			this.props.users,
 			this.props.sessionPersistance.id
 		)
+		this.setState({avatarBase64: this.props.sessionPersistance.avatar})
 	}
 
 	renderBackground() {
@@ -78,37 +87,23 @@ class Profile extends Component {
 	}
 
 	handleChangeProfile() {
-		var options = {
-			title: 'Select Avatar',
-			customButtons: [
-				{name: 'fb', title: 'Choose Photo from Facebook'},
-			],
+		const { id, accessToken } = this.props.sessionPersistance
+		const options = {
+			quality: 1.0,
+			maxWidth: 500,
+			maxHeight: 500,
 			storageOptions: {
-				skipBackup: true,
-				path: 'images'
+				skipBackup: true
 			}
-		};
-		
-		ImagePicker.showImagePicker(options, (response) => {
-			console.log('Response = ', response);
-		
-			if (response.didCancel) {
-				console.log('User cancelled image picker');
-			}
-			else if (response.error) {
-				console.log('ImagePicker Error: ', response.error);
-			}
-			else if (response.customButton) {
-				console.log('User tapped custom button: ', response.customButton);
-			}
-			else {
-				let source = { uri: response.uri };
+		}
 
-				this.setState({
-					avatarSource: source
-				});
+		ImagePicker.showImagePicker(options, response => {
+			if (response.didCancel) {
+				this.setState({ avatarBase64: this.state.avatarBase64 })
+			} else {
+				this.props.postAvatar(id, `data:image/png;base64,${response.data}`, accessToken)
 			}
-		});
+		})
 	}
 
 	renderFixedHeader = () => {
@@ -147,8 +142,7 @@ class Profile extends Component {
 								name="ios-notifications"
 								size={25}
 								color="#fff"
-								style={styles.iconBell}
-							/>
+								style={styles.iconBell} />
 						</TouchableOpacity>
 					</View>
 				</Col>
@@ -168,10 +162,14 @@ class Profile extends Component {
 				renderBackground={this.renderBackground}
 				renderForeground={() => (
 					<View key="parallax-header" style={styles.parallaxHeader}>
-						{this.props.sessionPersistance.avatar === '' ? (
-							<Image style={[styles.avatar, {width: AVATAR_SIZE, height: AVATAR_SIZE}]} source={defaultAvatar} />
+						{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_AVATAR' ? (
+							<Image style={[styles.avatar, {width: AVATAR_SIZE, height: AVATAR_SIZE}]} source={defaultLoading} />
 						) : (
-							<Image style={styles.avatar} source={{uri: this.props.sessionPersistance.avatar, width: AVATAR_SIZE, height: AVATAR_SIZE}} />
+							this.state.avatarBase64 === '' ? (
+								<Image style={[styles.avatar, {width: AVATAR_SIZE, height: AVATAR_SIZE}]} source={defaultAvatar} />
+							) : (
+								<Image style={styles.avatar} source={{uri: this.state.avatarBase64, width: AVATAR_SIZE, height: AVATAR_SIZE}} />
+							)
 						)}
 						<TouchableOpacity style={styles.viewBadge} onPress={() => this.handleChangeProfile()}>
 							<Badge style={styles.changeAvatarBadge}>
@@ -222,8 +220,7 @@ class Profile extends Component {
 								disabled
 								placeholder={
 									sessionPersistance.gender === 1 ? 'Male' : 'Female'
-								}
-							/>
+								} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Email</Label>
@@ -272,6 +269,7 @@ class Profile extends Component {
 const mapStateToProps = state => {
 	return {
 		users: state.users,
+		loading: state.loading,
 		userRegionRank: state.userRegionRank,
 		userNationRank: state.userNationRank,
 		sessionPersistance: state.sessionPersistance
@@ -280,6 +278,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
+		postAvatar: (id, avatar, accessToken) => dispatch(postAvatar(id, avatar, accessToken)),
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		getUserNationRank: (data, id_region) =>
 			dispatch(getUserNationRank(data, id_region)),

@@ -230,60 +230,60 @@ class Achievements extends Component {
 				<Content style={styles.content}>
 					<Grid style={styles.chartsDirection}>
 						<Col style={styles.leftCharts}>
-							<PieCharts />
+							<PieCharts target={this.props.target.target_month} completed={this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length} />
 						</Col>
 						<Col style={styles.rightCharts}>
 							<Text style={styles.chartTitle}>Gross In</Text>
 							<Text style={styles.chartMonth}>Monthly</Text>
-							<Text style={styles.chartPercentage}>80%</Text>
-							<Text style={styles.chartTargetUnder}>8 of 10 unit targets</Text>
+							<Text style={styles.chartPercentage}>{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length / this.props.target.target_month) * 100).toFixed(2)} %</Text>
+							<Text style={styles.chartTargetUnder}>{this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length} of {this.props.target.target_month} unit targets</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar 
-								progress={this.state.progress}
+								progress={parseFloat(parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2) / 100)}
 								style={styles.bar}
 								height={40}
 								borderColor="#DDD"
 								barColor="tomato"
-								fillColor="red"	
+								fillColor="grey"	
 								borderRadius={5}
 								borderWidth={5}>
 									<View style={styles.row}>
 										<Text style={styles.barText}>
-											{this.state.progress}%
+											{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2)} %
 										</Text>
 									</View>
 							</AnimatedBar>
-							<Text style={styles.chartTarget}>8 of 120 unit targets</Text>
+							<Text style={styles.chartTarget}>{this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length} of {this.props.target.target_year} unit targets</Text>
 						</Col>
 					</Grid>
 					<Grid style={styles.chartsDirection}>
 						<Col style={styles.leftCharts}>
-							<PieCharts />
+							<PieCharts target={this.props.target.target_month} completed={this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length} />
 						</Col>
 						<Col style={styles.rightCharts}>
 							<Text style={styles.chartTitle}>Revenue ORS</Text>
 							<Text style={styles.chartMonth}>Monthly</Text>
-							<Text style={styles.chartPercentage}>80%</Text>
-							<Text style={styles.chartTarget}>Rp. 800 Mio of</Text>
-							<Text style={styles.chartTargetUnder}>Rp. 1000 Mio targets</Text>
+							<Text style={styles.chartPercentage}>{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length / this.props.target.target_month) * 100).toFixed(2)} %</Text>
+							<Text style={styles.chartTarget}>Rp. {this.props.pipelinesWithUserId.map(data => data.total++)} Mio of</Text>
+							<Text style={styles.chartTargetUnder}>Rp. {this.props.target.target_revenue_month} Mio targets</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar 
-								progress={this.state.progress}
+								progress={parseFloat(parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2) / 100)}
 								style={styles.bar}
 								height={40}
 								borderColor="#DDD"
 								barColor="tomato"
-								fillColor="#f8f8f8"	
+								fillColor="grey"	
 								borderRadius={5}
 								borderWidth={5}>
 									<View style={styles.row}>
 										<Text style={styles.barText}>
-											{this.state.progress}%
+										{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2)} %
 										</Text>
 									</View>
 							</AnimatedBar>
-							<Text style={styles.chartTarget}>Rp. 800 Mio of</Text>
-							<Text style={styles.chartTarget}>Rp. 12000 Mio targets</Text>
+							<Text style={styles.chartTarget}>Rp. {this.props.pipelinesWithUserId.map(data => data.total++)-1} Mio of</Text>
+							<Text style={styles.chartTarget}>Rp. {this.props.target.target_revenue_year} Mio targets</Text>
 						</Col>
 					</Grid>
 					<View style={styles.customerTotal}>
@@ -330,14 +330,13 @@ class Achievements extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	sessionPersistance: state.sessionPersistance,
-	pipelinesWithUserId: state.pipelinesWithUserId
-})
-
-const mapDispatchToProps = dispatch => ({
-	fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
-})
+const mapStateToProps = state => {
+	return {
+		target: state.target,
+		sessionPersistance: state.sessionPersistance,
+		pipelinesWithUserId: state.pipelinesWithUserId
+	}
+}
 
 const styles = StyleSheet.create({
 	header: {
@@ -565,4 +564,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Achievements)
+export default connect(mapStateToProps)(Achievements)

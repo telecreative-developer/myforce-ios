@@ -13,29 +13,30 @@ List,
 ListItem } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Timeline from 'react-native-timeline-listview'
+import { connect } from 'react-redux'
+import { fetchEvents } from '../actions/events'
+import { setNavigate } from '../actions/processor'
 
 const { width, height } = Dimensions.get('window')
 
-export default class Calendar extends Component { 
-  constructor() {
-    super()
+class Calendar extends Component { 
+  componentWillMount() {
+    const { id, accessToken } = this.props.sessionPersistance
+    this.props.fetchEvents(id, accessToken)
+  }
 
-    this.data=[
-      {time: '11 Maret 2018', title: 'Archery Training', description: 'The Beginner Archery and Beginner Crossbow course does not require you to bring any equipment, since everything you need will be provided for the course. ',lineColor:'#009688'},
-      {time: '8 Maret 2018', title: 'Play Badminton', description: 'Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.',},
-      {time: '28 Februari 2018', title: 'Lunch',},
-      {time: '3 Februari 2018', title: 'Watch Soccer', description: 'Team sport played between two teams of eleven players with a spherical ball. ',lineColor:'#009688',},
-      {time: '1 Februari 2018', title: 'Go to Fitness center', description: 'Look out for the Best Gym & Fitness Centers around me :)',}
-    ]
+  handleBack() {
+    this.props.setNavigate('', '')
+    this.props.navigation.goBack()
   }
 
   render() {
-    const { navigate, goBack } = this.props.navigation
+    const { navigate } = this.props.navigation
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
           <Left style={styles.backHeader}>
-            <Button transparent onPress={() => goBack()}>
+            <Button transparent onPress={() => this.handleBack()}>
               <Icon name="ios-arrow-back" size={25} color="#000000" />
               <Text style={styles.back}>Back</Text>
             </Button>
@@ -55,17 +56,24 @@ export default class Calendar extends Component {
           timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', fontWeight: 'bold', padding:5, borderRadius:100}}
           descriptionStyle={{color:'gray'}}
           timeContainerStyle={{minWidth:150}}
-          options={{
-            removeClippedSubviews: false
-          }}
+          options={{removeClippedSubviews: false}}
           innerCircle={'dot'}
-          data={this.data}
-        />
+          data={this.props.events.reverse()} />
         </Content>
       </Container>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  events: state.events,
+  sessionPersistance: state.sessionPersistance
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  setNavigate: (link, data) => dispatch(setNavigate(link, data)),
+  fetchEvents: (id, accessToken) => dispatch(fetchEvents(id, accessToken))
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -102,3 +110,5 @@ const styles = StyleSheet.create({
     color: '#000000',
   }
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar)

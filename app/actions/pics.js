@@ -1,4 +1,4 @@
-import { ADD_PIC, REMOVE_PIC, PICS_CUSTOMERS, FETCH_PICS_SUCCESS } from '../constants'
+import { ADD_PIC, REMOVE_ALL_PIC, REMOVE_PIC, PICS_CUSTOMERS, FETCH_PICS_SUCCESS } from '../constants'
 import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
 
@@ -17,6 +17,7 @@ export const postPICS = (data, dataCustomer, accessToken) => {
 				},
 				body: JSON.stringify(data)
 			})
+			await dispatch(removeAllPic())
 			await dispatch(setSuccess(true, 'SUCCESS_ADD_PIC', dataCustomer))
 			await dispatch(setLoading(false, 'LOADING_ADD_PIC'))
 		} catch (e) {
@@ -33,6 +34,11 @@ export const addPIC = (data) => ({
 
 export const removePic = (data) => ({
 	type: REMOVE_PIC,
+	payload: data
+})
+
+const removeAllPic = (data = []) => ({
+	type: REMOVE_ALL_PIC,
 	payload: data
 })
 

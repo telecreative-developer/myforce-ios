@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, View, Image, Alert } from 'react-native'
+import { StyleSheet, TouchableHighlight, Dimensions, View, Image, Alert } from 'react-native'
 import {
 	Container,
 	Content,
@@ -13,34 +13,62 @@ import {
 	Item,
 	Label,
 	Input,
-	Picker
+	Picker,
+	Spinner
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import image from '../assets/images/add-user.png'
+import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
 import { isEmpty, isEmail } from 'validator'
+import DateTimePicker from 'react-native-modal-datetime-picker'
+import moment from 'moment'
+import { postEvent } from '../actions/events'
 
 const { height, width } = Dimensions.get('window')
 
-export default class AddCustomer extends Component {
+class NewEvent extends Component {
 	constructor() {
 		super()
 
 		this.state = {
-			event: '',
+			title: '',
 			description: '',
-			date: '',
+			time: moment().format('LLL'),
+			isDateTimePickerVisible: false
 		}
 	}
 
+	componentWillReceiveProps(props) {
+		if(props.success.condition === true && props.success.process_on === 'SUCCESS_POST_EVENT') {
+			this.setState({title: '', description: '', time: moment().format('LLL')})
+			props.navigation.goBack()
+		}
+	}
+
+	showDateTimePicker = () => this.setState({isDateTimePickerVisible: true})
+
+	hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false })
+
+	handleDatePicked = (time) => {
+		this.setState({time})
+    this.hideDateTimePicker()
+	}
+	
+	handlePostEvent() {
+		const { title, description, time } = this.state
+		const { id, accessToken } = this.props.sessionPersistance
+		this.props.postEvent({title, description, time, id}, accessToken)
+	}
+
 	renderButton() {
-		const { event, description, date } = this.state
-		if (!isEmpty(event) && !isEmpty(description) && !isEmpty(date)) {
+		const { title, description, time } = this.state
+		if (!isEmpty(title) && !isEmpty(description) && !isEmpty(time)) {
 			return (
 				<Button
 					primary
 					style={styles.button}
-					onPress={() => this.validationEmail()}>
+					onPress={() => this.handlePostEvent()}>
 					<LinearGradient
 						colors={['#20E6CD', '#2D38F9']}
 						style={styles.linearGradient}>
@@ -51,10 +79,8 @@ export default class AddCustomer extends Component {
 		}
 
 		return (
-			<Button
-				primary
-				style={styles.buttonBefore}>
-					<Text style={styles.buttonText}>NEXT</Text>
+			<Button primary style={styles.buttonBefore}>
+				<Text style={styles.buttonText}>NEXT</Text>
 			</Button>
 		)
 	}
@@ -85,31 +111,49 @@ export default class AddCustomer extends Component {
 					<Form>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Event Name</Label>
-							<Input value={this.state.event} onChangeText={(event) => this.setState({event})} />
+							<Input value={this.state.title} onChangeText={(title) => this.setState({title})} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Description</Label>
 							<Input value={this.state.description} multiline={true} onChangeText={(description) => this.setState({description})} style={{ paddingVertical: 15 }} />
 						</Item>
-						<Item stackedLabel style={styles.itemForm}>
+						<Item stackedLabel style={styles.itemForm} onPress={this.showDateTimePicker}>
 							<Label>Date</Label>
-							<Input value={this.state.date} onChangeText={(date) => this.setState({date})} style={{ paddingVertical: 15 }} keyboardType='numeric'/>
+							<Input disabled placeholder='Select date' value={moment(this.state.time).format('LLL')} style={{ paddingVertical: 15 }} />
 						</Item>
+						<DateTimePicker
+							mode='datetime'
+							isVisible={this.state.isDateTimePickerVisible}
+							onConfirm={this.handleDatePicked}
+							onCancel={this.hideDateTimePicker} />
 					</Form>
-					<View style={styles.buttonView}>
-						<Button
-							primary
-							style={styles.buttonBack}
-							onPress={() => this.props.navigation.goBack()}>
-							<Text style={styles.buttonText}>BACK</Text>
-						</Button>
-						{this.renderButton()}
-					</View>
+					{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_EVENT' ? (
+						<View style={styles.buttonView}>
+							<Spinner color='#999999' />
+						</View>
+					) : (
+						<View style={styles.buttonView}>
+							<Button primary style={styles.buttonBack} onPress={() => this.props.navigation.goBack()}>
+								<Text style={styles.buttonText}>BACK</Text>
+							</Button>
+							{this.renderButton()}
+						</View>
+					)}
 				</Content>
 			</Container>
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+	success: state.success,
+  loading: state.loading,
+	sessionPersistance: state.sessionPersistance
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	postEvent: (data, accessToken) => dispatch(postEvent(data, accessToken))
+})
 
 const styles = StyleSheet.create({
 	backHeader: {
@@ -195,3 +239,5 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	}
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewEvent)

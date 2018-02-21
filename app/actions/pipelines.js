@@ -1,5 +1,6 @@
 import { FETCH_PIPELINES_SUCCESS, FETCH_PIPELINES_WITH_USER_ID_SUCCESS } from '../constants'
 import { url } from '../lib/server'
+import moment from 'moment'
 import { sendUpdate } from './updates'
 import { setLoading, setSuccess, setFailed } from './processor'
 import { app } from '../lib/socket'
@@ -15,7 +16,9 @@ export const postPipeline = (item, accessToken) => {
 					'Content-Type': 'application/json',
 					Authorization: accessToken
 				},
-				body: JSON.stringify(item)
+				body: JSON.stringify({
+					...item, year: moment().format('YYYY'), month: moment().format('MM')
+				})
 			})
 			const data = await response.json()
 			await dispatch(sendUpdate({...item, id_pipeline: data.id_pipeline}, accessToken))

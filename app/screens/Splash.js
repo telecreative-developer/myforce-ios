@@ -2,15 +2,18 @@ import React, { Component } from 'react'
 import { StyleSheet, Image, AsyncStorage } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Container } from 'native-base'
+import moment from 'moment'
 import { fetchRegionals } from '../actions/regionals'
 import logo from '../assets/images/logo-myforce-white.png'
 import { login } from '../actions/login'
 import { connect } from 'react-redux'
+import { fetchTarget } from '../actions/targets'
 
 class Splash extends Component {
 	componentDidMount() {
 		setTimeout(async () => {
 			await this.props.fetchRegionals()
+			await this.props.fetchTarget(moment().format('YYYY'))
 			const response = await AsyncStorage.getItem('session')
 			const data = await JSON.parse(response)
 			if (data !== null) {
@@ -39,12 +42,11 @@ class Splash extends Component {
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-		login: (email, password) => dispatch(login(email, password)),
-		fetchRegionals: () => dispatch(fetchRegionals())
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	login: (email, password) => dispatch(login(email, password)),
+	fetchRegionals: () => dispatch(fetchRegionals()),
+	fetchTarget: (year) => dispatch(fetchTarget(year))
+})
 
 const styles = StyleSheet.create({
 	linearGradient: {
