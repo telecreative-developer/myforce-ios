@@ -44,6 +44,18 @@ class Achievements extends Component {
 		}
 	}
 
+	resultCompleteRevenueMonth() {
+		let revenueMonth = 0
+		this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).map(data => revenueMonth += data.total)
+		return revenueMonth
+	}
+
+	resultCompleteRevenueYear() {
+		let revenueYear = 0
+		this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).map(data => revenueYear += data.total)
+		return revenueYear
+	}
+
 	renderPipelineTabs() {
 		if (this.state.pipelineTabs === 'active') {
 			return (
@@ -264,7 +276,7 @@ class Achievements extends Component {
 							<Text style={styles.chartTitle}>Revenue ORS</Text>
 							<Text style={styles.chartMonth}>Monthly</Text>
 							<Text style={styles.chartPercentage}>{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length / this.props.target.target_month) * 100).toFixed(2)} %</Text>
-							<Text style={styles.chartTarget}>Rp. {this.props.pipelinesWithUserId.map(data => data.total++)} Mio of</Text>
+							<Text style={styles.chartTarget}>Rp. {this.resultCompleteRevenueMonth()} Mio of</Text>
 							<Text style={styles.chartTargetUnder}>Rp. {this.props.target.target_revenue_month} Mio targets</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar 
@@ -282,7 +294,7 @@ class Achievements extends Component {
 										</Text>
 									</View>
 							</AnimatedBar>
-							<Text style={styles.chartTarget}>Rp. {this.props.pipelinesWithUserId.map(data => data.total++)-1} Mio of</Text>
+							<Text style={styles.chartTarget}>Rp. {this.resultCompleteRevenueYear()} Mio of</Text>
 							<Text style={styles.chartTarget}>Rp. {this.props.target.target_revenue_year} Mio targets</Text>
 						</Col>
 					</Grid>
