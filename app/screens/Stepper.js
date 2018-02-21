@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
 	step: {
 		fontSize: 40,
 		fontWeight: '900',
-		color: '#db0000',
+		color: '#20E6CD',
 		fontStyle: 'italic', 
 		textAlign: 'center'
 	},

@@ -46,6 +46,7 @@ import {
 } from '../actions/pipelines'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
+import { NavigationActions } from 'react-navigation'
 import { setNavigate } from '../actions/processor'
 import bg from '../assets/images/meeting.jpg'
 
@@ -154,9 +155,13 @@ class CustomerProfile extends Component {
 
 	key = (item, index) => index
 
-	async handleBackButton() {
-		await this.props.setNavigate('')
-		await this.props.navigation.navigate('Home')
+	handleBackButton() {
+		this.props.setNavigate('')
+		const resetAction = NavigationActions.reset({
+			index: 0,
+			actions: [NavigationActions.navigate({ routeName: 'Home' })]
+		})
+		this.props.navigation.dispatch(resetAction)
 	}
 
 	handleSetStep(step, id_pipeline) {

@@ -254,7 +254,6 @@ class Activity extends Component {
 						style={styles.maps}
 						showsUserLocation={true}
 						region={this.state.region}
-						onRegionChange={region => this.setState({ region })}
 						onRegionChangeComplete={region => this.setState({ region })}>
 						{this.props.customers.map((data, index) => (
 							<MapView.Marker

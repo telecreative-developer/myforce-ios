@@ -60,6 +60,7 @@ class OrderSummary extends Component {
 
 		this.state = {
 			id_product: '',
+			totalPrice: 0,
 			isModalVisibleCart: false
 		}
 	}
@@ -179,6 +180,10 @@ class OrderSummary extends Component {
 									<Item key={index} label={data.product} value={data.id_product} />
 								))}
 							</Picker>
+							<Item stackedLabel style={styles.itemForm}>
+								<Label style={styles.productCategory}>Total Price</Label>
+								<Input value={this.state.totalPrice} onChangeText={(totalPrice) => this.setState({totalPrice})} keyboardType='numeric'/>
+							</Item>
 						</View>
 					</Form>
 					<FlatList
@@ -357,7 +362,12 @@ const styles = StyleSheet.create({
 	modalTotal: {
 		fontSize: 22,
 		marginTop: 5
-	}
+	},
+	itemForm: {
+		marginTop: 20,
+		marginLeft: 0,
+		marginBottom: 20
+	},
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderSummary)
