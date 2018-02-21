@@ -167,7 +167,14 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text style={styles.footerText}>ACHIEVEMENTS</Text>
+							<Text
+								style={{ 
+									fontSize: 10,
+									marginTop: 5,
+									color: this.props.activePageHome.activePageFirst
+									? '#2d84f6'
+									: '#000000'
+							}}>ACHIEVEMENTS</Text>
 						</Button>
 						<Button
 							vertical
@@ -183,7 +190,14 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text style={styles.footerText}>CUSTOMERS</Text>
+							<Text								
+							style={{ 
+								fontSize: 10,
+								marginTop: 5, 
+								color: this.props.activePageHome.activePageSecond
+										? '#2d84f6'
+										: '#000000'
+								}}>CUSTOMERS</Text>
 						</Button>
 						<Button
 							vertical
@@ -200,7 +214,14 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text style={styles.footerText}>ACTIVITY</Text>
+							<Text 								
+							style={{ 
+								fontSize: 10,
+								marginTop: 5, 
+								color: this.props.activePageHome.activePageThird
+								? '#2d84f6'
+								: '#000000'
+							}}>ACTIVITY</Text>
 						</Button>
 						<Button
 							vertical
@@ -216,7 +237,14 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text style={styles.footerText}>PRODUCT</Text>
+							<Text
+								style={{ 
+									fontSize: 10,
+									marginTop: 5, 
+									color: this.props.activePageHome.activePageFourth
+									? '#2d84f6'
+									: '#000000'
+							}}>PRODUCT</Text>
 						</Button>
 						<Button
 							vertical
@@ -232,7 +260,14 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text style={styles.footerText}>AG CLUB</Text>
+							<Text
+								style={{ 
+									fontSize: 10,
+									marginTop: 5, 
+									color: this.props.activePageHome.activePageFifth
+									? '#2d84f6'
+									: '#000000'
+							}}>AG CLUB</Text>
 						</Button>
 					</FooterTab>
 				</Footer>

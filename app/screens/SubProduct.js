@@ -42,7 +42,7 @@ class SubProduct extends Component {
 			source={{ uri: item.picture }}
 			imageStyle={styles.cardImage}
 			style={styles.item}>
-			<TouchableHighlight underlayColor={'transparent'} onPress={() => this.props.navigation.navigate('PDFProductViewer', {file: item.file, title: item.subproduct})} style={{flex: 1}}>
+			<TouchableHighlight underlayColor={'transparent'} onPress={() => this.props.navigation.navigate('PDFProductViewer', {file: item.file, title: item.subproduct})} style={{flex: 1, justifyContent: 'center'}}>
 				<Text style={styles.itemText}>{item.subproduct}</Text>
 			</TouchableHighlight>
 		</ImageBackground>

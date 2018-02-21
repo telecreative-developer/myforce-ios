@@ -35,7 +35,9 @@ const HorizontalJoker = props => {
 					<View style={styles.cardHeader}>
 						<H3 style={styles.textTitle}>{props.name}</H3>
 						<View style={styles.viewLocation}>
-							<Text style={styles.textLocation}>{props.company}</Text>
+							<Text style={styles.textCompany} 
+							numberOfLines={1}
+							ellipsizeMode={'tail'}>{props.company}</Text>
 						</View>
 						<View style={styles.cardText}>
 							<Text style={styles.text}>{props.pipeline}</Text>
@@ -77,6 +79,10 @@ const styles = StyleSheet.create({
 	},
 	textLocation: {
 		color: '#ffffff',
+	},
+	textCompany: {
+		color: '#ffffff',
+		maxWidth: 200
 	},
 	text: {
 		color: '#ffffff',
