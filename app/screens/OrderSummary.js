@@ -195,7 +195,7 @@ class OrderSummary extends Component {
 				</Content>
 				<Footer>
 					{this.props.cartProducts.length !== 0 ? (
-						<Button full style={styles.footerButton} onPress={() => navigate('QuestionPage', {step: params.step, id_pipeline: params.id_pipeline, id_customer: params.id_customer})}>
+						<Button full style={styles.footerButton} onPress={() => navigate('QuestionPage', {step: params.step, id_pipeline: params.id_pipeline, id_customer: params.id_customer, total: this.state.totalPrice})}>
 							<Text style={styles.submit}>SUBMIT</Text>
 						</Button>
 					) : (
