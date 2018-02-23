@@ -50,10 +50,7 @@ class Home extends Component {
 		} else if (active === 3) {
 			return (
 				<Activity
-					navigateToAddCustomer={() =>
-						this.props.navigation.navigate('AddCustomer')
-					}
-				/>
+					navigateToAddCustomer={() => this.props.navigation.navigate('AddCustomer')} />
 			)
 		} else if (active === 4) {
 			return <Product />
@@ -165,8 +162,7 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageFirst
 										? '#2d84f6'
 										: '#000000'
-								}}
-							/>
+								}} />
 							<Text style={[styles.footerText, {
 									color: this.props.activePageHome.activePageFirst
 										? '#2d84f6'
@@ -185,8 +181,7 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageSecond
 										? '#2d84f6'
 										: '#000000'
-								}}
-							/>
+								}} />
 							<Text style={[styles.footerText, {
 									color: this.props.activePageHome.activePageSecond
 										? '#2d84f6'
@@ -206,8 +201,7 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageThird
 										? '#2d84f6'
 										: '#000000'
-								}}
-							/>
+								}} />
 							<Text style={[styles.footerText, {
 									color: this.props.activePageHome.activePageThird
 										? '#2d84f6'
