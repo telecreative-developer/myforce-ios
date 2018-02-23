@@ -69,17 +69,21 @@ class Achievements extends Component {
 			)
 		} else if (this.state.pipelineTabs === 'close') {
 			return (
-				<FlatList
-					data={this.props.pipelinesWithUserId.filter(p => p.step === 7 && p.lose === false)}
-					keyExtractor={this.key}
-					renderItem={this.renderItemsClose} />
+				<View>
+					<FlatList
+						data={this.props.pipelinesWithUserId.filter(p => p.step === 7 && p.lose === false)}
+						keyExtractor={this.key}
+						renderItem={this.renderItemsClose} />
+				</View>
 			)
 		} else if (this.state.pipelineTabs === 'lose') {
 			return (
-				<FlatList
-					data={this.props.pipelinesWithUserId.filter(p => p.lose === true)}
-					keyExtractor={this.key}
-					renderItem={this.renderItemsLose} />
+				<View>
+					<FlatList
+						data={this.props.pipelinesWithUserId.filter(p => p.lose === true)}
+						keyExtractor={this.key}
+						renderItem={this.renderItemsLose} />
+				</View>
 			)
 		}
 	}

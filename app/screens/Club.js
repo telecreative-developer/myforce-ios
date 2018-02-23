@@ -126,7 +126,7 @@ class Club extends Component {
 										/>
 									)}
 									<View style={{justifyContent: 'center'}}>
-										<TouchableOpacity>
+										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
 											<H3 style={styles.profileName}>{`${
 												this.props.sessionPersistance.first_name
 											} ${this.props.sessionPersistance.last_name}`}</H3>

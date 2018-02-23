@@ -251,6 +251,7 @@ class Activity extends Component {
 				</Header>
 				<View style={styles.wrapperView}>
 					<MapView
+						provider={PROVIDER_GOOGLE}
 						style={styles.maps}
 						showsUserLocation={true}
 						region={this.state.region}

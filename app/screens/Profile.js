@@ -194,7 +194,7 @@ class Profile extends Component {
 				)}
 				renderStickyHeader={() => (
 					<View key="sticky-header" style={styles.stickySection}>
-						<Text style={styles.stickySectionText}>Kevin Hermione</Text>
+						<Text style={styles.stickySectionText}>{`${this.props.sessionPersistance.first_name} ${sessionPersistance.last_name}`}</Text>
 					</View>
 				)}
 				renderFixedHeader={this.renderFixedHeader}>
