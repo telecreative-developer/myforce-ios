@@ -8,10 +8,9 @@ import {
 	resultCheckCustomer
 } from './customers'
 import { sessionPersistance } from './session'
-import { regionals } from './regionals'
 import { products } from './products'
 import { subproducts } from './subproducts'
-import { users, userRegionRank, userNationRank } from './users'
+import { users } from './users'
 import { pipelines, pipelinesWithUserId } from './pipelines'
 import { pics, picsCustomers, resultPics } from './pics'
 import { questionWithStep } from './questions'
@@ -27,8 +26,6 @@ const config = {
 }
 
 const reducers = persistCombineReducers(config, {
-	userRegionRank,
-	userNationRank,
 	pipelines,
 	pipelinesWithUserId,
 	loading,
@@ -41,7 +38,6 @@ const reducers = persistCombineReducers(config, {
 	selectedCustomerPlace,
 	resultCheckCustomer,
 	sessionPersistance,
-	regionals,
 	products,
 	subproducts,
 	users,

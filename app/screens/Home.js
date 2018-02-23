@@ -50,10 +50,7 @@ class Home extends Component {
 		} else if (active === 3) {
 			return (
 				<Activity
-					navigateToAddCustomer={() =>
-						this.props.navigation.navigate('AddCustomer')
-					}
-				/>
+					navigateToAddCustomer={() => this.props.navigation.navigate('AddCustomer')} />
 			)
 		} else if (active === 4) {
 			return <Product />
@@ -165,16 +162,12 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageFirst
 										? '#2d84f6'
 										: '#000000'
-								}}
-							/>
-							<Text
-								style={{ 
-									fontSize: 10,
-									marginTop: 5,
+								}} />
+							<Text style={[styles.footerText, {
 									color: this.props.activePageHome.activePageFirst
-									? '#2d84f6'
-									: '#000000'
-							}}>ACHIEVEMENTS</Text>
+										? '#2d84f6'
+										: '#000000'
+								}]}>ACHIEVEMENTS</Text>
 						</Button>
 						<Button
 							vertical
@@ -188,16 +181,12 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageSecond
 										? '#2d84f6'
 										: '#000000'
-								}}
-							/>
-							<Text								
-							style={{ 
-								fontSize: 10,
-								marginTop: 5, 
-								color: this.props.activePageHome.activePageSecond
+								}} />
+							<Text style={[styles.footerText, {
+									color: this.props.activePageHome.activePageSecond
 										? '#2d84f6'
 										: '#000000'
-								}}>CUSTOMERS</Text>
+								}]}>CUSTOMERS</Text>
 						</Button>
 						<Button
 							vertical
@@ -212,16 +201,12 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageThird
 										? '#2d84f6'
 										: '#000000'
-								}}
-							/>
-							<Text 								
-							style={{ 
-								fontSize: 10,
-								marginTop: 5, 
-								color: this.props.activePageHome.activePageThird
-								? '#2d84f6'
-								: '#000000'
-							}}>ACTIVITY</Text>
+								}} />
+							<Text style={[styles.footerText, {
+									color: this.props.activePageHome.activePageThird
+										? '#2d84f6'
+										: '#000000'
+								}]}>ACTIVITY</Text>
 						</Button>
 						<Button
 							vertical
@@ -237,14 +222,11 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text
-								style={{ 
-									fontSize: 10,
-									marginTop: 5, 
+							<Text style={[styles.footerText, {
 									color: this.props.activePageHome.activePageFourth
-									? '#2d84f6'
-									: '#000000'
-							}}>PRODUCT</Text>
+										? '#2d84f6'
+										: '#000000'
+								}]}>PRODUCT</Text>
 						</Button>
 						<Button
 							vertical
@@ -260,14 +242,11 @@ class Home extends Component {
 										: '#000000'
 								}}
 							/>
-							<Text
-								style={{ 
-									fontSize: 10,
-									marginTop: 5, 
+							<Text style={[styles.footerText, {
 									color: this.props.activePageHome.activePageFifth
-									? '#2d84f6'
-									: '#000000'
-							}}>AG CLUB</Text>
+										? '#2d84f6'
+										: '#000000'
+								}]}>AG CLUB</Text>
 						</Button>
 					</FooterTab>
 				</Footer>

@@ -29,7 +29,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import Icon, { Button } from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import ThemeContainer from '../components/ThemeContainer'
-import { getUserNationRank, getUserRegionRank, postAvatar } from '../actions/users'
+import { postAvatar } from '../actions/users'
 import { setNavigate } from '../actions/processor'
 import defaultAvatar from '../assets/images/default-avatar.png'
 import defaultLoading from '../assets/images/default-loading.gif'
@@ -46,14 +46,6 @@ class Profile extends Component {
 		}
 	}
 	componentWillMount() {
-		this.props.getUserRegionRank(
-			this.props.users,
-			this.props.sessionPersistance.regionals[0].id_region
-		)
-		this.props.getUserNationRank(
-			this.props.users,
-			this.props.sessionPersistance.id
-		)
 		this.setState({avatarBase64: this.props.sessionPersistance.avatar})
 	}
 
@@ -75,8 +67,7 @@ class Profile extends Component {
 						width: window.width,
 						backgroundColor: 'rgba(42,92,240,.4)',
 						height: PARALLAX_HEADER_HEIGHT
-					}}
-				/>
+					}} />
 			</View>
 		)
 	}
@@ -269,8 +260,6 @@ const mapStateToProps = state => {
 	return {
 		users: state.users,
 		loading: state.loading,
-		userRegionRank: state.userRegionRank,
-		userNationRank: state.userNationRank,
 		sessionPersistance: state.sessionPersistance
 	}
 }
@@ -278,10 +267,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		postAvatar: (id, avatar, accessToken) => dispatch(postAvatar(id, avatar, accessToken)),
-		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-		getUserNationRank: (data, id_region) =>
-			dispatch(getUserNationRank(data, id_region)),
-		getUserRegionRank: (data, id) => dispatch(getUserRegionRank(data, id))
+		setNavigate: (link, data) => dispatch(setNavigate(link, data))
 	}
 }
 

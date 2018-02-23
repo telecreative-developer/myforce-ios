@@ -1,7 +1,5 @@
 import {
-	FETCH_USERS_SUCCESS,
-	GET_USER_REGION_RANK,
-	GET_USER_NATION_RANK
+	FETCH_USERS_SUCCESS
 } from '../constants'
 import { url } from '../lib/server'
 import { saveSessionForPersistance } from './session'
@@ -107,22 +105,6 @@ export const updateUser = (id, item, accessToken) => {
 const fetchUsersSuccess = data => {
 	return {
 		type: FETCH_USERS_SUCCESS,
-		payload: data
-	}
-}
-
-export const getUserRegionRank = (data, id_region) => {
-	return {
-		type: GET_USER_REGION_RANK,
-		id_region: id_region,
-		payload: data
-	}
-}
-
-export const getUserNationRank = (data, id_user) => {
-	return {
-		type: GET_USER_NATION_RANK,
-		id_user: id_user,
 		payload: data
 	}
 }
