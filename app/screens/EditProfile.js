@@ -175,22 +175,19 @@ class EditProfile extends Component {
 								<Label style={styles.labelText}>First Name</Label>
 								<Input
 									value={this.state.first_name}
-									onChangeText={first_name => this.setState({ first_name })}
-								/>
+									onChangeText={first_name => this.setState({ first_name })} />
 							</Item>
 							<Item stackedLabel>
 								<Label style={styles.labelText}>Last Name</Label>
 								<Input
 									value={this.state.last_name}
-									onChangeText={last_name => this.setState({ last_name })}
-								/>
+									onChangeText={last_name => this.setState({ last_name })} />
 							</Item>
 							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.labelText}>Username</Label>
 								<Input
 									value={this.state.username}
-									onChangeText={username => this.setState({ username })}
-								/>
+									onChangeText={username => this.setState({ username })} />
 							</Item>
 							<View style={styles.genderView}>
 								<Text style={styles.gender}>Gender</Text>
@@ -208,8 +205,7 @@ class EditProfile extends Component {
 								<Label style={styles.labelText}>Email</Label>
 								<Input
 									value={this.state.email}
-									onChangeText={email => this.setState({ email })}
-								/>
+									onChangeText={email => this.setState({ email })} />
 							</Item>
 							<View style={styles.genderView}>
 								<Text style={styles.gender}>Region</Text>
@@ -223,8 +219,7 @@ class EditProfile extends Component {
 										<Item
 											key={index}
 											label={data.region}
-											value={data.id_region}
-										/>
+											value={data.id_region} />
 									))}
 								</Picker>
 							</View>
