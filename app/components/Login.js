@@ -57,8 +57,7 @@ class Login extends Component {
 					rounded
 					style={styles.loginButton}
 					onPress={() => this.handleLoginValidation()}>
-					{this.props.loading.condition === true &&
-					this.props.loading.process_on === 'PROCESS_LOGIN' ? (
+					{this.props.loading.condition === true && this.props.loading.process_on === 'PROCESS_LOGIN' ? (
 						<Spinner color="#FFFFFF" />
 					) : (
 						<Text>Login</Text>
@@ -115,31 +114,21 @@ class Login extends Component {
 					</Item>
 				</Form>
 				<View style={styles.button}>{this.renderButtons()}</View>
-				<View style={styles.textForgot}>
-					<TouchableOpacity onPress={this.props.forgotPassword}>
-						<Text>Forgot your password?</Text>
-					</TouchableOpacity>
-				</View>
 			</Content>
 		)
 	}
 }
 
-const mapStateToProps = state => {
-	console.log(state.success)
-	return {
-		loading: state.loading,
-		success: state.success,
-		failed: state.failed
-	}
-}
+const mapStateToProps = state => ({
+	loading: state.loading,
+	success: state.success,
+	failed: state.failed
+})
 
-const mapDispatchToProps = dispatch => {
-	return {
-		login: (email, password) => dispatch(login(email, password)),
-		setNavigate: (link, data) => dispatch(setNavigate(link, data))
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	login: (email, password) => dispatch(login(email, password)),
+	setNavigate: (link, data) => dispatch(setNavigate(link, data))
+})
 
 const styles = StyleSheet.create({
 	paddingForm: {

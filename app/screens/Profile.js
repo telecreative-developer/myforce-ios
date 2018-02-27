@@ -45,6 +45,7 @@ class Profile extends Component {
 			avatarBase64: ''
 		}
 	}
+	
 	componentWillMount() {
 		this.setState({avatarBase64: this.props.sessionPersistance.avatar})
 	}
@@ -54,12 +55,10 @@ class Profile extends Component {
 			<View key="background">
 				<Image
 					source={{
-						uri:
-							'https://images.pexels.com/photos/567633/pexels-photo-567633.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb',
+						uri: 'https://images.pexels.com/photos/567633/pexels-photo-567633.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb',
 						width: window.width,
 						height: PARALLAX_HEADER_HEIGHT
-					}}
-				/>
+					}} />
 				<View
 					style={{
 						position: 'absolute',
@@ -106,12 +105,7 @@ class Profile extends Component {
 						<TouchableOpacity
 							onPress={() => this.handleBackButton()}
 							style={styles.fixedSectionBack}>
-							<Icon
-								name="ios-arrow-back"
-								size={25}
-								color="#fff"
-								style={styles.iconBack}
-							/>
+							<Icon name="ios-arrow-back" size={25} color="#fff" style={styles.iconBack} />
 							<Text style={styles.back}>Back</Text>
 						</TouchableOpacity>
 					</View>
@@ -119,20 +113,10 @@ class Profile extends Component {
 				<Col style={styles.fixHeaderRight}>
 					<View key="fixed-header" style={styles.fixedSection}>
 						<TouchableOpacity>
-							<Icon
-								name="ios-settings"
-								size={25}
-								color="transparent"
-								style={styles.iconSetting}
-							/>
+							<Icon name="ios-settings" size={25} color="transparent" style={styles.iconSetting} />
 						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() => this.props.navigation.navigate('Settings')}>
-							<Icon
-								name="ios-settings"
-								size={25}
-								color="#fff"
-								style={styles.iconBell} />
+						<TouchableOpacity onPress={() => this.props.navigation.navigate('Settings')}>
+							<Icon name="ios-settings" size={25} color="#fff" style={styles.iconBell} />
 						</TouchableOpacity>
 					</View>
 				</Col>
@@ -176,8 +160,7 @@ class Profile extends Component {
 									backgroundColor: '#2A5CF0',
 									alignItems: 'center',
 									justifyContent: 'center',
-									marginTop: 15
-								}}>
+									marginTop: 15}}>
 								<Text style={styles.changeCoverText}>Change Cover</Text>
 							</Badge>
 						</TouchableOpacity>
@@ -206,22 +189,11 @@ class Profile extends Component {
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Gender</Label>
-							<Input
-								disabled
-								placeholder={
-									sessionPersistance.gender === 1 ? 'Male' : 'Female'
-								} />
+							<Input disabled placeholder={sessionPersistance.gender === 1 ? 'Male' : 'Female'} />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Email</Label>
 							<Input disabled placeholder={sessionPersistance.email} />
-						</Item>
-						<Item stackedLabel disabled style={styles.itemForm}>
-							<Label style={styles.labelText}>Regional</Label>
-							<Input
-								disabled
-								placeholder={sessionPersistance.regionals[0].region}
-							/>
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Address</Label>
@@ -233,21 +205,11 @@ class Profile extends Component {
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Regional Rank</Label>
-							<Input
-								disabled
-								placeholder={JSON.stringify(
-									this.props.userRegionRank.findIndex(
-										i => i.id === sessionPersistance.id
-									) + 1
-								)}
-							/>
+							<Input disabled placeholder="1" />
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>National Rank</Label>
-							<Input
-								disabled
-								placeholder={JSON.stringify(this.props.userNationRank)}
-							/>
+							<Input disabled placeholder="1" />
 						</Item>
 					</Form>
 				</View>
@@ -256,20 +218,16 @@ class Profile extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		users: state.users,
-		loading: state.loading,
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	users: state.users,
+	loading: state.loading,
+	sessionPersistance: state.sessionPersistance
+})
 
-const mapDispatchToProps = dispatch => {
-	return {
-		postAvatar: (id, avatar, accessToken) => dispatch(postAvatar(id, avatar, accessToken)),
-		setNavigate: (link, data) => dispatch(setNavigate(link, data))
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	postAvatar: (id, avatar, accessToken) => dispatch(postAvatar(id, avatar, accessToken)),
+	setNavigate: (link, data) => dispatch(setNavigate(link, data))
+})
 
 const window = Dimensions.get('window')
 

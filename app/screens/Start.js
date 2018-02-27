@@ -32,18 +32,16 @@ class Start extends Component {
 					</LinearGradient>
 				</View>
 				<View style={{ flex: 1 }}>
-					<Login forgotPassword={() => navigate('ForgotPassword')} />
+					<Login />
 				</View>
 			</Container>
 		)
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		navigate: state.navigate
-	}
-}
+const mapStateToProps = state => ({
+	navigate: state.navigate
+})
 
 const styles = StyleSheet.create({
 	header: {
