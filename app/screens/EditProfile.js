@@ -42,7 +42,6 @@ class EditProfile extends Component {
 			username: '',
 			gender: '',
 			email: '',
-			id_region: '',
 			address: '',
 			phone: ''
 		}
@@ -55,7 +54,6 @@ class EditProfile extends Component {
 			username: this.props.sessionPersistance.username,
 			gender: this.props.sessionPersistance.gender,
 			email: this.props.sessionPersistance.email,
-			id_region: this.props.sessionPersistance.id_region,
 			address: this.props.sessionPersistance.address,
 			phone: this.props.sessionPersistance.phone
 		})
@@ -128,7 +126,6 @@ class EditProfile extends Component {
 			last_name,
 			username,
 			gender,
-			id_region,
 			email,
 			address,
 			phone
@@ -144,7 +141,6 @@ class EditProfile extends Component {
 					email,
 					username,
 					gender,
-					id_region,
 					address,
 					phone
 				},
@@ -207,22 +203,6 @@ class EditProfile extends Component {
 									value={this.state.email}
 									onChangeText={email => this.setState({ email })} />
 							</Item>
-							<View style={styles.genderView}>
-								<Text style={styles.gender}>Region</Text>
-								<Picker
-									style={styles.picker}
-									mode="dropdown"
-									iosHeader="region"
-									selectedValue={this.state.id_region}
-									onValueChange={id_region => this.setState({ id_region })}>
-									{this.props.regions.map((data, index) => (
-										<Item
-											key={index}
-											label={data.region}
-											value={data.id_region} />
-									))}
-								</Picker>
-							</View>
 							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.labelText}>Address</Label>
 								<Input
@@ -246,15 +226,12 @@ class EditProfile extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		regions: state.regionals,
-		loading: state.loading,
-		success: state.success,
-		failed: state.failed,
-		sessionPersistance: state.sessionPersistance
-	}
-}
+const mapStateToProps = state => ({
+	loading: state.loading,
+	success: state.success,
+	failed: state.failed,
+	sessionPersistance: state.sessionPersistance
+})
 
 const mapDipatchToProps = dispatch => {
 	return {

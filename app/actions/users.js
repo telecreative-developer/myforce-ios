@@ -9,7 +9,7 @@ export const fetchUsers = accessToken => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'FETCH_USERS'))
 		try {
-			const response = await fetch(`${url}/users?$sort[point]=-1`, {
+			const response = await fetch(`${url}/users`, {
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',

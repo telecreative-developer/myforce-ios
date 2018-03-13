@@ -110,16 +110,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-HorizontalJoker.propTypes = {
-	title: PropTypes.string,
-	data: PropTypes.array,
-	key: PropTypes.string,
-	items: PropTypes.node,
-	horizontalIndicator: PropTypes.bool
-}
-
-HorizontalJoker.defaultProps = {
-	horizontalIndicator: false
-}
-
 export default HorizontalJoker

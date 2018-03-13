@@ -19,6 +19,7 @@ import { teamUpdatesWithBranch } from './updates'
 import { cartProducts } from './cart'
 import { target } from './targets'
 import { events } from './events'
+import { points } from './points'
 
 const config = {
 	key: 'root',
@@ -49,7 +50,8 @@ const reducers = persistCombineReducers(config, {
 	teamUpdatesWithBranch,
 	cartProducts,
 	target,
-	events
+	events,
+	points
 })
 
 export default reducers

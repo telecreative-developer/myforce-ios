@@ -28,8 +28,8 @@ import moment from 'moment'
 import Icon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import HorizontalJoker from '../components/HorizontalJokerTeam'
-import { fetchUsers } from '../actions/users'
 import { setNavigate } from '../actions/processor'
+import { fetchPoints } from '../actions/points'
 import { fetchTeamUpdatesWithBranch } from '../actions/updates'
 import defaultAvatar from '../assets/images/default-avatar.png'
 
@@ -47,6 +47,7 @@ class Club extends Component {
 	componentWillMount() {
 		const { sessionPersistance } = this.props
 		this.props.fetchTeamUpdatesWithBranch(sessionPersistance.id_branch, sessionPersistance.accessToken)
+		this.props.fetchPoints(sessionPersistance.accessToken)
 	}
 
 	key = (item, index) => index
@@ -62,9 +63,8 @@ class Club extends Component {
 		</TouchableOpacity>
 	)
 
-	renderItemUsers = ({ item, index }) => (
-		<View
-			style={{
+	renderItemsRank = ({item, index}) => (
+		<View style={{
 				display: 'flex',
 				flexDirection: 'row',
 				marginTop: 30,
@@ -73,20 +73,17 @@ class Club extends Component {
 			<Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15 }}>
 				{index + 1}
 			</Text>
-			{item.avatar === '' ? (
+			{item.users[0].avatar === '' || item.users[0].avatar === null ? (
 				<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
 			) : (
 				<Thumbnail
 					small
-					source={{ uri: item.avatar }}
-					style={{ marginRight: 10 }}
-				/>
+					source={{ uri: item.users[0].avatar }}
+					style={{ marginRight: 10 }} />
 			)}
 			<View>
-				<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${
-					item.first_name
-				} ${item.last_name}`}</Text>
-				<Text style={{ fontSize: 14 }}>
+				<Text style={{fontSize: 16, fontWeight: 'bold'}}>{`${item.users[0].first_name} ${item.users[0].last_name}`}</Text>
+				<Text style={{fontSize: 14}}>
 					{JSON.stringify(item.point)} Points
 				</Text>
 			</View>
@@ -94,6 +91,7 @@ class Club extends Component {
 	)
 
 	render() {
+		const { sessionPersistance } = this.props
 		return (
 			<Container>
 				<Header style={styles.header}>
@@ -101,11 +99,7 @@ class Club extends Component {
 					<Body>
 						<Text style={styles.title}>AG CLUB</Text>
 					</Body>
-					<Right>
-						{/* <TouchableOpacity>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity> */}
-					</Right>
+					<Right />
 				</Header>
 				<View style={styles.customerHeader}>
 					<LinearGradient
@@ -114,31 +108,15 @@ class Club extends Component {
 						<Grid>
 							<Col style={styles.leftCol}>
 								<View style={styles.headerDirection}>
-									{this.props.sessionPersistance.avatar === '' ? (
+									{sessionPersistance.avatar === '' ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
-										<Thumbnail
-											rounded
-											large
-											source={{
-												uri: this.props.sessionPersistance.avatar
-											}}
-										/>
+										<Thumbnail rounded large source={{uri: sessionPersistance.avatar}} />
 									)}
 									<View style={{justifyContent: 'center'}}>
 										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-											<H3 style={styles.profileName}>{`${
-												this.props.sessionPersistance.first_name
-											} ${this.props.sessionPersistance.last_name}`}</H3>
+											<H3 style={styles.profileName}>{`${sessionPersistance.first_name} ${sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
-										{/* <View style={styles.headerDirection}>
-											<Text style={styles.Data}>
-												{this.props.sessionPersistance.bio}
-											</Text>
-										</View> */}
-										<View style={styles.headerDirection}>
-											<Text style={styles.Data}>{this.props.pipelinesWithUserId.length} Pipeline Created</Text>
-										</View>
 									</View>
 								</View>
 							</Col>
@@ -153,26 +131,19 @@ class Club extends Component {
 					<View style={styles.boardDirection}>
 						<View style={styles.leaderboard}>
 							<Text style={styles.leaderboardTitle}>
-								{this.props.sessionPersistance.regionals[0].region} Leaderboard
+								{this.props.sessionPersistance.branches[0].branch} Leaderboard
 							</Text>
 							<FlatList
-								data={this.props.users.filter(u => u.id_region === this.props.sessionPersistance.regionals[0].id_region).slice(0, 5)}
+								data={this.props.points.filter(d => d.id_branch === sessionPersistance.id_branch).sort((a, b) => a.point - b.point).slice(0, 5).reverse()}
 								keyExtractor={this.key}
-								renderItem={this.renderItemUsers} />
-							{/* <TouchableOpacity>
-								<Text style={styles.see}>See Complete Table</Text>
-							</TouchableOpacity> */}
+								renderItem={this.renderItemsRank} />
 						</View>
 						<View style={styles.leaderboard}>
 							<Text style={styles.leaderboardTitle}>National Leaderboard</Text>
 							<FlatList
-								data={this.props.users.slice(0, 5)}
+								data={this.props.points.sort((a, b) => a.point - b.point).slice(0, 5).reverse()}
 								keyExtractor={this.key}
-								renderItem={this.renderItemUsers}
-							/>
-							{/* <TouchableOpacity>
-								<Text style={styles.see}>See Complete Table</Text>
-							</TouchableOpacity> */}
+								renderItem={this.renderItemsRank} />
 						</View>
 					</View>
 					<View style={styles.team}>
@@ -191,14 +162,14 @@ class Club extends Component {
 }
 
 const mapStateToProps = state => ({
-	users: state.users,
 	teamUpdatesWithBranch: state.teamUpdatesWithBranch,
 	sessionPersistance: state.sessionPersistance,
-	pipelinesWithUserId: state.pipelinesWithUserId
+	points: state.points
 })
 
 const mapDispatchToProps = dispatch => ({
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
+	fetchPoints: (accessToken) => dispatch(fetchPoints(accessToken)),
 	fetchTeamUpdatesWithBranch: (id_branch, accessToken) => dispatch(fetchTeamUpdatesWithBranch(id_branch, accessToken)),
 })
 

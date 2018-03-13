@@ -454,40 +454,8 @@ class CustomerProfile extends Component {
 					<Body>
 						<Text style={styles.title}>CUSTOMER PROFILE</Text>
 					</Body>
-					<Right>
-						{/* <TouchableOpacity onPress={() => navigate('OrderSummary')}>
-							<Icon name="ios-folder-open" size={25} />
-						</TouchableOpacity> */}
-					</Right>
+					<Right />
 				</Header>
-				{/* <View style={styles.newsWrapper}>
-					<View style={styles.newsDirection}>
-						<View style={styles.titleFlex}>
-							<H3 style={styles.newsTitle}>Latest News</H3>
-						</View>
-						<TouchableOpacity
-							style={styles.iconFlex}
-							onPress={() => navigate('OrderSummary')}>
-							<Icon
-								style={styles.closeIcon}
-								name="ios-close-circle-outline"
-								size={20}
-								color={'#ffffff'}
-							/>
-						</TouchableOpacity>
-					</View>
-					<View>
-						<Text style={styles.newsText}>
-							Lorem Ipsum is simply dummy text of the printing and typesetting
-							industry. Lorem Ipsum has been the industry's standard dummy text
-							ever since the 1500s. when an unknown printer took a galley of
-							type and scrambled it.
-						</Text>
-						<TouchableOpacity>
-							<Text style={styles.readMore}>Read More</Text>
-						</TouchableOpacity>
-					</View>
-				</View> */}
 				<Content style={styles.content} showsVerticalScrollIndicator={false}>
 					<View style={styles.customerHeader}>
 						<View style={styles.headerDirectionTitle}>

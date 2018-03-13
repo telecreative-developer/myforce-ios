@@ -106,8 +106,7 @@ class CustomerList extends Component {
 						searchTerm={this.state.search}
 						data={this.props.customers}
 						keyExtractor={this.key}
-						renderItem={this.renderItems}
-					/>
+						renderItem={this.renderItems} />
 				</Content>
 			</Container>
 		)

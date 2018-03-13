@@ -194,11 +194,7 @@ class Achievements extends Component {
 					<Body>
 						<Text style={styles.title}>ACHIEVEMENTS</Text>
 					</Body>
-					<Right>
-						{/* <TouchableOpacity>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity> */}
-					</Right>
+					<Right />
 				</Header>
 				<View style={styles.customerHeader}>
 					<LinearGradient
@@ -210,25 +206,12 @@ class Achievements extends Component {
 									{this.props.sessionPersistance.avatar === '' || this.props.sessionPersistance.avatar === null ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
-										<Thumbnail
-											rounded
-											large
-											source={{
-												uri: this.props.sessionPersistance.avatar
-											}}
-										/>
+										<Thumbnail rounded large source={{uri: this.props.sessionPersistance.avatar}} />
 									)}
 									<View style={{justifyContent: 'center'}}>
 										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-											<H3 style={styles.profileName}>{`${
-												this.props.sessionPersistance.first_name
-											} ${this.props.sessionPersistance.last_name}`}</H3>
+											<H3 style={styles.profileName}>{`${this.props.sessionPersistance.first_name} ${this.props.sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
-										{/* <View style={styles.headerDirection}>
-											<Text style={styles.dataBio}>
-												{this.props.sessionPersistance.bio}
-											</Text>
-										</View> */}
 										<View style={styles.headerDirection}>
 											<Text style={styles.dataPipeline}>
 												{this.props.pipelinesWithUserId.length} Pipeline Created
@@ -295,7 +278,7 @@ class Achievements extends Component {
 								borderWidth={5}>
 									<View style={styles.row}>
 										<Text style={styles.barText}>
-										{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2)} %
+											{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2)} %
 										</Text>
 									</View>
 							</AnimatedBar>
@@ -347,19 +330,15 @@ class Achievements extends Component {
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		target: state.target,
-		sessionPersistance: state.sessionPersistance,
-		pipelinesWithUserId: state.pipelinesWithUserId,
-	}
-}
+const mapStateToProps = state => ({
+	target: state.target,
+	sessionPersistance: state.sessionPersistance,
+	pipelinesWithUserId: state.pipelinesWithUserId
+})
 
-const mapDispatchToProps = dispatch => {
-	return{
-		setNavigate: (link, data) => dispatch(setNavigate(link, data))
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	setNavigate: (link, data) => dispatch(setNavigate(link, data))
+})
 
 const styles = StyleSheet.create({
 	header: {

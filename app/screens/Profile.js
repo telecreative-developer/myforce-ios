@@ -89,7 +89,7 @@ class Profile extends Component {
 
 		ImagePicker.showImagePicker(options, response => {
 			if (response.didCancel) {
-				this.setState({ avatarBase64: this.state.avatarBase64 })
+				this.setState({avatarBase64: this.state.avatarBase64})
 			} else {
 				this.props.postAvatar(id, `data:image/png;base64,${response.data}`, accessToken)
 			}
@@ -374,6 +374,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-	ThemeContainer(Profile)
-)
+export default connect(mapStateToProps, mapDispatchToProps)(ThemeContainer(Profile))
