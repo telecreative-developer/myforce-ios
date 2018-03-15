@@ -59,13 +59,21 @@ class CustomerProfile extends Component {
 
 		this.state = {
 			id_pic: '',
+			isModalVisibleCart: false,
 			isModalVisible: false,
 			modalNewPipeline: false,
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
+			totalPrice: 0,
 			id_pipeline: '',
-			step: ''
+			step: '',
+			cartProducts: [
+				{
+					picture: 'http://www.nusacopy.com/images/a/produk/rental-fotocopy-warna.jpg',
+					subproduct: 'Test'
+				}
+			]
 		}
 	}
 
@@ -254,7 +262,7 @@ class CustomerProfile extends Component {
 					)}
 				</View>
 				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
-					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
+					<Button small style={{backgroundColor: '#2D38F9', height: 40 }} onPress={() => this.setState({isModalVisibleCart: true})}>
 						<Text style={{fontSize: 14}}>Order Summary</Text>
 					</Button>
 				</View>
@@ -287,6 +295,11 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress currentPosition={item.step-1} />
 				</View>
+				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
+					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
+						<Text style={{fontSize: 14}}>Order Summary</Text>
+					</Button>
+				</View>
 			</View>
 		</View>
 	)
@@ -316,16 +329,34 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress currentPosition={item.step-1} />
 				</View>
+				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
+					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
+						<Text style={{fontSize: 14}}>Order Summary</Text>
+					</Button>
+				</View>
 			</View>
 		</View>
 	)
 
 	renderItemsPic = ({ item }) => (
-		<TouchableOpacity style={styles.headerDirection}>
+		<TouchableOpacity style={styles.headerDirection} onPress={() => this.setState({modalPic: true})}>
 			<Icon name="md-contact" size={15} color={'#fff'}/>
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
 	)
+
+	renderItemCart = ({ item }) => {
+		return (
+			<ImageBackground
+				source={{ uri: item.picture }}
+				imageStyle={styles.cardImage}
+				style={styles.itemCart}>
+				<TouchableHighlight underlayColor={'transparent'}>
+					<Text style={styles.itemText}>{item.subproduct}</Text>
+				</TouchableHighlight>
+			</ImageBackground>
+		)
+	}
 
 	render() {
 		const { navigate, goBack, state } = this.props.navigation
@@ -384,23 +415,23 @@ class CustomerProfile extends Component {
 						<Content>
 							<View style={styles.formPicDirection}>
 								<Form>
-									<Item floatingLabel>
+									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>PIC Name</Label>
 										<Input value="Rizaldi Halim" />
 									</Item>
-									<Item floatingLabel>
+									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Job</Label>
 										<Input value="Branch Manager" />
 									</Item>
-									<Item floatingLabel>
+									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Phone Number</Label>
 										<Input value="+62 859 8006 4003" />
 									</Item>
-									<Item floatingLabel>
+									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Email</Label>
 										<Input value="nando@gmail.com" />
 									</Item>
-									<Item floatingLabel>
+									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Address</Label>
 										<Input
 											multiline={true}
@@ -414,12 +445,7 @@ class CustomerProfile extends Component {
 						<Footer>
 							<FooterTab>
 								<Button onPress={() => this.setState({ modalPic: false })}>
-									<Text note style={styles.modalCancelButton}>
-										Cancel
-									</Text>
-								</Button>
-								<Button onPress={() => this.setState({ modalPic: false })}>
-									<Text style={styles.modalYesButton}>Save Changes</Text>
+									<Text style={styles.modalYesButton}>OKE</Text>
 								</Button>
 							</FooterTab>
 						</Footer>
@@ -451,6 +477,32 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
+				<Modal isVisible={this.state.isModalVisibleCart} style={styles.modal}   
+					onBackdropPress={() => this.setState({ isModalVisibleCart: false })}>
+					<View style={styles.cartContent}>
+						<View style={{width: '100%',alignItems: 'flex-end', paddingHorizontal: 20, paddingTop: 10,}}>
+							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.setState({ isModalVisibleCart: false })}>
+								<Icon name="ios-close" size={35}/>
+							</TouchableHighlight>
+						</View>
+						<Text style={styles.modalTitle}>Order Cart</Text>
+						<Text style={styles.modalTotal}>Total Item: 1</Text>
+						<View style={{width: width / 1.3}}>
+							<Item stackedLabel style={styles.itemForm}>
+								<Label style={styles.productCategory}>Total Price</Label>
+								<Input value={this.state.totalPrice} onChangeText={(totalPrice) => this.setState({totalPrice})} keyboardType='numeric'/>
+							</Item>
+						</View>
+						<View>
+							<FlatList
+								showsVerticalScrollIndicator={false}
+								data={this.state.cartProducts}
+								style={styles.container}
+								keyExtractor={this.key}
+								renderItem={this.renderItemCart} />
+						</View>
+					</View>
+        </Modal>
 				<Header style={styles.header}>
 					<Left style={{ flexDirection: 'row' }}>
 						<Button transparent onPress={() => this.handleBackButton()}>
@@ -493,7 +545,7 @@ class CustomerProfile extends Component {
 								{/* <TouchableOpacity
 									style={styles.headerDirection}
 									onPress={() => navigate('ChoosePic')}>
-									<Icon name="md-add" size={15} color={'#2D38F9'}/>
+									<Icon name="md-add" size={13} color={'#fff'}/>
 									<Text style={styles.dataAddPic}>Add More PIC</Text>
 								</TouchableOpacity> */}
 							</View>
@@ -722,7 +774,7 @@ const styles = StyleSheet.create({
 	},
 	dataAddPic: {
 		fontSize: 12,
-		color: '#2D38F9',
+		color: '#fff',
 		marginLeft: 5
 	},
 	titleFlex: {
@@ -827,6 +879,65 @@ const styles = StyleSheet.create({
 		fontStyle: 'italic', 
 		textAlign: 'center',
 		backgroundColor: 'transparent'
+	},
+	cartContent: {
+    width: '100%',
+    height: '100%',
+    flex: 1,
+    backgroundColor: '#ffffff',
+		margin: 0,
+		alignItems: 'center',
+		overflow:'hidden'
+	},
+	modalTitle: {
+		fontSize: 28,
+		fontWeight: 'bold'
+	},
+	modalTotal: {
+		fontSize: 22,
+		marginTop: 5
+	},
+	container: {
+		flex: 1,
+		marginTop: 20,
+		marginBottom: 40
+	},
+	itemCart: {
+		backgroundColor: '#000000',
+		alignItems: 'center',
+		justifyContent: 'center',
+		flex: 1,
+		marginBottom: 10,
+		paddingHorizontal: 20,
+		height: Dimensions.get('window').width / 4,
+		width: width / 1.3
+	},
+	itemText: {
+		color: '#fff',
+		textAlign: 'center',
+		backgroundColor: 'transparent'
+	},
+	cardFooterCart: {
+		position: 'absolute',
+		bottom: 0,
+		height: '25%',
+		backgroundColor: 'transparent'
+	},
+	cardButtonCart: {
+		backgroundColor: '#ff6961',
+		width: '100%',
+		height: '100%',
+		flexDirection: 'row',
+		borderRadius: 0
+	},
+	itemForm: {
+		marginTop: 20,
+		marginLeft: 0,
+		marginBottom: 20
+	},
+	productCategory: {
+		fontSize: 18,
+		color: '#696969'
 	},
 })
 

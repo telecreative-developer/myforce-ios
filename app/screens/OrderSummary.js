@@ -133,6 +133,12 @@ class OrderSummary extends Component {
 						</View>
 						<Text style={styles.modalTitle}>Order Cart</Text>
 						<Text style={styles.modalTotal}>Total Item: {this.props.cartProducts.length}</Text>
+						<View style={{width: width / 1.3}}>
+							<Item stackedLabel style={styles.itemForm}>
+								<Label style={styles.productCategory}>Total Price</Label>
+								<Input value={this.state.totalPrice} onChangeText={(totalPrice) => this.setState({totalPrice})} keyboardType='numeric'/>
+							</Item>
+						</View>
 						<View>
 							<FlatList
 								showsVerticalScrollIndicator={false}
