@@ -49,6 +49,7 @@ import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
 import { setNavigate } from '../actions/processor'
 import bg from '../assets/images/meeting.jpg'
+import LinearGradient from 'react-native-linear-gradient'
 
 const { height, width } = Dimensions.get('window')
 
@@ -237,8 +238,9 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
+						<Icon name="md-contact" size={18} color={'#000'}/>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>{data.name}</Text>
+							<Text key={index} style={styles.dataPic}>{data.name}</Text>
 						))}
 					</View>
 				</View>
@@ -250,6 +252,11 @@ class CustomerProfile extends Component {
 					) : (
 						<PipelineProgress currentPosition={item.step-1} />
 					)}
+				</View>
+				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
+					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
+						<Text style={{fontSize: 14}}>Order Summary</Text>
+					</Button>
 				</View>
 			</View>
 		</View>
@@ -273,7 +280,7 @@ class CustomerProfile extends Component {
 					</View>
 					<View style={styles.picDirection}>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>{data.name}</Text>
+							<Text key={index} style={styles.dataPic}>{data.name}</Text>
 						))}
 					</View>
 				</View>
@@ -302,7 +309,7 @@ class CustomerProfile extends Component {
 					</View>
 					<View style={styles.picDirection}>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>{data.name}</Text>
+							<Text key={index} style={styles.dataPic}>{data.name}</Text>
 						))}
 					</View>
 				</View>
@@ -315,7 +322,7 @@ class CustomerProfile extends Component {
 
 	renderItemsPic = ({ item }) => (
 		<TouchableOpacity style={styles.headerDirection}>
-			<Icon name="md-contact" size={15} />
+			<Icon name="md-contact" size={15} color={'#fff'}/>
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
 	)
@@ -458,20 +465,26 @@ class CustomerProfile extends Component {
 				</Header>
 				<Content style={styles.content} showsVerticalScrollIndicator={false}>
 					<View style={styles.customerHeader}>
+					<LinearGradient
+						start={{ x: 0.0, y: 0.25 }}
+						end={{ x: 1.5, y: 1 }}
+						locations={[0, 0.5, 0.6]}
+						colors={['#20E6CD', '#2D38F9', '#2D38F9']}
+						style={styles.linearGradient}>
 						<View style={styles.headerDirectionTitle}>
-							<View>
+							<View style={{backgroundColor: 'transparent'}}>
 								<TouchableHighlight underlayColor={'transparent'}>
 									<H3 style={styles.headerDirectionTitle}>
 										{state.params.name}
 									</H3>
 								</TouchableHighlight>
 								<View style={styles.headerDirection}>
-									<Icon name="md-pin" size={15} />
+									<Icon name="md-pin" size={15} color={'#fff'}/>
 									<Text style={styles.dataAddress}>
 										{state.params.address}
 									</Text>
 								</View>
-								<Text style={{fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>PIC List:</Text>
+								<Text style={{fontSize: 14, paddingTop: 15, paddingLeft: 20, fontWeight: 'bold', color: '#fff' }}>PIC List:</Text>
 								<FlatList 
 									data={this.props.picsCustomers}
 									keyExtractor={this.key}
@@ -485,6 +498,7 @@ class CustomerProfile extends Component {
 								</TouchableOpacity> */}
 							</View>
 						</View>
+						</LinearGradient>
 					</View>
 					<View style={styles.customerTotal}>
 						<Grid style={{ display: 'flex', alignItems: 'center' }}>
@@ -629,8 +643,12 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ffffff',
 		width: '100%',
 		height: 'auto',
-		paddingVertical: 20,
 		justifyContent: 'center'
+	},
+	linearGradient: {
+		width: '100%',
+		height: 'auto',
+		paddingVertical: 20,
 	},
 	headerDirection: {
 		display: 'flex',
@@ -641,7 +659,9 @@ const styles = StyleSheet.create({
 	headerDirectionTitle: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginLeft: 20
+		marginLeft: 20,
+		color: '#fff',
+		fontWeight: 'bold'
 	},
 	customerTotal: {
 		width: '100%',
@@ -658,7 +678,8 @@ const styles = StyleSheet.create({
 	},
 	customerPipeline: {
 		width: '100%',
-		height: height / 5,
+		minHeight: height / 5,
+		height: 'auto',
 		backgroundColor: '#ffffff',
 		marginBottom: '2%',
 		flex: 1,
@@ -685,13 +706,17 @@ const styles = StyleSheet.create({
 		fontSize: 10
 	},
 	data: {
-		fontSize: 12,
-		color: '#181818',
+		fontSize: 14,
+		color: '#fff',
+		marginLeft: 5
+	},
+	dataPic: {
+		fontSize: 16,
 		marginLeft: 5
 	},
 	dataAddress: {
-		fontSize: 12,
-		color: '#181818',
+		fontSize: 14,
+		color: '#fff',
 		marginLeft: 5,
 		maxWidth: width / 1.5
 	},

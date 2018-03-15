@@ -37,7 +37,7 @@ export default class PieCharts extends Component {
       },
       label: {
         fontFamily: 'Arial',
-        fontSize: 8,
+        fontSize: 16,
         fontWeight: true,
         color: '#ECF0F1'
       }
@@ -64,7 +64,7 @@ export default class PieCharts extends Component {
           legendPosition="topLeft"
           label={{
             fontFamily: 'Arial',
-            fontSize: 8,
+            fontSize: 16,
             fontWeight: true,
             color: '#ECF0F1'
           }}/>

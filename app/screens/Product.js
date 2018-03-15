@@ -155,7 +155,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent'
 	},
 	cardTitle: {
-		fontSize: 48,
+		fontSize: 46,
+		minWidth: width / 2,
 		fontWeight: '900',
 		color: '#ffffff',
 		fontStyle: 'italic',
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
 	},
 	cardDetail: {
 		color: '#ffffff',
-		fontSize: 14,
+		fontSize: 18,
 		textAlign: 'center',
 		marginTop: 10
 	},
