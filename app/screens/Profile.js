@@ -45,9 +45,9 @@ class Profile extends Component {
 			avatarBase64: ''
 		}
 	}
-	
+
 	componentWillMount() {
-		this.setState({avatarBase64: this.props.sessionPersistance.avatar})
+		this.setState({ avatarBase64: this.props.sessionPersistance.avatar })
 	}
 
 	renderBackground() {
@@ -55,10 +55,12 @@ class Profile extends Component {
 			<View key="background">
 				<Image
 					source={{
-						uri: 'https://images.pexels.com/photos/567633/pexels-photo-567633.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb',
+						uri:
+							'https://images.pexels.com/photos/567633/pexels-photo-567633.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb',
 						width: window.width,
 						height: PARALLAX_HEADER_HEIGHT
-					}} />
+					}}
+				/>
 				<View
 					style={{
 						position: 'absolute',
@@ -66,7 +68,8 @@ class Profile extends Component {
 						width: window.width,
 						backgroundColor: 'rgba(42,92,240,.4)',
 						height: PARALLAX_HEADER_HEIGHT
-					}} />
+					}}
+				/>
 			</View>
 		)
 	}
@@ -89,9 +92,13 @@ class Profile extends Component {
 
 		ImagePicker.showImagePicker(options, response => {
 			if (response.didCancel) {
-				this.setState({avatarBase64: this.state.avatarBase64})
+				this.setState({ avatarBase64: this.state.avatarBase64 })
 			} else {
-				this.props.postAvatar(id, `data:image/png;base64,${response.data}`, accessToken)
+				this.props.postAvatar(
+					id,
+					`data:image/png;base64,${response.data}`,
+					accessToken
+				)
 			}
 		})
 	}
@@ -105,7 +112,12 @@ class Profile extends Component {
 						<TouchableOpacity
 							onPress={() => this.handleBackButton()}
 							style={styles.fixedSectionBack}>
-							<Icon name="ios-arrow-back" size={25} color="#fff" style={styles.iconBack} />
+							<Icon
+								name="ios-arrow-back"
+								size={25}
+								color="#fff"
+								style={styles.iconBack}
+							/>
 							<Text style={styles.back}>Back</Text>
 						</TouchableOpacity>
 					</View>
@@ -113,10 +125,21 @@ class Profile extends Component {
 				<Col style={styles.fixHeaderRight}>
 					<View key="fixed-header" style={styles.fixedSection}>
 						<TouchableOpacity>
-							<Icon name="ios-settings" size={25} color="transparent" style={styles.iconSetting} />
+							<Icon
+								name="ios-settings"
+								size={25}
+								color="transparent"
+								style={styles.iconSetting}
+							/>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => this.props.navigation.navigate('Settings')}>
-							<Icon name="ios-settings" size={25} color="#fff" style={styles.iconBell} />
+						<TouchableOpacity
+							onPress={() => this.props.navigation.navigate('Settings')}>
+							<Icon
+								name="ios-settings"
+								size={25}
+								color="#fff"
+								style={styles.iconBell}
+							/>
 						</TouchableOpacity>
 					</View>
 				</Col>
@@ -136,21 +159,43 @@ class Profile extends Component {
 				renderBackground={this.renderBackground}
 				renderForeground={() => (
 					<View key="parallax-header" style={styles.parallaxHeader}>
-						{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_AVATAR' ? (
-							<Image style={[styles.avatar, {width: AVATAR_SIZE, height: AVATAR_SIZE}]} source={defaultLoading} />
+						{this.props.loading.condition === true &&
+						this.props.loading.process_on === 'LOADING_POST_AVATAR' ? (
+							<Image
+								style={[
+									styles.avatar,
+									{ width: AVATAR_SIZE, height: AVATAR_SIZE }
+								]}
+								source={defaultLoading}
+							/>
+						) : this.state.avatarBase64 === '' ? (
+							<Image
+								style={[
+									styles.avatar,
+									{ width: AVATAR_SIZE, height: AVATAR_SIZE }
+								]}
+								source={defaultAvatar}
+							/>
 						) : (
-							this.state.avatarBase64 === '' ? (
-								<Image style={[styles.avatar, {width: AVATAR_SIZE, height: AVATAR_SIZE}]} source={defaultAvatar} />
-							) : (
-								<Image style={styles.avatar} source={{uri: this.state.avatarBase64, width: AVATAR_SIZE, height: AVATAR_SIZE}} />
-							)
+							<Image
+								style={styles.avatar}
+								source={{
+									uri: this.state.avatarBase64,
+									width: AVATAR_SIZE,
+									height: AVATAR_SIZE
+								}}
+							/>
 						)}
-						<TouchableOpacity style={styles.viewBadge} onPress={() => this.handleChangeProfile()}>
+						<TouchableOpacity
+							style={styles.viewBadge}
+							onPress={() => this.handleChangeProfile()}>
 							<Badge style={styles.changeAvatarBadge}>
 								<Icon name="md-create" color={'#ffffff'} size={20} />
 							</Badge>
 						</TouchableOpacity>
-						<Text style={styles.sectionSpeakerText}>{`${this.props.sessionPersistance.first_name} ${sessionPersistance.last_name}`}</Text>
+						<Text style={styles.sectionSpeakerText}>{`${
+							this.props.sessionPersistance.first_name
+						} ${sessionPersistance.last_name}`}</Text>
 						<Text style={styles.sectionTitleText}>
 							{sessionPersistance.bio}
 						</Text>
@@ -160,7 +205,8 @@ class Profile extends Component {
 									backgroundColor: '#2A5CF0',
 									alignItems: 'center',
 									justifyContent: 'center',
-									marginTop: 15}}>
+									marginTop: 15
+								}}>
 								<Text style={styles.changeCoverText}>Change Cover</Text>
 							</Badge>
 						</TouchableOpacity>
@@ -168,7 +214,9 @@ class Profile extends Component {
 				)}
 				renderStickyHeader={() => (
 					<View key="sticky-header" style={styles.stickySection}>
-						<Text style={styles.stickySectionText}>{`${this.props.sessionPersistance.first_name} ${sessionPersistance.last_name}`}</Text>
+						<Text style={styles.stickySectionText}>{`${
+							this.props.sessionPersistance.first_name
+						} ${sessionPersistance.last_name}`}</Text>
 					</View>
 				)}
 				renderFixedHeader={this.renderFixedHeader}>
@@ -189,7 +237,12 @@ class Profile extends Component {
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Gender</Label>
-							<Input disabled placeholder={sessionPersistance.gender === 1 ? 'Male' : 'Female'} />
+							<Input
+								disabled
+								placeholder={
+									sessionPersistance.gender === 1 ? 'Male' : 'Female'
+								}
+							/>
 						</Item>
 						<Item stackedLabel disabled style={styles.itemForm}>
 							<Label style={styles.labelText}>Email</Label>
@@ -225,7 +278,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	postAvatar: (id, avatar, accessToken) => dispatch(postAvatar(id, avatar, accessToken)),
+	postAvatar: (id, avatar, accessToken) =>
+		dispatch(postAvatar(id, avatar, accessToken)),
 	setNavigate: (link, data) => dispatch(setNavigate(link, data))
 })
 
@@ -374,4 +428,6 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThemeContainer(Profile))
+export default connect(mapStateToProps, mapDispatchToProps)(
+	ThemeContainer(Profile)
+)

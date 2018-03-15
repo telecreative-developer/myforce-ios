@@ -68,27 +68,33 @@ class OrderSummary extends Component {
 	async componentWillMount() {
 		const { accessToken } = await this.props.sessionPersistance
 		await this.props.fetchProducts(accessToken)
-		await this.setState({id_product: this.props.products[0].id_product})
-		await this.props.fetchSubproducts(this.props.products[0].id_product, accessToken)
+		await this.setState({ id_product: this.props.products[0].id_product })
+		await this.props.fetchSubproducts(
+			this.props.products[0].id_product,
+			accessToken
+		)
 	}
 
 	handleSelectCategory(id_product) {
 		const { accessToken } = this.props.sessionPersistance
 		this.props.fetchSubproducts(id_product, accessToken)
-		this.setState({id_product})
+		this.setState({ id_product })
 	}
 
 	renderItem = ({ item, index }) => {
 		return (
 			<ImageBackground
-				source={{uri: item.picture}}
+				source={{ uri: item.picture }}
 				imageStyle={styles.cardImage}
 				style={styles.item}>
 				<TouchableHighlight underlayColor={'transparent'}>
 					<Text style={styles.itemText}>{item.subproduct}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooter}>
-					<Button full style={styles.cardButton} onPress={() => this.props.addProductToCart(item)}>
+					<Button
+						full
+						style={styles.cardButton}
+						onPress={() => this.props.addProductToCart(item)}>
 						<Icon name="md-add" size={20} color={'#ffffff'} />
 						<Text>Add</Text>
 					</Button>
@@ -107,7 +113,10 @@ class OrderSummary extends Component {
 					<Text style={styles.itemText}>{item.subproduct}</Text>
 				</TouchableHighlight>
 				<Footer style={styles.cardFooterCart}>
-					<Button full style={styles.cardButtonCart} onPress={() => this.props.removeProductFromCart(item.id_index)}>
+					<Button
+						full
+						style={styles.cardButtonCart}
+						onPress={() => this.props.removeProductFromCart(item.id_index)}>
 						<Icon name="ios-close" size={20} color={'#ffffff'} />
 						<Text>Cancel</Text>
 					</Button>
@@ -116,33 +125,46 @@ class OrderSummary extends Component {
 		)
 	}
 
-	key = ( item, index ) => index
+	key = (item, index) => index
 
 	render() {
 		const { navigate, goBack } = this.props.navigation
 		const { params } = this.props.navigation.state
 		return (
 			<Container>
-				<Modal isVisible={this.state.isModalVisibleCart} style={styles.modal}   
+				<Modal
+					isVisible={this.state.isModalVisibleCart}
+					style={styles.modal}
 					onBackdropPress={() => this.setState({ isModalVisibleCart: false })}>
 					<View style={styles.cartContent}>
-						<View style={{width: '100%',alignItems: 'flex-end', paddingHorizontal: 20, paddingTop: 10,}}>
-							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.setState({ isModalVisibleCart: false })}>
-								<Icon name="ios-close" size={35}/>
+						<View
+							style={{
+								width: '100%',
+								alignItems: 'flex-end',
+								paddingHorizontal: 20,
+								paddingTop: 10
+							}}>
+							<TouchableHighlight
+								underlayColor={'transparent'}
+								onPress={() => this.setState({ isModalVisibleCart: false })}>
+								<Icon name="ios-close" size={35} />
 							</TouchableHighlight>
 						</View>
 						<Text style={styles.modalTitle}>Order Cart</Text>
-						<Text style={styles.modalTotal}>Total Item: {this.props.cartProducts.length}</Text>
+						<Text style={styles.modalTotal}>
+							Total Item: {this.props.cartProducts.length}
+						</Text>
 						<View>
 							<FlatList
 								showsVerticalScrollIndicator={false}
 								data={this.props.cartProducts}
 								style={styles.container}
 								keyExtractor={this.key}
-								renderItem={this.renderItemCart} />
+								renderItem={this.renderItemCart}
+							/>
 						</View>
 					</View>
-        </Modal>
+				</Modal>
 				<Header style={styles.header}>
 					<Left style={styles.backHeader}>
 						<Button transparent onPress={() => goBack()}>
@@ -154,9 +176,13 @@ class OrderSummary extends Component {
 						<Text style={styles.title}>ORDER SUMMARY</Text>
 					</Body>
 					<Right>
-						<Button transparent onPress={() => this.setState({isModalVisibleCart: true})}>
+						<Button
+							transparent
+							onPress={() => this.setState({ isModalVisibleCart: true })}>
 							{this.props.cartProducts.length !== 0 ? (
-								<Badge><Text>{this.props.cartProducts.length}</Text></Badge>
+								<Badge>
+									<Text>{this.props.cartProducts.length}</Text>
+								</Badge>
 							) : (
 								<Icon name="ios-cart" size={25} />
 							)}
@@ -175,14 +201,24 @@ class OrderSummary extends Component {
 								mode="dropdown"
 								iosHeader="Product Category"
 								selectedValue={this.state.id_product}
-								onValueChange={id_product => this.handleSelectCategory(id_product)}>
+								onValueChange={id_product =>
+									this.handleSelectCategory(id_product)
+								}>
 								{this.props.products.map((data, index) => (
-									<Item key={index} label={data.product} value={data.id_product} />
+									<Item
+										key={index}
+										label={data.product}
+										value={data.id_product}
+									/>
 								))}
 							</Picker>
 							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.productCategory}>Total Price</Label>
-								<Input value={this.state.totalPrice} onChangeText={(totalPrice) => this.setState({totalPrice})} keyboardType='numeric'/>
+								<Input
+									value={this.state.totalPrice}
+									onChangeText={totalPrice => this.setState({ totalPrice })}
+									keyboardType="numeric"
+								/>
 							</Item>
 						</View>
 					</Form>
@@ -191,15 +227,28 @@ class OrderSummary extends Component {
 						style={styles.container}
 						keyExtractor={(item, index) => index}
 						renderItem={this.renderItem}
-						numColumns={numColumns} />
+						numColumns={numColumns}
+					/>
 				</Content>
 				<Footer>
 					{this.props.cartProducts.length !== 0 ? (
-						<Button full style={styles.footerButton} onPress={() => navigate('QuestionPage', {step: params.step, id_pipeline: params.id_pipeline, id_customer: params.id_customer, total: this.state.totalPrice})}>
+						<Button
+							full
+							style={styles.footerButton}
+							onPress={() =>
+								navigate('QuestionPage', {
+									step: params.step,
+									id_pipeline: params.id_pipeline,
+									id_customer: params.id_customer,
+									total: this.state.totalPrice
+								})
+							}>
 							<Text style={styles.submit}>SUBMIT</Text>
 						</Button>
 					) : (
-						<Button full style={[styles.footerButton, {backgroundColor: '#999999'}]}>
+						<Button
+							full
+							style={[styles.footerButton, { backgroundColor: '#999999' }]}>
 							<Text style={styles.submit}>SUBMIT</Text>
 						</Button>
 					)}
@@ -209,7 +258,7 @@ class OrderSummary extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
 	return {
 		sessionPersistance: state.sessionPersistance,
 		products: state.products,
@@ -218,11 +267,13 @@ const mapStateToProps = (state) => {
 	}
 }
 
-const mapDispatchToProps = (dispatch) => ({
-	addProductToCart: (data) => dispatch(addProductToCart(data)),
-	removeProductFromCart: (id_subproduct) => dispatch(removeProductFromCart(id_subproduct)),
-	fetchProducts: (accessToken) => dispatch(fetchProducts(accessToken)),
-	fetchSubproducts: (id, accessToken) => dispatch(fetchSubproducts(id, accessToken))
+const mapDispatchToProps = dispatch => ({
+	addProductToCart: data => dispatch(addProductToCart(data)),
+	removeProductFromCart: id_subproduct =>
+		dispatch(removeProductFromCart(id_subproduct)),
+	fetchProducts: accessToken => dispatch(fetchProducts(accessToken)),
+	fetchSubproducts: (id, accessToken) =>
+		dispatch(fetchSubproducts(id, accessToken))
 })
 
 const styles = StyleSheet.create({
@@ -271,7 +322,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		margin: 2,
 		paddingHorizontal: 20,
-		height: Dimensions.get('window').width / 4,
+		height: Dimensions.get('window').width / 4
 	},
 	itemCart: {
 		backgroundColor: '#000000',
@@ -342,18 +393,18 @@ const styles = StyleSheet.create({
 	},
 	modalCart: {
 		padding: 0,
-    margin: 0,
-    width: '100%',
-    height: '100%',
+		margin: 0,
+		width: '100%',
+		height: '100%'
 	},
 	cartContent: {
-    width: '100%',
-    height: '100%',
-    flex: 1,
-    backgroundColor: '#ffffff',
+		width: '100%',
+		height: '100%',
+		flex: 1,
+		backgroundColor: '#ffffff',
 		margin: 0,
 		alignItems: 'center',
-		overflow:'hidden'
+		overflow: 'hidden'
 	},
 	modalTitle: {
 		fontSize: 28,
@@ -367,7 +418,7 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		marginLeft: 0,
 		marginBottom: 20
-	},
+	}
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderSummary)

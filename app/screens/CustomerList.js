@@ -51,15 +51,22 @@ class CustomerList extends Component {
 				<View style={styles.contentCard}>
 					<View style={styles.cardHeader}>
 						<H3 style={styles.textTitle}>{item.name}</H3>
-						{this.props.resultPics.filter(data => data.id_customer === item.id_customer).map((d, index) => (
-							<View style={styles.viewPerson} key={index}>
-								<Icon name="ios-person" color="#000000" size={15} />
-								<Text style={styles.textPerson}>{d.name}</Text>
-							</View>
-						))}
-						{this.props.pipelinesWithUserId.filter(data => data.id_customer === item.id_customer).splice(0, 1).map((d, index) => (
-							<Text key={index} style={styles.text}>{d.pipeline}</Text>
-						))}
+						{this.props.resultPics
+							.filter(data => data.id_customer === item.id_customer)
+							.map((d, index) => (
+								<View style={styles.viewPerson} key={index}>
+									<Icon name="ios-person" color="#000000" size={15} />
+									<Text style={styles.textPerson}>{d.name}</Text>
+								</View>
+							))}
+						{this.props.pipelinesWithUserId
+							.filter(data => data.id_customer === item.id_customer)
+							.splice(0, 1)
+							.map((d, index) => (
+								<Text key={index} style={styles.text}>
+									{d.pipeline}
+								</Text>
+							))}
 					</View>
 				</View>
 			</View>
@@ -69,34 +76,12 @@ class CustomerList extends Component {
 	render() {
 		return (
 			<Container>
-				<Header style={styles.header}>
-					<Left>
-						<TouchableOpacity
-							onPress={() => this.props.setNavigate('Profile', '')}>
-							{this.props.sessionPersistance.avatar === '' ? (
-								<Thumbnail rounded small source={defaultAvatar} />
-							) : (
-								<Thumbnail
-									small
-									rounded
-									source={{ uri: this.props.sessionPersistance.avatar }} />
-							)}
-						</TouchableOpacity>
-					</Left>
-					<Body>
-						<Text style={styles.title}>CUSTOMERS</Text>
-					</Body>
-					<Right>
-						{/* <TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity> */}
-					</Right>
-				</Header>
 				<View style={styles.searchView}>
 					<Item style={styles.searchForm} rounded>
 						<Input
 							placeholder="Search"
-							onChangeText={name => this.setState({ search: name })} />
+							onChangeText={name => this.setState({ search: name })}
+						/>
 						<Icon size={25} name="ios-search" />
 					</Item>
 				</View>
@@ -106,7 +91,8 @@ class CustomerList extends Component {
 						searchTerm={this.state.search}
 						data={this.props.customers}
 						keyExtractor={this.key}
-						renderItem={this.renderItems} />
+						renderItem={this.renderItems}
+					/>
 				</Content>
 			</Container>
 		)
@@ -125,8 +111,9 @@ const mapDispatchToProps = dispatch => {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		filterCustomersWithId: id => dispatch(filterCustomersWithId(id)),
 		filterCustomersWithName: name => dispatch(filterCustomersWithName(name)),
-		fetchPics: (accessToken) => dispatch(fetchPics(accessToken)),
-		fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
+		fetchPics: accessToken => dispatch(fetchPics(accessToken)),
+		fetchPipelinesWithUserId: (id, accessToken) =>
+			dispatch(fetchPipelinesWithUserId(id, accessToken))
 	}
 }
 

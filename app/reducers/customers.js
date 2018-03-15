@@ -3,9 +3,7 @@ import {
 	FILTER_CUSTOMERS_WITH_ID,
 	FILTER_CUSTOMERS_WITH_NAME,
 	RECEIVE_CUSTOMER_PLACES,
-	SELECTED_CUSTOMER_PLACE,
-	INPUT_DATA_TO_CUSTOMER,
-	CHECK_CUSTOMER
+	INPUT_DATA_TO_CUSTOMER
 } from '../constants'
 
 export const customers = (state = [], action) => {
@@ -15,19 +13,7 @@ export const customers = (state = [], action) => {
 		case FILTER_CUSTOMERS_WITH_ID:
 			return state.filter(data => data.id === action.id_user)
 		case INPUT_DATA_TO_CUSTOMER:
-			return [
-				...state,
-				action.payload
-			]
-		default:
-			return state
-	}
-}
-
-export const resultCheckCustomer = (state = [], action) => {
-	switch (action.type) {
-		case CHECK_CUSTOMER:
-			return action.payload
+			return [...state, action.payload]
 		default:
 			return state
 	}
@@ -36,15 +22,6 @@ export const resultCheckCustomer = (state = [], action) => {
 export const resultCustomersPlace = (state = [], action) => {
 	switch (action.type) {
 		case RECEIVE_CUSTOMER_PLACES:
-			return action.payload
-		default:
-			return state
-	}
-}
-
-export const selectedCustomerPlace = (state = [], action) => {
-	switch (action.type) {
-		case SELECTED_CUSTOMER_PLACE:
 			return action.payload
 		default:
 			return state

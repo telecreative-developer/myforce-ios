@@ -20,15 +20,13 @@ export const fetchSubproducts = (id, accessToken) => {
 			await dispatch(setSuccess(true, 'FETCH_SUBPRODUCTS'))
 			await dispatch(setLoading(false, 'FETCH_SUBPRODUCTS'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'FETCH_SUBPRODUCTS', e))
-			await dispatch(setLoading(false, 'FETCH_SUBPRODUCTS'))
+			dispatch(setFailed(true, 'FETCH_SUBPRODUCTS', e))
+			dispatch(setLoading(false, 'FETCH_SUBPRODUCTS'))
 		}
 	}
 }
 
-const fetchSubproductsSuccess = data => {
-	return {
-		type: FETCH_SUBPRODUCTS_SUCCESS,
-		payload: data
-	}
-}
+const fetchSubproductsSuccess = data => ({
+	type: FETCH_SUBPRODUCTS_SUCCESS,
+	payload: data
+})

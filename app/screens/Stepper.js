@@ -17,7 +17,6 @@ import bg from '../assets/images/meeting.jpg'
 const { width, height } = Dimensions.get('window')
 
 class Stepper extends Component {
-
 	componentWillMount() {
 		const { params } = this.props.navigation.state
 		const { accessToken } = this.props.sessionPersistance
@@ -25,9 +24,9 @@ class Stepper extends Component {
 	}
 
 	handleGo(data) {
-		if(data.step === 4) {
+		if (data.step === 4) {
 			this.props.navigation.navigate('OrderSummary', data)
-		}else{
+		} else {
 			this.props.navigation.navigate('QuestionPage', data)
 		}
 	}
@@ -50,19 +49,35 @@ class Stepper extends Component {
 					<Image source={bg} style={styles.cardImage} />
 					<View style={styles.contentView}>
 						<View style={styles.content}>
-							<Text style={styles.step}>STEP {sellingProcessWithStep.step}</Text>
+							<Text style={styles.step}>
+								STEP {sellingProcessWithStep.step}
+							</Text>
 							<Text style={styles.title}>{sellingProcessWithStep.title}</Text>
-							<Text style={styles.description}>Client Buying Process: {sellingProcessWithStep.buying_process}</Text>
+							<Text style={styles.description}>
+								Client Buying Process: {sellingProcessWithStep.buying_process}
+							</Text>
 							<View style={styles.activityContentView}>
-								<Text style={styles.contentDescription}>{sellingProcessWithStep.description}</Text>
-								<Text style={styles.goal}>Your Goal: {sellingProcessWithStep.goal}</Text>
-								<Text style={styles.advice}>{sellingProcessWithStep.advice}</Text>
+								<Text style={styles.contentDescription}>
+									{sellingProcessWithStep.description}
+								</Text>
+								<Text style={styles.goal}>
+									Your Goal: {sellingProcessWithStep.goal}
+								</Text>
+								<Text style={styles.advice}>
+									{sellingProcessWithStep.advice}
+								</Text>
 							</View>
 						</View>
 					</View>
 					<TouchableOpacity
 						style={styles.centerButton}
-						onPress={() => this.handleGo({step: params.step, id_pipeline: params.id_pipeline, id_customer: params.id_customer})}>
+						onPress={() =>
+							this.handleGo({
+								step: params.step,
+								id_pipeline: params.id_pipeline,
+								id_customer: params.id_customer
+							})
+						}>
 						<LinearGradient
 							colors={['#20E6CD', '#2D38F9']}
 							style={styles.linearGradient}>
@@ -75,15 +90,16 @@ class Stepper extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
 	return {
 		sessionPersistance: state.sessionPersistance,
 		sellingProcessWithStep: state.sellingProcessWithStep
 	}
 }
 
-const mapDispatchToProps = (dispatch) => ({
-	fetchSellingProcessWithStep: (step, accessToken) => dispatch(fetchSellingProcessWithStep(step, accessToken))
+const mapDispatchToProps = dispatch => ({
+	fetchSellingProcessWithStep: (step, accessToken) =>
+		dispatch(fetchSellingProcessWithStep(step, accessToken))
 })
 
 const styles = StyleSheet.create({
@@ -99,7 +115,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 		zIndex: -20,
-		backgroundColor: '#000000',
+		backgroundColor: '#000000'
 	},
 	cardImage: {
 		width: '100%',
@@ -119,13 +135,13 @@ const styles = StyleSheet.create({
 	content: {
 		width: width / 1.2,
 		minHeight: height / 1.5,
-		height: 'auto',
+		height: 'auto'
 	},
 	title: {
 		fontSize: 40,
 		fontWeight: '900',
 		color: '#ffffff',
-		fontStyle: 'italic', 
+		fontStyle: 'italic',
 		textAlign: 'center'
 	},
 	description: {
@@ -208,7 +224,7 @@ const styles = StyleSheet.create({
 		fontSize: 40,
 		fontWeight: '900',
 		color: '#20E6CD',
-		fontStyle: 'italic', 
+		fontStyle: 'italic',
 		textAlign: 'center'
 	},
 	activityContentView: {

@@ -1,4 +1,7 @@
-import { FETCH_PIPELINES_SUCCESS, FETCH_PIPELINES_WITH_USER_ID_SUCCESS } from '../constants'
+import {
+	FETCH_PIPELINES_SUCCESS,
+	FETCH_PIPELINES_WITH_USER_ID_SUCCESS
+} from '../constants'
 
 export const pipelines = (state = [], action) => {
 	switch (action.type) {

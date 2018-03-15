@@ -30,8 +30,8 @@ export const register = item => {
 				await dispatch(setLoading(false, 'PROCESS_REGISTER'))
 			}
 		} catch (e) {
-			await dispatch(setFailed(true, 'PROCESS_REGISTER', e))
-			await dispatch(setLoading(false, 'PROCESS_REGISTER'))
+			dispatch(setFailed(true, 'PROCESS_REGISTER', e))
+			dispatch(setLoading(false, 'PROCESS_REGISTER'))
 		}
 	}
 }

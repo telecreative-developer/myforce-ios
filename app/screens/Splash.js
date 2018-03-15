@@ -42,7 +42,7 @@ class Splash extends Component {
 
 const mapDispatchToProps = dispatch => ({
 	login: (email, password) => dispatch(login(email, password)),
-	fetchTarget: (year) => dispatch(fetchTarget(year))
+	fetchTarget: year => dispatch(fetchTarget(year))
 })
 
 const styles = StyleSheet.create({

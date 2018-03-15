@@ -13,8 +13,8 @@ import {
 	Item,
 	Label,
 	Input,
-  Picker,
-  List,
+	Picker,
+	List,
 	ListItem,
 	CheckBox,
 	Icon
@@ -27,23 +27,24 @@ import { removePic } from '../actions/pics'
 const { height, width } = Dimensions.get('window')
 
 class ChoosePic extends Component {
+	key = (item, index) => index
 
-  key = (item, index) => index
-  
-  renderItems = ({ item }) => (
-		<ListItem style={{paddingHorizontal: 10}}>
+	renderItems = ({ item }) => (
+		<ListItem style={{ paddingHorizontal: 10 }}>
 			<Body>
-				<Text style={{fontSize: 14, fontWeight: 'bold', textAlign: 'left'}}>{item.name}</Text>
-				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.job}</Text>
-				<Text style={{fontSize: 14, textAlign: 'left'}}>{item.company}</Text>
+				<Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'left' }}>
+					{item.name}
+				</Text>
+				<Text style={{ fontSize: 14, textAlign: 'left' }}>{item.job}</Text>
+				<Text style={{ fontSize: 14, textAlign: 'left' }}>{item.company}</Text>
 			</Body>
 			<Right>
 				<Button onPress={() => this.props.removePic(item)}>
-					<Icon name='close' />
+					<Icon name="close" />
 				</Button>
 			</Right>
 		</ListItem>
-  )
+	)
 
 	render() {
 		return (
@@ -56,48 +57,68 @@ class ChoosePic extends Component {
 						</Button>
 					</Left>
 					<Body>
-						<Text style={styles.title}>CHOOSE PIC ({this.props.pics.length})</Text>
+						<Text style={styles.title}>
+							CHOOSE PIC ({this.props.pics.length})
+						</Text>
 					</Body>
 					<Right>
 						{this.props.pics.length === 0 ? (
-							<Button transparent badge style={{paddingRight: 0}}>
-								<Text note style={styles.back}>Preview</Text>
+							<Button transparent badge style={{ paddingRight: 0 }}>
+								<Text note style={styles.back}>
+									Preview
+								</Text>
 							</Button>
 						) : (
-							<Button transparent badge onPress={() => this.props.navigation.navigate('AddCustomerPreview', this.props.navigation.state.params)} style={{paddingRight: 0}}>
-								<Text note style={styles.back}>Preview</Text>
+							<Button
+								transparent
+								badge
+								onPress={() =>
+									this.props.navigation.navigate(
+										'AddCustomerPreview',
+										this.props.navigation.state.params
+									)
+								}
+								style={{ paddingRight: 0 }}>
+								<Text note style={styles.back}>
+									Preview
+								</Text>
 							</Button>
 						)}
 					</Right>
 				</Header>
-        <View style={styles.buttonView}>
-          <Button
-            bordered
-            style={styles.buttonBack}
-            onPress={() => this.props.navigation.navigate('AddNewPic')}>
-            <Icon name="ios-add" size={25} color="#2D38F9" />
-            <Text style={styles.buttonText}>Add New PIC</Text>
-          </Button>
-        </View>
+				<View style={styles.buttonView}>
+					<Button
+						bordered
+						style={styles.buttonBack}
+						onPress={() =>
+							this.props.navigation.navigate(
+								'AddNewPic',
+								this.props.navigation.state.params
+							)
+						}>
+						<Icon name="ios-add" size={25} color="#2D38F9" />
+						<Text style={styles.buttonText}>Add New PIC</Text>
+					</Button>
+				</View>
 				<Content style={styles.content}>
-          <FlatList 
-            data={this.props.pics.reverse()}
-            keyExtractor={this.key}
-            renderItem={this.renderItems}
-          />
+					<FlatList
+						data={this.props.pics.reverse()}
+						keyExtractor={this.key}
+						renderItem={this.renderItems}
+					/>
 				</Content>
 			</Container>
 		)
 	}
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
 	sessionPersistance: state.sessionPersistance,
 	pics: state.pics
 })
 
-const mapDispatchToProps = (dispatch) => ({
-	removePic: (data) => dispatch(removePic(data))
+const mapDispatchToProps = dispatch => ({
+	removePic: data => dispatch(removePic(data))
 })
 
 const styles = StyleSheet.create({
@@ -163,8 +184,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderColor: '#2D38F9'
+		backgroundColor: 'transparent',
+		borderColor: '#2D38F9'
 	},
 	linearGradient: {
 		flex: 1,
@@ -173,8 +194,8 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center'
-  },
-  searchView: {
+	},
+	searchView: {
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',

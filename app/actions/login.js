@@ -23,8 +23,8 @@ export const login = (email, password) => {
 				await dispatch(fetchUserWithEmail(email, password, data.accessToken))
 			}
 		} catch (e) {
-			await dispatch(setFailed(true, 'PROCESS_LOGIN', e))
-			await dispatch(setLoading(false, 'PROCESS_LOGIN'))
+			dispatch(setFailed(true, 'PROCESS_LOGIN', e))
+			dispatch(setLoading(false, 'PROCESS_LOGIN'))
 		}
 	}
 }
@@ -43,12 +43,14 @@ const fetchUserWithEmail = (email, password, accessToken) => {
 			})
 			const data = await response.json()
 			await dispatch(saveSessionForLocal({ email, password, accessToken }))
-			await dispatch(saveSessionForPersistance({ ...data.data[0], accessToken }))
+			await dispatch(
+				saveSessionForPersistance({ ...data.data[0], accessToken })
+			)
 			await dispatch(setSuccess(true, 'FETCH_USER_WITH_EMAIL'))
 			await dispatch(setLoading(false, 'FETCH_USER_WITH_EMAIL'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'FETCH_USER_WITH_EMAIL', e))
-			await dispatch(setLoading(false, 'FETCH_USER_WITH_EMAIL'))
+			dispatch(setFailed(true, 'FETCH_USER_WITH_EMAIL', e))
+			dispatch(setLoading(false, 'FETCH_USER_WITH_EMAIL'))
 		}
 	}
 }

@@ -10,7 +10,6 @@ import {
 import {
 	Container,
 	Content,
-	Header,
 	Left,
 	Body,
 	Right,
@@ -46,25 +45,33 @@ class Club extends Component {
 
 	componentWillMount() {
 		const { sessionPersistance } = this.props
-		this.props.fetchTeamUpdatesWithBranch(sessionPersistance.id_branch, sessionPersistance.accessToken)
+		this.props.fetchTeamUpdatesWithBranch(
+			sessionPersistance.id_branch,
+			sessionPersistance.accessToken
+		)
 		this.props.fetchPoints(sessionPersistance.accessToken)
 	}
 
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
-		<TouchableOpacity onPress={() => this.props.setNavigate('CustomerProfile', item.customers[0])}>
+		<TouchableOpacity
+			onPress={() =>
+				this.props.setNavigate('CustomerProfile', item.customers[0])
+			}>
 			<HorizontalJoker
 				name={item.users[0].first_name}
 				company={item.customers[0].name}
 				pipeline={item.pipelines[0].pipeline}
 				avatar={item.users[0].avatar}
-				step={item.pipelines[0].step} />
+				step={item.pipelines[0].step}
+			/>
 		</TouchableOpacity>
 	)
 
-	renderItemsRank = ({item, index}) => (
-		<View style={{
+	renderItemsRank = ({ item, index }) => (
+		<View
+			style={{
 				display: 'flex',
 				flexDirection: 'row',
 				marginTop: 30,
@@ -79,11 +86,14 @@ class Club extends Component {
 				<Thumbnail
 					small
 					source={{ uri: item.users[0].avatar }}
-					style={{ marginRight: 10 }} />
+					style={{ marginRight: 10 }}
+				/>
 			)}
 			<View>
-				<Text style={{fontSize: 16, fontWeight: 'bold'}}>{`${item.users[0].first_name} ${item.users[0].last_name}`}</Text>
-				<Text style={{fontSize: 14}}>
+				<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${
+					item.users[0].first_name
+				} ${item.users[0].last_name}`}</Text>
+				<Text style={{ fontSize: 14 }}>
 					{JSON.stringify(item.point)} Points
 				</Text>
 			</View>
@@ -94,13 +104,6 @@ class Club extends Component {
 		const { sessionPersistance } = this.props
 		return (
 			<Container>
-				<Header style={styles.header}>
-					<Left />
-					<Body>
-						<Text style={styles.title}>AG CLUB</Text>
-					</Body>
-					<Right />
-				</Header>
 				<View style={styles.customerHeader}>
 					<LinearGradient
 						colors={['#ee8084', '#dc6cbe']}
@@ -111,11 +114,18 @@ class Club extends Component {
 									{sessionPersistance.avatar === '' ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
-										<Thumbnail rounded large source={{uri: sessionPersistance.avatar}} />
+										<Thumbnail
+											rounded
+											large
+											source={{ uri: sessionPersistance.avatar }}
+										/>
 									)}
-									<View style={{justifyContent: 'center'}}>
-										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-											<H3 style={styles.profileName}>{`${sessionPersistance.first_name} ${sessionPersistance.last_name}`}</H3>
+									<View style={{ justifyContent: 'center' }}>
+										<TouchableOpacity
+											onPress={() => this.props.setNavigate('Profile')}>
+											<H3 style={styles.profileName}>{`${
+												sessionPersistance.first_name
+											} ${sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
 									</View>
 								</View>
@@ -134,16 +144,25 @@ class Club extends Component {
 								{this.props.sessionPersistance.branches[0].branch} Leaderboard
 							</Text>
 							<FlatList
-								data={this.props.points.filter(d => d.id_branch === sessionPersistance.id_branch).sort((a, b) => a.point - b.point).slice(0, 5).reverse()}
+								data={this.props.points
+									.filter(d => d.id_branch === sessionPersistance.id_branch)
+									.sort((a, b) => a.point - b.point)
+									.slice(0, 5)
+									.reverse()}
 								keyExtractor={this.key}
-								renderItem={this.renderItemsRank} />
+								renderItem={this.renderItemsRank}
+							/>
 						</View>
 						<View style={styles.leaderboard}>
 							<Text style={styles.leaderboardTitle}>National Leaderboard</Text>
 							<FlatList
-								data={this.props.points.sort((a, b) => a.point - b.point).slice(0, 5).reverse()}
+								data={this.props.points
+									.sort((a, b) => a.point - b.point)
+									.slice(0, 5)
+									.reverse()}
 								keyExtractor={this.key}
-								renderItem={this.renderItemsRank} />
+								renderItem={this.renderItemsRank}
+							/>
 						</View>
 					</View>
 					<View style={styles.team}>
@@ -153,7 +172,8 @@ class Club extends Component {
 							showsHorizontalScrollIndicator={false}
 							data={this.props.teamUpdatesWithBranch}
 							keyExtractor={this.key}
-							renderItem={this.renderItems} />
+							renderItem={this.renderItems}
+						/>
 					</View>
 				</View>
 			</Container>
@@ -169,8 +189,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-	fetchPoints: (accessToken) => dispatch(fetchPoints(accessToken)),
-	fetchTeamUpdatesWithBranch: (id_branch, accessToken) => dispatch(fetchTeamUpdatesWithBranch(id_branch, accessToken)),
+	fetchPoints: accessToken => dispatch(fetchPoints(accessToken)),
+	fetchTeamUpdatesWithBranch: (id_branch, accessToken) =>
+		dispatch(fetchTeamUpdatesWithBranch(id_branch, accessToken))
 })
 
 const styles = StyleSheet.create({
