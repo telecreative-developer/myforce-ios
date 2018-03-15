@@ -7,9 +7,7 @@ export const saveSessionForLocal = sessionToLocal => {
 	}
 }
 
-export const saveSessionForPersistance = sessionToPersistance => {
-	return {
-		type: SAVE_SESSION_FOR_PERSISTANCE,
-		payload: sessionToPersistance
-	}
-}
+export const saveSessionForPersistance = sessionToPersistance => ({
+	type: SAVE_SESSION_FOR_PERSISTANCE,
+	payload: sessionToPersistance
+})

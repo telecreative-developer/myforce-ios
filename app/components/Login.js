@@ -57,7 +57,8 @@ class Login extends Component {
 					rounded
 					style={styles.loginButton}
 					onPress={() => this.handleLoginValidation()}>
-					{this.props.loading.condition === true && this.props.loading.process_on === 'PROCESS_LOGIN' ? (
+					{this.props.loading.condition === true &&
+					this.props.loading.process_on === 'PROCESS_LOGIN' ? (
 						<Spinner color="#FFFFFF" />
 					) : (
 						<Text>Login</Text>
@@ -99,7 +100,7 @@ class Login extends Component {
 					<Item floatingLabel>
 						<Label>Email</Label>
 						<Input
-							autoCapitalize = 'none'
+							autoCapitalize="none"
 							value={this.state.email}
 							onChangeText={email => this.setState({ email })}
 						/>

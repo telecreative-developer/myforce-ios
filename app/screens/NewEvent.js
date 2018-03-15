@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableHighlight, Dimensions, View, Image, Alert } from 'react-native'
+import {
+	StyleSheet,
+	TouchableHighlight,
+	Dimensions,
+	View,
+	Image,
+	Alert
+} from 'react-native'
 import {
 	Container,
 	Content,
@@ -40,25 +47,32 @@ class NewEvent extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.success.condition === true && props.success.process_on === 'SUCCESS_POST_EVENT') {
-			this.setState({title: '', description: '', time: moment().format('LLL')})
+		if (
+			props.success.condition === true &&
+			props.success.process_on === 'SUCCESS_POST_EVENT'
+		) {
+			this.setState({
+				title: '',
+				description: '',
+				time: moment().format('LLL')
+			})
 			props.navigation.goBack()
 		}
 	}
 
-	showDateTimePicker = () => this.setState({isDateTimePickerVisible: true})
+	showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true })
 
 	hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false })
 
-	handleDatePicked = (time) => {
-		this.setState({time})
-    this.hideDateTimePicker()
+	handleDatePicked = time => {
+		this.setState({ time })
+		this.hideDateTimePicker()
 	}
-	
+
 	handlePostEvent() {
 		const { title, description, time } = this.state
 		const { id, accessToken } = this.props.sessionPersistance
-		this.props.postEvent({title, description, time, id}, accessToken)
+		this.props.postEvent({ title, description, time, id }, accessToken)
 	}
 
 	renderButton() {
@@ -111,29 +125,50 @@ class NewEvent extends Component {
 					<Form>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Event Name</Label>
-							<Input value={this.state.title} onChangeText={(title) => this.setState({title})} />
+							<Input
+								value={this.state.title}
+								onChangeText={title => this.setState({ title })}
+							/>
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Description</Label>
-							<Input value={this.state.description} multiline={true} onChangeText={(description) => this.setState({description})} style={{ paddingVertical: 15 }} />
+							<Input
+								value={this.state.description}
+								multiline={true}
+								onChangeText={description => this.setState({ description })}
+								style={{ paddingVertical: 15 }}
+							/>
 						</Item>
-						<Item stackedLabel style={styles.itemForm} onPress={this.showDateTimePicker}>
+						<Item
+							stackedLabel
+							style={styles.itemForm}
+							onPress={this.showDateTimePicker}>
 							<Label>Date</Label>
-							<Input disabled placeholder='Select date' value={moment(this.state.time).format('LLL')} style={{ paddingVertical: 15 }} />
+							<Input
+								disabled
+								placeholder="Select date"
+								value={moment(this.state.time).format('LLL')}
+								style={{ paddingVertical: 15 }}
+							/>
 						</Item>
 						<DateTimePicker
-							mode='datetime'
+							mode="datetime"
 							isVisible={this.state.isDateTimePickerVisible}
 							onConfirm={this.handleDatePicked}
-							onCancel={this.hideDateTimePicker} />
+							onCancel={this.hideDateTimePicker}
+						/>
 					</Form>
-					{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_EVENT' ? (
+					{this.props.loading.condition === true &&
+					this.props.loading.process_on === 'LOADING_POST_EVENT' ? (
 						<View style={styles.buttonView}>
-							<Spinner color='#999999' />
+							<Spinner color="#999999" />
 						</View>
 					) : (
 						<View style={styles.buttonView}>
-							<Button primary style={styles.buttonBack} onPress={() => this.props.navigation.goBack()}>
+							<Button
+								primary
+								style={styles.buttonBack}
+								onPress={() => this.props.navigation.goBack()}>
 								<Text style={styles.buttonText}>BACK</Text>
 							</Button>
 							{this.renderButton()}
@@ -145,13 +180,13 @@ class NewEvent extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
 	success: state.success,
-  loading: state.loading,
+	loading: state.loading,
 	sessionPersistance: state.sessionPersistance
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
 	postEvent: (data, accessToken) => dispatch(postEvent(data, accessToken))
 })
 

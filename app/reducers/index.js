@@ -1,12 +1,7 @@
 import { persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
 import { loading, success, failed, navigate, activePageHome } from './processor'
-import {
-	customers,
-	resultCustomersPlace,
-	selectedCustomerPlace,
-	resultCheckCustomer
-} from './customers'
+import { customers, resultCustomersPlace } from './customers'
 import { sessionPersistance } from './session'
 import { products } from './products'
 import { subproducts } from './subproducts'
@@ -36,8 +31,6 @@ const reducers = persistCombineReducers(config, {
 	activePageHome,
 	customers,
 	resultCustomersPlace,
-	selectedCustomerPlace,
-	resultCheckCustomer,
 	sessionPersistance,
 	products,
 	subproducts,

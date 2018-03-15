@@ -33,15 +33,17 @@ export default class ChangePassword extends Component {
 			<Container style={styles.container}>
 				<Header style={styles.header}>
 					<Left>
-						<Button transparent onPress={() => goBack()} style={{paddingLeft: 0}}>
+						<Button
+							transparent
+							onPress={() => goBack()}
+							style={{ paddingLeft: 0 }}>
 							<Text style={styles.cancel}>Cancel</Text>
 						</Button>
 					</Left>
 					<Body>
 						<Text style={styles.title}>CHANGE PASSWORD</Text>
 					</Body>
-					<Right>
-					</Right>
+					<Right />
 				</Header>
 				<View style={styles.image}>
 					<Image source={image} />

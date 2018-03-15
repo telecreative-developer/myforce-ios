@@ -30,7 +30,7 @@ import moment from 'moment'
 import defaultAvatar from '../assets/images/default-avatar.png'
 import BarCharts from '../components/BarCharts'
 import PieCharts from '../components/PieCharts'
-import AnimatedBar from "react-native-animated-bar"
+import AnimatedBar from 'react-native-animated-bar'
 import { setNavigate } from '../actions/processor'
 
 const { height, width } = Dimensions.get('window')
@@ -47,13 +47,22 @@ class Achievements extends Component {
 
 	resultCompleteRevenueMonth() {
 		let revenueMonth = 0
-		this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).map(data => revenueMonth += data.total)
+		this.props.pipelinesWithUserId
+			.filter(
+				data => data.month === parseInt(moment().format('M')) && data.step === 7
+			)
+			.map(data => (revenueMonth += data.total))
 		return revenueMonth
 	}
 
 	resultCompleteRevenueYear() {
 		let revenueYear = 0
-		this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).map(data => revenueYear += data.total)
+		this.props.pipelinesWithUserId
+			.filter(
+				data =>
+					data.year === parseInt(moment().format('YYYY')) && data.step === 7
+			)
+			.map(data => (revenueYear += data.total))
 		return revenueYear
 	}
 
@@ -62,18 +71,24 @@ class Achievements extends Component {
 			return (
 				<View>
 					<FlatList
-						data={this.props.pipelinesWithUserId.filter(p => p.step !== 7 && p.lose === false)}
+						data={this.props.pipelinesWithUserId.filter(
+							p => p.step !== 7 && p.lose === false
+						)}
 						keyExtractor={this.key}
-						renderItem={this.renderItemsActive} />
+						renderItem={this.renderItemsActive}
+					/>
 				</View>
 			)
 		} else if (this.state.pipelineTabs === 'close') {
 			return (
 				<View>
 					<FlatList
-						data={this.props.pipelinesWithUserId.filter(p => p.step === 7 && p.lose === false)}
+						data={this.props.pipelinesWithUserId.filter(
+							p => p.step === 7 && p.lose === false
+						)}
 						keyExtractor={this.key}
-						renderItem={this.renderItemsClose} />
+						renderItem={this.renderItemsClose}
+					/>
 				</View>
 			)
 		} else if (this.state.pipelineTabs === 'lose') {
@@ -82,7 +97,8 @@ class Achievements extends Component {
 					<FlatList
 						data={this.props.pipelinesWithUserId.filter(p => p.lose === true)}
 						keyExtractor={this.key}
-						renderItem={this.renderItemsLose} />
+						renderItem={this.renderItemsLose}
+					/>
 				</View>
 			)
 		}
@@ -110,13 +126,15 @@ class Achievements extends Component {
 						<Icon name="md-contact" size={15} />
 						<View style={styles.picDirection}>
 							{item.pics.map((data, index) => (
-								<Text key={index} style={styles.data}>{data.name}</Text>
+								<Text key={index} style={styles.data}>
+									{data.name}
+								</Text>
 							))}
 						</View>
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step-1} />
+					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
 			</View>
 		</View>
@@ -142,13 +160,15 @@ class Achievements extends Component {
 						<Icon name="md-contact" size={15} />
 						<View style={styles.picDirection}>
 							{item.pics.map((data, index) => (
-								<Text key={index} style={styles.data}>{data.name}</Text>
+								<Text key={index} style={styles.data}>
+									{data.name}
+								</Text>
 							))}
 						</View>
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step-1} />
+					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
 			</View>
 		</View>
@@ -174,13 +194,15 @@ class Achievements extends Component {
 						<Icon name="md-contact" size={15} />
 						<View style={styles.picDirection}>
 							{item.pics.map((data, index) => (
-								<Text key={index} style={styles.data}>{data.name}</Text>
+								<Text key={index} style={styles.data}>
+									{data.name}
+								</Text>
 							))}
 						</View>
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step-1} />
+					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
 			</View>
 		</View>
@@ -189,13 +211,6 @@ class Achievements extends Component {
 	render() {
 		return (
 			<Container>
-				<Header style={styles.header}>
-					<Left />
-					<Body>
-						<Text style={styles.title}>ACHIEVEMENTS</Text>
-					</Body>
-					<Right />
-				</Header>
 				<View style={styles.customerHeader}>
 					<LinearGradient
 						start={{ x: 0.0, y: 0.25 }}
@@ -206,14 +221,22 @@ class Achievements extends Component {
 						<Grid>
 							<Col style={styles.leftCol}>
 								<View style={styles.headerDirection}>
-									{this.props.sessionPersistance.avatar === '' || this.props.sessionPersistance.avatar === null ? (
+									{this.props.sessionPersistance.avatar === '' ||
+									this.props.sessionPersistance.avatar === null ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
-										<Thumbnail rounded large source={{uri: this.props.sessionPersistance.avatar}} />
+										<Thumbnail
+											rounded
+											large
+											source={{ uri: this.props.sessionPersistance.avatar }}
+										/>
 									)}
-									<View style={{justifyContent: 'center'}}>
-										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-											<H3 style={styles.profileName}>{`${this.props.sessionPersistance.first_name} ${this.props.sessionPersistance.last_name}`}</H3>
+									<View style={{ justifyContent: 'center' }}>
+										<TouchableOpacity
+											onPress={() => this.props.setNavigate('Profile')}>
+											<H3 style={styles.profileName}>{`${
+												this.props.sessionPersistance.first_name
+											} ${this.props.sessionPersistance.last_name}`}</H3>
 										</TouchableOpacity>
 										<View style={styles.headerDirection}>
 											<Text style={styles.dataPipeline}>
@@ -233,60 +256,164 @@ class Achievements extends Component {
 				<Content style={styles.content}>
 					<Grid style={styles.chartsDirection}>
 						<Col style={styles.leftCharts}>
-							<PieCharts target={this.props.target.target_month} completed={this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length} />
+							<PieCharts
+								target={this.props.target.target_month}
+								completed={
+									this.props.pipelinesWithUserId.filter(
+										data =>
+											data.month === parseInt(moment().format('M')) &&
+											data.step === 7
+									).length
+								}
+							/>
 						</Col>
 						<Col style={styles.rightCharts}>
 							<Text style={styles.chartTitle}>Gross In</Text>
 							<Text style={styles.chartMonth}>Monthly</Text>
-							<Text style={styles.chartPercentage}>{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length / this.props.target.target_month) * 100).toFixed(2)} %</Text>
-							<Text style={styles.chartTargetUnder}>{this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length} of {this.props.target.target_month} unit targets</Text>
+							<Text style={styles.chartPercentage}>
+								{parseFloat(
+									parseFloat(
+										this.props.pipelinesWithUserId.filter(
+											data =>
+												data.month === parseInt(moment().format('M')) &&
+												data.step === 7
+										).length / this.props.target.target_month
+									) * 100
+								).toFixed(2)}{' '}
+								%
+							</Text>
+							<Text style={styles.chartTargetUnder}>
+								{
+									this.props.pipelinesWithUserId.filter(
+										data =>
+											data.month === parseInt(moment().format('M')) &&
+											data.step === 7
+									).length
+								}{' '}
+								of {this.props.target.target_month} unit targets
+							</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
-							<AnimatedBar 
-								progress={parseFloat(parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2) / 100)}
+							<AnimatedBar
+								progress={parseFloat(
+									parseFloat(
+										parseFloat(
+											this.props.pipelinesWithUserId.filter(
+												data =>
+													data.year === parseInt(moment().format('YYYY')) &&
+													data.step === 7
+											).length / this.props.target.target_year
+										) * 100
+									).toFixed(2) / 100
+								)}
 								style={styles.bar}
 								height={40}
 								borderColor="#DDD"
 								barColor="tomato"
-								fillColor="grey"	
+								fillColor="grey"
 								borderRadius={5}
 								borderWidth={5}>
-									<View style={styles.row}>
-										<Text style={styles.barText}>
-											{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2)} %
-										</Text>
-									</View>
+								<View style={styles.row}>
+									<Text style={styles.barText}>
+										{parseFloat(
+											parseFloat(
+												this.props.pipelinesWithUserId.filter(
+													data =>
+														data.year === parseInt(moment().format('YYYY')) &&
+														data.step === 7
+												).length / this.props.target.target_year
+											) * 100
+										).toFixed(2)}{' '}
+										%
+									</Text>
+								</View>
 							</AnimatedBar>
-							<Text style={styles.chartTarget}>{this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length} of {this.props.target.target_year} unit targets</Text>
+							<Text style={styles.chartTarget}>
+								{
+									this.props.pipelinesWithUserId.filter(
+										data =>
+											data.year === parseInt(moment().format('YYYY')) &&
+											data.step === 7
+									).length
+								}{' '}
+								of {this.props.target.target_year} unit targets
+							</Text>
 						</Col>
 					</Grid>
 					<Grid style={styles.chartsDirection}>
 						<Col style={styles.leftCharts}>
-							<PieCharts target={this.props.target.target_month} completed={this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length} />
+							<PieCharts
+								target={this.props.target.target_month}
+								completed={
+									this.props.pipelinesWithUserId.filter(
+										data =>
+											data.month === parseInt(moment().format('M')) &&
+											data.step === 7
+									).length
+								}
+							/>
 						</Col>
 						<Col style={styles.rightCharts}>
 							<Text style={styles.chartTitle}>Revenue ORS</Text>
 							<Text style={styles.chartMonth}>Monthly</Text>
-							<Text style={styles.chartPercentage}>{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.month === parseInt(moment().format('M')) && data.step === 7).length / this.props.target.target_month) * 100).toFixed(2)} %</Text>
-							<Text style={styles.chartTarget}>Rp. {this.resultCompleteRevenueMonth()} Mio of</Text>
-							<Text style={styles.chartTargetUnder}>Rp. {this.props.target.target_revenue_month} Mio targets</Text>
+							<Text style={styles.chartPercentage}>
+								{parseFloat(
+									parseFloat(
+										this.props.pipelinesWithUserId.filter(
+											data =>
+												data.month === parseInt(moment().format('M')) &&
+												data.step === 7
+										).length / this.props.target.target_month
+									) * 100
+								).toFixed(2)}{' '}
+								%
+							</Text>
+							<Text style={styles.chartTarget}>
+								Rp. {this.resultCompleteRevenueMonth()} Mio of
+							</Text>
+							<Text style={styles.chartTargetUnder}>
+								Rp. {this.props.target.target_revenue_month} Mio targets
+							</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
-							<AnimatedBar 
-								progress={parseFloat(parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2) / 100)}
+							<AnimatedBar
+								progress={parseFloat(
+									parseFloat(
+										parseFloat(
+											this.props.pipelinesWithUserId.filter(
+												data =>
+													data.year === parseInt(moment().format('YYYY')) &&
+													data.step === 7
+											).length / this.props.target.target_year
+										) * 100
+									).toFixed(2) / 100
+								)}
 								style={styles.bar}
 								height={40}
 								borderColor="#DDD"
 								barColor="tomato"
-								fillColor="grey"	
+								fillColor="grey"
 								borderRadius={5}
 								borderWidth={5}>
-									<View style={styles.row}>
-										<Text style={styles.barText}>
-											{parseFloat(parseFloat(this.props.pipelinesWithUserId.filter(data => data.year === parseInt(moment().format('YYYY')) && data.step === 7).length / this.props.target.target_year) * 100).toFixed(2)} %
-										</Text>
-									</View>
+								<View style={styles.row}>
+									<Text style={styles.barText}>
+										{parseFloat(
+											parseFloat(
+												this.props.pipelinesWithUserId.filter(
+													data =>
+														data.year === parseInt(moment().format('YYYY')) &&
+														data.step === 7
+												).length / this.props.target.target_year
+											) * 100
+										).toFixed(2)}{' '}
+										%
+									</Text>
+								</View>
 							</AnimatedBar>
-							<Text style={styles.chartTarget}>Rp. {this.resultCompleteRevenueYear()} Mio of</Text>
-							<Text style={styles.chartTarget}>Rp. {this.props.target.target_revenue_year} Mio targets</Text>
+							<Text style={styles.chartTarget}>
+								Rp. {this.resultCompleteRevenueYear()} Mio of
+							</Text>
+							<Text style={styles.chartTarget}>
+								Rp. {this.props.target.target_revenue_year} Mio targets
+							</Text>
 						</Col>
 					</Grid>
 					<View style={styles.customerTotal}>
@@ -296,7 +423,9 @@ class Achievements extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'active' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelinesWithUserId.filter(p => p.step !== 7 && p.lose === false).length
+											this.props.pipelinesWithUserId.filter(
+												p => p.step !== 7 && p.lose === false
+											).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>ACTIVE</Text>
@@ -307,7 +436,9 @@ class Achievements extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'close' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelinesWithUserId.filter(p => p.step === 7 && p.lose === false).length
+											this.props.pipelinesWithUserId.filter(
+												p => p.step === 7 && p.lose === false
+											).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>CLOSE</Text>
@@ -318,7 +449,9 @@ class Achievements extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelinesWithUserId.filter(p => p.lose === true).length
+											this.props.pipelinesWithUserId.filter(
+												p => p.lose === true
+											).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
@@ -402,23 +535,23 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		height: height / 3,
 		backgroundColor: '#fff',
-		marginBottom: 10,
+		marginBottom: 10
 	},
 	leftCharts: {
 		flex: 0.5
 	},
 	rightCharts: {
 		flex: 0.5,
-		justifyContent: 'center',
+		justifyContent: 'center'
 	},
 	bar: {
 		width: width / 2.5,
-		marginVertical: 10,
+		marginVertical: 10
 	},
 	barText: {
 		fontSize: 18,
-		backgroundColor: "transparent",
-		color: "#FFF",
+		backgroundColor: 'transparent',
+		color: '#FFF',
 		textAlign: 'center'
 	},
 	row: {
@@ -433,7 +566,7 @@ const styles = StyleSheet.create({
 	},
 	chartMonth: {
 		fontSize: 20,
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	chartPercentage: {
 		fontSize: 34,
@@ -449,7 +582,7 @@ const styles = StyleSheet.create({
 	},
 	chartYear: {
 		fontSize: 20,
-		fontWeight: 'bold',
+		fontWeight: 'bold'
 	},
 	customerTotal: {
 		width: '100%',

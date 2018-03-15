@@ -49,7 +49,11 @@ class Home extends Component {
 			return <CustomerList />
 		} else if (active === 3) {
 			return (
-				<Activity navigateToAddCustomer={() => this.props.navigation.navigate('AddCustomer')} />
+				<Activity
+					navigateToAddCustomer={() =>
+						this.props.navigation.navigate('AddCustomer')
+					}
+				/>
 			)
 		} else if (active === 4) {
 			return <Product />
@@ -120,6 +124,7 @@ class Home extends Component {
 	}
 
 	render() {
+		const { title } = this.props.activePageHome
 		if (this.props.navigate.link === 'SubProduct') {
 			this.props.navigation.navigate(
 				this.props.navigate.link,
@@ -143,9 +148,23 @@ class Home extends Component {
 			this.props.navigation.navigate(this.props.navigate.link)
 		} else if (this.props.navigate.link === 'NewEvent') {
 			this.props.navigation.navigate(this.props.navigate.link)
-		} 
+		}
 		return (
 			<Container>
+				<Header style={styles.header}>
+					<Left />
+					<Body>
+						<Text style={styles.title}>{title}</Text>
+					</Body>
+					<Right />
+				</Header>
+				<Header style={styles.headerCheckIn} hasTabs>
+					<Left />
+					<Body>
+						<Text>Check In</Text>
+					</Body>
+					<Right />
+				</Header>
 				{this.renderContent()}
 				<Footer style={styles.footerWrap}>
 					<FooterTab>
@@ -161,12 +180,19 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageFirst
 										? '#2d84f6'
 										: '#000000'
-								}} />
-							<Text style={[styles.footerText, {
-									color: this.props.activePageHome.activePageFirst
-										? '#2d84f6'
-										: '#000000'
-								}]}>ACHIEVEMENTS</Text>
+								}}
+							/>
+							<Text
+								style={[
+									styles.footerText,
+									{
+										color: this.props.activePageHome.activePageFirst
+											? '#2d84f6'
+											: '#000000'
+									}
+								]}>
+								ACHIEVEMENTS
+							</Text>
 						</Button>
 						<Button
 							vertical
@@ -180,12 +206,19 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageSecond
 										? '#2d84f6'
 										: '#000000'
-								}} />
-							<Text style={[styles.footerText, {
-									color: this.props.activePageHome.activePageSecond
-										? '#2d84f6'
-										: '#000000'
-								}]}>CUSTOMERS</Text>
+								}}
+							/>
+							<Text
+								style={[
+									styles.footerText,
+									{
+										color: this.props.activePageHome.activePageSecond
+											? '#2d84f6'
+											: '#000000'
+									}
+								]}>
+								CUSTOMERS
+							</Text>
 						</Button>
 						<Button
 							vertical
@@ -200,12 +233,19 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageThird
 										? '#2d84f6'
 										: '#000000'
-								}} />
-							<Text style={[styles.footerText, {
-									color: this.props.activePageHome.activePageThird
-										? '#2d84f6'
-										: '#000000'
-								}]}>ACTIVITY</Text>
+								}}
+							/>
+							<Text
+								style={[
+									styles.footerText,
+									{
+										color: this.props.activePageHome.activePageThird
+											? '#2d84f6'
+											: '#000000'
+									}
+								]}>
+								ACTIVITY
+							</Text>
 						</Button>
 						<Button
 							vertical
@@ -219,8 +259,19 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageFourth
 										? '#2d84f6'
 										: '#000000'
-								}} />
-							<Text style={[styles.footerText, {color: this.props.activePageHome.activePageFourth ? '#2d84f6' : '#000000'}]}>PRODUCT</Text>
+								}}
+							/>
+							<Text
+								style={[
+									styles.footerText,
+									{
+										color: this.props.activePageHome.activePageFourth
+											? '#2d84f6'
+											: '#000000'
+									}
+								]}>
+								PRODUCT
+							</Text>
 						</Button>
 						<Button
 							vertical
@@ -234,12 +285,19 @@ class Home extends Component {
 									color: this.props.activePageHome.activePageFifth
 										? '#2d84f6'
 										: '#000000'
-								}} />
-							<Text style={[styles.footerText, {
-									color: this.props.activePageHome.activePageFifth
-										? '#2d84f6'
-										: '#000000'
-								}]}>AG CLUB</Text>
+								}}
+							/>
+							<Text
+								style={[
+									styles.footerText,
+									{
+										color: this.props.activePageHome.activePageFifth
+											? '#2d84f6'
+											: '#000000'
+									}
+								]}>
+								AG CLUB
+							</Text>
 						</Button>
 					</FooterTab>
 				</Footer>
@@ -256,12 +314,20 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	fetchUsers: accessToken => dispatch(fetchUsers(accessToken)),
-	setActivePageHome: activePageHome => dispatch(setActivePageHome(activePageHome))
+	setActivePageHome: activePageHome =>
+		dispatch(setActivePageHome(activePageHome))
 })
 
 const styles = StyleSheet.create({
 	footerWrap: {
 		height: 70
+	},
+	title: {
+		fontWeight: 'bold'
+	},
+	headerCheckIn: {
+		height: 50,
+		backgroundColor: '#FFAB00'
 	},
 	footerText: {
 		fontSize: 10,

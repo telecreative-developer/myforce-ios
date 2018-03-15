@@ -39,18 +39,29 @@ class AddCustomer extends Component {
 	}
 
 	componentWillMount() {
-		const { params } = this.props.navigation.state
-		this.setState({
-			name: params.name,
-			address: params.formatted_address,
-			latitude: params.geometry.location.lat,
-			longitude: params.geometry.location.lng
-		})
+		navigator.geolocation.getCurrentPosition(
+			position => {
+				this.setState({
+					region: {
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude
+					}
+				})
+			},
+			error => {},
+			{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+		)
 	}
 
 	renderButton() {
-		const { name, email, phone } = this.state
-		if (!isEmpty(name) && !isEmpty(email) && !isEmpty(phone) && isEmail(email)) {
+		const { name, email, phone, address } = this.state
+		if (
+			!isEmpty(name) &&
+			!isEmpty(email) &&
+			!isEmpty(phone) &&
+			isEmail(email) &&
+			!isEmpty(address)
+		) {
 			return (
 				<Button
 					primary
@@ -66,16 +77,14 @@ class AddCustomer extends Component {
 		}
 
 		return (
-			<Button
-				primary
-				style={styles.buttonBefore}>
+			<Button primary style={styles.buttonBefore}>
 				<Text style={styles.buttonText}>NEXT</Text>
 			</Button>
 		)
 	}
 
 	validationEmail() {
-		const { email, password } = this.state
+		const { email } = this.state
 		if (!isEmail(email)) {
 			Alert.alert('Gagal', 'Silahkan masukan alamat email yang valid')
 		} else {
@@ -85,7 +94,7 @@ class AddCustomer extends Component {
 
 	handleBack() {
 		this.props.navigation.goBack()
-		this.props.setNavigate('', '')
+		this.props.setNavigate()
 	}
 
 	render() {
@@ -115,19 +124,38 @@ class AddCustomer extends Component {
 						</View>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Customer Name</Label>
-							<Input value={this.state.name} onChangeText={(name) => this.setState({name})} />
+							<Input
+								value={this.state.name}
+								onChangeText={name => this.setState({ name })}
+							/>
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Email</Label>
-							<Input value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ paddingVertical: 15 }} autoCapitalize = 'none' uppercase={false}/>
+							<Input
+								value={this.state.email}
+								onChangeText={email => this.setState({ email })}
+								style={{ paddingVertical: 15 }}
+								autoCapitalize="none"
+								uppercase={false}
+							/>
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Phone</Label>
-							<Input value={this.state.phone} onChangeText={(phone) => this.setState({phone})} style={{ paddingVertical: 15 }} keyboardType='numeric'/>
+							<Input
+								value={this.state.phone}
+								onChangeText={phone => this.setState({ phone })}
+								style={{ paddingVertical: 15 }}
+								keyboardType="numeric"
+							/>
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Address</Label>
-							<Input disabled value={this.state.address} multiline={true} style={{ paddingVertical: 15 }} />
+							<Input
+								value={this.state.address}
+								multiline={true}
+								onChangeText={address => this.setState({ address })}
+								style={{ paddingVertical: 15 }}
+							/>
 						</Item>
 					</Form>
 					<View style={styles.buttonView}>
@@ -145,7 +173,7 @@ class AddCustomer extends Component {
 	}
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
 	setNavigate: (link, data) => dispatch(setNavigate(link, data))
 })
 

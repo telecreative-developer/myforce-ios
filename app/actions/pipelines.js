@@ -1,4 +1,7 @@
-import { FETCH_PIPELINES_SUCCESS, FETCH_PIPELINES_WITH_USER_ID_SUCCESS } from '../constants'
+import {
+	FETCH_PIPELINES_SUCCESS,
+	FETCH_PIPELINES_WITH_USER_ID_SUCCESS
+} from '../constants'
 import { url } from '../lib/server'
 import moment from 'moment'
 import { sendUpdate } from './updates'
@@ -17,17 +20,21 @@ export const postPipeline = (item, accessToken) => {
 					Authorization: accessToken
 				},
 				body: JSON.stringify({
-					...item, year: moment().format('YYYY'), month: moment().format('MM')
+					...item,
+					year: moment().format('YYYY'),
+					month: moment().format('MM')
 				})
 			})
 			const data = await response.json()
-			await dispatch(sendUpdate({...item, id_pipeline: data.id_pipeline}, accessToken))
+			await dispatch(
+				sendUpdate({ ...item, id_pipeline: data.id_pipeline }, accessToken)
+			)
 			await dispatch(fetchPipelines(item.id_customer, accessToken))
 			await dispatch(setSuccess(false, 'POST_PIPELINE'))
 			await dispatch(setLoading(false, 'POST_PIPELINE'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'POST_PIPELINE', e))
-			await dispatch(setLoading(false, 'POST_PIPELINE'))
+			dispatch(setFailed(true, 'POST_PIPELINE', e))
+			dispatch(setLoading(false, 'POST_PIPELINE'))
 		}
 	}
 }
@@ -52,8 +59,8 @@ export const fetchPipelines = (id_customer, accessToken) => {
 			await dispatch(setSuccess(false, 'FETCH_PIPELINES'))
 			await dispatch(setLoading(false, 'FETCH_PIPELINES'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'FETCH_PIPELINES', e))
-			await dispatch(setLoading(false, 'FETCH_PIPELINES'))
+			dispatch(setFailed(true, 'FETCH_PIPELINES', e))
+			dispatch(setLoading(false, 'FETCH_PIPELINES'))
 		}
 	}
 }
@@ -78,8 +85,8 @@ export const fetchPipelinesWithUserId = (id, accessToken) => {
 			await dispatch(setSuccess(false, 'SUCCESS_FETCH_PIPELINES_WITH_USER_ID'))
 			await dispatch(setLoading(false, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'FAILED_FETCH_PIPELINES_WITH_USER_ID', e))
-			await dispatch(setLoading(false, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
+			dispatch(setFailed(true, 'FAILED_FETCH_PIPELINES_WITH_USER_ID', e))
+			dispatch(setLoading(false, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
 		}
 	}
 }
@@ -96,16 +103,12 @@ export const fetchPipelinesRealtime = (id, accessToken) => {
 	}
 }
 
-export const fetchPipelinesSuccess = data => {
-	return {
-		type: FETCH_PIPELINES_SUCCESS,
-		payload: data
-	}
-}
+export const fetchPipelinesSuccess = data => ({
+	type: FETCH_PIPELINES_SUCCESS,
+	payload: data
+})
 
-export const fetchPipelinesWithUserIdSuccess = data => {
-	return {
-		type: FETCH_PIPELINES_WITH_USER_ID_SUCCESS,
-		payload: data
-	}
-}
+export const fetchPipelinesWithUserIdSuccess = data => ({
+	type: FETCH_PIPELINES_WITH_USER_ID_SUCCESS,
+	payload: data
+})

@@ -36,32 +36,35 @@ import PDFProductViewer from './app/screens/PDFProductViewer'
 const store = Reactotron.createStore(reducers, applyMiddleware(thunk))
 const persistor = persistStore(store)
 
-const App = StackNavigator({
-  Splash: {screen: Splash},
-  Start: {screen: Start},
-  Home: {screen: Home},
-  AddCustomer: {screen: AddCustomer},
-  Profile: {screen: Profile},
-  CustomerProfile: {screen: CustomerProfile},
-  Stepper: {screen: Stepper},
-  QuestionPage: {screen: QuestionPage},
-  Notifications: {screen: Notifications},
-  SubProduct: {screen: SubProduct},
-  Settings: {screen: Settings},
-  EditProfile: {screen: EditProfile},
-  ChangePassword: {screen: ChangePassword},
-  ForgotPassword: {screen: ForgotPassword},
-  OrderSummary: {screen: OrderSummary},
-  Cart: {screen: Cart},
-  AddCustomerPreview: {screen: AddCustomerPreview},
-  Calendar: {screen: Calendar},
-  ChoosePic: {screen: ChoosePic},
-  AddNewPic: {screen: AddNewPic},
-  NewEvent: {screen: NewEvent},
-  PDFProductViewer: {screen: PDFProductViewer}
-}, {
-  headerMode: 'none'
-})
+const App = StackNavigator(
+	{
+		Splash: { screen: Splash },
+		Start: { screen: Start },
+		Home: { screen: Home },
+		AddCustomer: { screen: AddCustomer },
+		Profile: { screen: Profile },
+		CustomerProfile: { screen: CustomerProfile },
+		Stepper: { screen: Stepper },
+		QuestionPage: { screen: QuestionPage },
+		Notifications: { screen: Notifications },
+		SubProduct: { screen: SubProduct },
+		Settings: { screen: Settings },
+		EditProfile: { screen: EditProfile },
+		ChangePassword: { screen: ChangePassword },
+		ForgotPassword: { screen: ForgotPassword },
+		OrderSummary: { screen: OrderSummary },
+		Cart: { screen: Cart },
+		AddCustomerPreview: { screen: AddCustomerPreview },
+		Calendar: { screen: Calendar },
+		ChoosePic: { screen: ChoosePic },
+		AddNewPic: { screen: AddNewPic },
+		NewEvent: { screen: NewEvent },
+		PDFProductViewer: { screen: PDFProductViewer }
+	},
+	{
+		headerMode: 'none'
+	}
+)
 
 const MyForce = () => (
 	<Provider store={store}>

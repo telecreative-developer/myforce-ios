@@ -3,14 +3,17 @@ import { View, Text, StyleSheet } from 'react-native'
 import { Pie } from 'react-native-pathjs-charts'
 
 export default class PieCharts extends Component {
-  render() {
-    let data = [{
-      "name": "Target",
-      "percentage": this.props.target
-    }, {
-      "name": "Completed",
-      "percentage": this.props.completed
-    }]
+	render() {
+		let data = [
+			{
+				name: 'Target',
+				percentage: this.props.target
+			},
+			{
+				name: 'Completed',
+				percentage: this.props.completed
+			}
+		]
 
     let dataTarget = [{
       "name": "Target",
@@ -74,8 +77,8 @@ export default class PieCharts extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: 'transparent'
+	}
 })

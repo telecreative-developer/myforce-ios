@@ -15,31 +15,28 @@ export const postEvent = (item, accessToken) => {
 				},
 				body: JSON.stringify(item)
 			})
-      await dispatch(fetchEvents(item.id, accessToken))
+			await dispatch(fetchEvents(item.id, accessToken))
 			await dispatch(setSuccess(true, 'SUCCESS_POST_EVENT'))
 			await dispatch(setLoading(false, 'LOADING_POST_EVENT'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'FAILED_POST_EVENT', e))
-			await dispatch(setLoading(false, 'LOADING_POST_EVENT'))
+			dispatch(setFailed(true, 'FAILED_POST_EVENT', e))
+			dispatch(setLoading(false, 'LOADING_POST_EVENT'))
 		}
 	}
 }
 
 export const fetchEvents = (id, accessToken) => {
-  return async dispatch => {
+	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_FETCH_EVENTS'))
 		try {
-			const response = await fetch(
-				`${url}/events?id=${id}`,
-				{
-					method: 'GET',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-						Authorization: accessToken
-					}
+			const response = await fetch(`${url}/events?id=${id}`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
 				}
-			)
+			})
 			const data = await response.json()
 			await dispatch(fetchEventsSuccess(data.data))
 			await dispatch(setSuccess(false, 'SUCCESS_FETCH_EVENTS'))
@@ -51,7 +48,7 @@ export const fetchEvents = (id, accessToken) => {
 	}
 }
 
-export const fetchEventsSuccess = (data) => ({
-  type: FETCH_FETCH_EVENTS_SUCCESS,
-  payload: data
+export const fetchEventsSuccess = data => ({
+	type: FETCH_FETCH_EVENTS_SUCCESS,
+	payload: data
 })

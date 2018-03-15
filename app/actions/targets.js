@@ -2,7 +2,7 @@ import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from '../actions/processor'
 import { FETCH_TARGET_SUCCESS } from '../constants'
 
-export const fetchTarget = (year) => {
+export const fetchTarget = year => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_FETCH_TARGET'))
 		try {
@@ -18,8 +18,8 @@ export const fetchTarget = (year) => {
 			await dispatch(setSuccess(true, 'SUCCESS_FETCH_TARGET'))
 			await dispatch(setLoading(false, 'LOADING_FETCH_TARGET'))
 		} catch (e) {
-			await dispatch(setFailed(true, 'FAILED_FETCH_TARGET', e))
-			await dispatch(setLoading(false, 'LOADING_FETCH_TARGET'))
+			dispatch(setFailed(true, 'FAILED_FETCH_TARGET', e))
+			dispatch(setLoading(false, 'LOADING_FETCH_TARGET'))
 		}
 	}
 }

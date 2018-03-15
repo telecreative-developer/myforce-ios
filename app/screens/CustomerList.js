@@ -53,15 +53,22 @@ class CustomerList extends Component {
 				<View style={styles.contentCard}>
 					<View style={styles.cardHeader}>
 						<H3 style={styles.textTitle}>{item.name}</H3>
-						{this.props.resultPics.filter(data => data.id_customer === item.id_customer).map((d, index) => (
-							<View style={styles.viewPerson} key={index}>
-								<Icon name="ios-person" color="#000000" size={20} />
-								<Text style={styles.textPerson}>{d.name}</Text>
-							</View>
-						))}
-						{this.props.pipelinesWithUserId.filter(data => data.id_customer === item.id_customer).splice(0, 1).map((d, index) => (
-							<Text key={index} style={styles.text}>{d.pipeline}</Text>
-						))}
+						{this.props.resultPics
+							.filter(data => data.id_customer === item.id_customer)
+							.map((d, index) => (
+								<View style={styles.viewPerson} key={index}>
+									<Icon name="ios-person" color="#000000" size={15} />
+									<Text style={styles.textPerson}>{d.name}</Text>
+								</View>
+							))}
+						{this.props.pipelinesWithUserId
+							.filter(data => data.id_customer === item.id_customer)
+							.splice(0, 1)
+							.map((d, index) => (
+								<Text key={index} style={styles.text}>
+									{d.pipeline}
+								</Text>
+							))}
 					</View>
 				</View>
 			</View>
@@ -132,8 +139,9 @@ const mapDispatchToProps = dispatch => {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		filterCustomersWithId: id => dispatch(filterCustomersWithId(id)),
 		filterCustomersWithName: name => dispatch(filterCustomersWithName(name)),
-		fetchPics: (accessToken) => dispatch(fetchPics(accessToken)),
-		fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
+		fetchPics: accessToken => dispatch(fetchPics(accessToken)),
+		fetchPipelinesWithUserId: (id, accessToken) =>
+			dispatch(fetchPipelinesWithUserId(id, accessToken))
 	}
 }
 

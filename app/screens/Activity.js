@@ -16,7 +16,6 @@ import {
 import {
 	Container,
 	Content,
-	Header,
 	Footer,
 	FooterTab,
 	Left,
@@ -40,7 +39,7 @@ import HorizontalJoker from '../components/HorizontalJoker'
 import Modal from 'react-native-modal'
 import defaultAvatar from '../assets/images/default-avatar.png'
 import { connect } from 'react-redux'
-import { fetchCustomers, searchCustomersPlace, selectCustomerPlace, checkCustomer } from '../actions/customers'
+import { fetchCustomers, searchCustomersPlace } from '../actions/customers'
 import { setNavigate } from '../actions/processor'
 import image from '../assets/images/add-user.png'
 import ornament from '../assets/images/ornament.png'
@@ -67,32 +66,12 @@ class Activity extends Component {
 				longitude: LONGITUDE,
 				latitudeDelta: LATITUDE_DELTA,
 				longitudeDelta: LONGITUDE_DELTA
-			}
+			},
+			dataCustomers: {}
 		}
 
 		this.animatedValue = new Animated.Value(400)
 		this.animatedValueDetail = new Animated.Value(0)
-	}
-
-	componentWillReceiveProps(props) {
-		if(props.loading.condition === false &&
-			props.loading.process_on === 'LOADING_CHECK_CUSTOMER' &&
-			props.success.condition === true &&
-			props.success.process_on === 'SUCCESS_CHECK_CUSTOMER') {
-			if(props.resultCheckCustomer.length === 0) {
-				Alert.alert(
-					'Customer not found',
-					`Can't found customer ${props.selectedCustomerPlace.name}, are you want to create new customer?`,
-					[
-						{text: 'Cancel', onPress: () => {}, style: 'cancel'},
-						{text: 'Create New', onPress: () => props.setNavigate('AddCustomer', props.selectedCustomerPlace)},
-					],
-					{ cancelable: false }
-				)
-			}else{
-				Alert.alert('Success', 'Ada data')
-			}
-		}
 	}
 
 	handleShowBoxContent() {
@@ -112,16 +91,8 @@ class Activity extends Component {
 		}).start()
 	}
 
-	async handleOpenDetail(placeId) {
-		await this.props.selectCustomerPlace(placeId)
-		await this.setState({
-			region: {
-				latitude: this.props.selectedCustomerPlace.geometry.location.lat,
-				longitude: this.props.selectedCustomerPlace.geometry.location.lng,
-				latitudeDelta: LATITUDE_DELTA,
-				longitudeDelta: LONGITUDE_DELTA
-			}
-		})
+	async handleOpenDetail(dataCustomers) {
+		await this.setState({ dataCustomers })
 
 		await Animated.timing(this.animatedValue, {
 			toValue: 0,
@@ -178,32 +149,27 @@ class Activity extends Component {
 		navigator.geolocation.clearWatch(this.watchID)
 	}
 
-	handleTypingSearch(value) {
+	async handleTypingSearch(value) {
 		Animated.spring(this.animatedValue, {
 			toValue: height / 1.25,
 			tension: 50
 		}).start()
-		this.setState({ value })
-		this.props.searchCustomersPlace(value)
-	}
-
-	handleCheckCustomer() {
-		const { lat, lng } = this.props.selectedCustomerPlace.geometry.location
-		const { accessToken } = this.props.sessionPersistance
-		this.props.checkCustomer(lat, lng, accessToken)
+		await this.setState({ value })
+		await this.props.searchCustomersPlace(
+			value,
+			this.props.sessionPersistance.accessToken
+		)
 	}
 
 	key = (item, index) => index
 
 	renderItemsCustomer = ({ item }) => (
-		<ListItem onPress={() => this.handleOpenDetail(item.place_id)}>
+		<ListItem onPress={() => this.handleOpenDetail(item)}>
 			<Icon name="ios-locate-outline" size={40} />
 			<Body>
-				<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-					{item.structured_formatting.main_text}
-				</Text>
+				<Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item.name}</Text>
 				<Text note style={{ fontSize: 18 }}>
-					{item.structured_formatting.secondary_text}
+					{item.address}
 				</Text>
 			</Body>
 		</ListItem>
@@ -214,41 +180,6 @@ class Activity extends Component {
 		const animatedStyleDetail = { height: this.animatedValueDetail }
 		return (
 			<Container>
-				<Header style={styles.header}>
-					<Left>
-						<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-							{this.props.sessionPersistance.avatar === '' && this.props.sessionPersistance.avatar === null ? (
-								<Thumbnail rounded small source={defaultAvatar} />
-							) : (
-								<Thumbnail
-									small
-									rounded
-									source={{ uri: this.props.sessionPersistance.avatar }}
-								/>
-							)}
-						</TouchableOpacity>
-					</Left>
-					<Body>
-						<Text style={styles.title}>ACTIVITY</Text>
-					</Body>
-					<Right>
-						<Button
-							transparent
-							onPress={() => this.props.setNavigate('Calendar')}>
-							<Icon
-								name="ios-calendar-outline"
-								size={25}
-								style={styles.iconCalendar}
-								color={'#2D38F9'}
-							/>
-						</Button>
-						{/* <Button
-							transparent
-							onPress={() => this.props.setNavigate({ link: 'Notifications' })}>
-							<Icon name="ios-notifications" size={25} />
-						</Button> */}
-					</Right>
-				</Header>
 				<View style={styles.wrapperView}>
 					<MapView
 						provider={PROVIDER_GOOGLE}
@@ -268,18 +199,28 @@ class Activity extends Component {
 							/>
 						))}
 					</MapView>
-					<Animated.View style={[styles.footerConfirmation, animatedStyleDetail]}>
-						<View style={{width: '100%',alignItems: 'flex-end'}}>
-							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.handleCloseDetail()}>
-								<Icon name="ios-close" size={35}/>
+					<Animated.View
+						style={[styles.footerConfirmation, animatedStyleDetail]}>
+						<View style={{ width: '100%', alignItems: 'flex-end' }}>
+							<TouchableHighlight
+								underlayColor={'transparent'}
+								onPress={() => this.handleCloseDetail()}>
+								<Icon name="ios-close" size={35} />
 							</TouchableHighlight>
 						</View>
-						<Text style={styles.addCustomer}>Add Customer Confirmation</Text>
-						<Text style={styles.customerName}>{this.props.selectedCustomerPlace.name}</Text>
-						<Text style={styles.customerAddress}>{this.props.selectedCustomerPlace.formatted_address}</Text>
-						<TouchableOpacity style={styles.centerButton} onPress={() => this.handleCheckCustomer()}>
-							<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
-								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_CHECK_CUSTOMER' ? (
+						<Text style={styles.addCustomer}>Customer Detail</Text>
+						<Text style={styles.customerName}>
+							{this.state.dataCustomers.name}
+						</Text>
+						<Text style={styles.customerAddress}>
+							{this.state.dataCustomers.address}
+						</Text>
+						<TouchableOpacity style={styles.centerButton} onPress={() => {}}>
+							<LinearGradient
+								colors={['#20E6CD', '#2D38F9']}
+								style={styles.linearGradient}>
+								{this.props.loading.condition === true &&
+								this.props.loading.process_on === 'LOADING_CHECK_CUSTOMER' ? (
 									<Text style={styles.buttonText}>LOADING...</Text>
 								) : (
 									<Text style={styles.buttonText}>CHECK IN</Text>
@@ -319,11 +260,24 @@ class Activity extends Component {
 						) : (
 							<View
 								style={{ width: width / 1.5, marginTop: 15, height: height }}>
-								<FlatList
-									data={this.props.resultCustomersPlace}
-									keyExtractor={this.key}
-									renderItem={this.renderItemsCustomer}
-								/>
+								{this.props.resultCustomersPlace.length === 0 ? (
+									<View>
+										<View style={{ alignItems: 'center', marginVertical: 100 }}>
+											<Text>Customer Not Found</Text>
+										</View>
+										<Button
+											block
+											onPress={() => this.props.setNavigate('AddCustomer')}>
+											<Text>CREATE NEW CUSTOMER</Text>
+										</Button>
+									</View>
+								) : (
+									<FlatList
+										data={this.props.resultCustomersPlace}
+										keyExtractor={this.key}
+										renderItem={this.renderItemsCustomer}
+									/>
+								)}
 							</View>
 						)}
 					</Animated.View>
@@ -338,17 +292,14 @@ const mapStateToProps = state => ({
 	loading: state.loading,
 	success: state.success,
 	sessionPersistance: state.sessionPersistance,
-	resultCustomersPlace: state.resultCustomersPlace,
-	selectedCustomerPlace: state.selectedCustomerPlace,
-	resultCheckCustomer: state.resultCheckCustomer
+	resultCustomersPlace: state.resultCustomersPlace
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-	selectCustomerPlace: (placeId) => dispatch(selectCustomerPlace(placeId)),
-	searchCustomersPlace: input => dispatch(searchCustomersPlace(input)),
-	checkCustomer: (lat, lng, accessToken) => dispatch(checkCustomer(lat, lng, accessToken))
+	searchCustomersPlace: (input, accessToken) =>
+		dispatch(searchCustomersPlace(input, accessToken))
 })
 
 const styles = StyleSheet.create({
@@ -404,12 +355,12 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontWeight: 'bold',
 		fontSize: 22,
-		marginBottom: 10 
+		marginBottom: 10
 	},
 	customerAddress: {
 		textAlign: 'center',
 		fontSize: 18,
-		marginBottom: 20,
+		marginBottom: 20
 	},
 	checkin: {
 		width: '70%'
@@ -459,7 +410,7 @@ const styles = StyleSheet.create({
 	centerButton: {
 		width: 100,
 		height: 100,
-		borderRadius: 100,
+		borderRadius: 100
 	},
 	buttonText: {
 		textAlign: 'center',

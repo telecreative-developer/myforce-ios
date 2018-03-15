@@ -40,10 +40,20 @@ class AddCustomerPreview extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.loading.condition === false && props.loading.process_on === 'LOADING_ADD_PIC' && props.success.condition === true && props.success.process_on === 'SUCCESS_ADD_PIC') {
+		if (
+			props.loading.condition === false &&
+			props.loading.process_on === 'LOADING_ADD_PIC' &&
+			props.success.condition === true &&
+			props.success.process_on === 'SUCCESS_ADD_PIC'
+		) {
 			const resetAction = NavigationActions.reset({
 				index: 0,
-				actions: [NavigationActions.navigate({ routeName: 'CustomerProfile', params: props.success.payload})]
+				actions: [
+					NavigationActions.navigate({
+						routeName: 'CustomerProfile',
+						params: props.success.payload
+					})
+				]
 			})
 			props.navigation.dispatch(resetAction)
 		}
@@ -63,9 +73,9 @@ class AddCustomerPreview extends Component {
 		})
 	}
 
-	key = (item,index) => index
+	key = (item, index) => index
 
-	renderItems = ({item}) => (
+	renderItems = ({ item }) => (
 		<View style={styles.headerDirection}>
 			<Icon name="md-contact" size={18} />
 			<Text style={styles.data}>{item.name}</Text>
@@ -74,7 +84,11 @@ class AddCustomerPreview extends Component {
 
 	async handlePostCustomer() {
 		const { sessionPersistance } = await this.props
-		await this.props.postCustomer(this.state, this.props.pics, sessionPersistance.accessToken)
+		await this.props.postCustomer(
+			this.state,
+			this.props.pics,
+			sessionPersistance.accessToken
+		)
 	}
 
 	render() {
@@ -90,11 +104,7 @@ class AddCustomerPreview extends Component {
 					<Body>
 						<Text style={styles.title}>CUSTOMER PREVIEW</Text>
 					</Body>
-					<Right>
-						{/* <Button transparent badge onPress={() => navigate('Cart')}>
-							<Icon name="ios-notifications" size={25} />
-						</Button> */}
-					</Right>
+					<Right />
 				</Header>
 				<Content style={styles.content}>
 					<Form>
@@ -120,11 +130,21 @@ class AddCustomerPreview extends Component {
 							/>
 						</Item>
 					</Form>
-					<Text style={{color: '#575757', fontSize: 14, marginLeft: 15, marginTop: 20, marginBottom: 5}}>PIC Name</Text>
-					<FlatList 
+					<Text
+						style={{
+							color: '#575757',
+							fontSize: 14,
+							marginLeft: 15,
+							marginTop: 20,
+							marginBottom: 5
+						}}>
+						PIC Name
+					</Text>
+					<FlatList
 						data={this.props.pics}
 						keyExtractor={this.key}
-						renderItem={this.renderItems} />
+						renderItem={this.renderItems}
+					/>
 					<View style={styles.buttonView}>
 						<Button
 							primary
@@ -133,9 +153,7 @@ class AddCustomerPreview extends Component {
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
 						{this.props.loading.condition === true ? (
-							<Button
-								primary
-								style={styles.button}>
+							<Button primary style={styles.button}>
 								<LinearGradient
 									colors={['#20E6CD', '#2D38F9']}
 									style={styles.linearGradient}>
@@ -161,15 +179,16 @@ class AddCustomerPreview extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
 	success: state.success,
 	loading: state.loading,
 	sessionPersistance: state.sessionPersistance,
 	pics: state.pics
 })
 
-const mapDispatchToProps = (dispatch) => ({
-	postCustomer: (data, dataPic, accessToken) => dispatch(postCustomer(data, dataPic, accessToken))
+const mapDispatchToProps = dispatch => ({
+	postCustomer: (data, dataPic, accessToken) =>
+		dispatch(postCustomer(data, dataPic, accessToken))
 })
 
 const styles = StyleSheet.create({
@@ -260,7 +279,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		marginLeft: 15,
 		marginTop: 10
-	},
+	}
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerPreview)

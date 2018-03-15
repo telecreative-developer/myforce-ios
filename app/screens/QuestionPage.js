@@ -52,43 +52,85 @@ class QuestionPage extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.loading.condition === false &&
+		if (
+			props.loading.condition === false &&
 			props.loading.process_on === 'LOADING_POST_ANSWER' &&
 			props.success.condition === true &&
-			props.success.process_on === 'SUCCESS_POST_ANSWER') {
-				const resetAction = NavigationActions.reset({
-					index: 0,
-					actions: [NavigationActions.navigate({ routeName: 'CustomerProfile', params: props.success.payload})]
-				})
-				props.navigation.dispatch(resetAction)
-				this.setState({isModalVisible: false})
+			props.success.process_on === 'SUCCESS_POST_ANSWER'
+		) {
+			const resetAction = NavigationActions.reset({
+				index: 0,
+				actions: [
+					NavigationActions.navigate({
+						routeName: 'CustomerProfile',
+						params: props.success.payload
+					})
+				]
+			})
+			props.navigation.dispatch(resetAction)
+			this.setState({ isModalVisible: false })
 		}
 	}
 
 	async componentWillMount() {
 		const { params } = await this.props.navigation.state
 		const { sessionPersistance } = await this.props
-		await this.props.fetchQuestionWithStep(params.step, sessionPersistance.accessToken)
+		await this.props.fetchQuestionWithStep(
+			params.step,
+			sessionPersistance.accessToken
+		)
 	}
 
 	handlePostAnswer() {
 		const { answer, activity_desc } = this.state
-		const { step, id_pipeline, id_customer, total } = this.props.navigation.state.params
+		const {
+			step,
+			id_pipeline,
+			id_customer,
+			total
+		} = this.props.navigation.state.params
 		const { questionWithStep, cartProducts } = this.props
 		const { id, id_branch, accessToken } = this.props.sessionPersistance
-		if(step === 4) {
-			cartProducts.forEach((data) => {
-				this.props.sendProductsOnCart({
-					id_pipeline, id_customer, id, id_branch, total, id_product: data.id_product, id_subproduct: data.id_subproduct
-				}, accessToken)
+		if (step === 4) {
+			cartProducts.forEach(data => {
+				this.props.sendProductsOnCart(
+					{
+						id_pipeline,
+						id_customer,
+						id,
+						id_branch,
+						total,
+						id_product: data.id_product,
+						id_subproduct: data.id_subproduct
+					},
+					accessToken
+				)
 			})
-			this.props.postAnswer({
-				answer, activity_desc, step, id_customer, id_pipeline, id, id_question: questionWithStep.id_question
-			}, accessToken)
-		}else{
-			this.props.postAnswer({
-				answer, activity_desc, step, id_customer, id_pipeline, id, id_question: questionWithStep.id_question
-			}, accessToken)
+			this.props.postAnswer(
+				{
+					answer,
+					activity_desc,
+					step,
+					id_customer,
+					id_pipeline,
+					id,
+					id_question: questionWithStep.id_question
+				},
+				accessToken
+			)
+		} else {
+			this.props.postAnswer(
+				{
+					answer,
+					activity_desc,
+					step,
+					id_customer,
+					id_pipeline,
+					id,
+					id_question: questionWithStep.id_question
+				},
+				accessToken
+			)
 		}
 	}
 
@@ -97,7 +139,8 @@ class QuestionPage extends Component {
 		const { sessionPersistance, questionWithStep, loading } = this.props
 		return (
 			<Container>
-				{loading.condition === true && loading.process_on === 'LOADING_POST_ANSWER' ? (
+				{loading.condition === true &&
+				loading.process_on === 'LOADING_POST_ANSWER' ? (
 					<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
 						<View style={styles.modalWrapper}>
 							<View
@@ -136,9 +179,10 @@ class QuestionPage extends Component {
 											Cancel
 										</Text>
 									</Button>
-									<Button
-										onPress={() => this.handlePostAnswer()}>
-										<Text style={styles.modalYesButton}>Yes, Submit Answer</Text>
+									<Button onPress={() => this.handlePostAnswer()}>
+										<Text style={styles.modalYesButton}>
+											Yes, Submit Answer
+										</Text>
 									</Button>
 								</FooterTab>
 							</Footer>
@@ -156,9 +200,13 @@ class QuestionPage extends Component {
 				<View style={styles.contentWrapper}>
 					<Image source={bg} style={styles.cardImage} />
 					<View style={styles.questionBox}>
-						<Text style={styles.greeting}>{`Hai, ${sessionPersistance.first_name}`}</Text>
+						<Text style={styles.greeting}>{`Hai, ${
+							sessionPersistance.first_name
+						}`}</Text>
 						{this.state.nextActivityDesc ? (
-							<Text style={styles.question}>Deskripsikan aktivitas anda dalam step ini pada kolom dibawah</Text>
+							<Text style={styles.question}>
+								Deskripsikan aktivitas anda dalam step ini pada kolom dibawah
+							</Text>
 						) : (
 							<Text style={styles.question}>{questionWithStep.question}</Text>
 						)}
@@ -168,16 +216,18 @@ class QuestionPage extends Component {
 									<Input
 										multiline={true}
 										value={this.state.activity_desc}
-										onChangeText={(e) => this.setState({activity_desc: e})}
+										onChangeText={e => this.setState({ activity_desc: e })}
 										placeholder="Silahkan deskripsikan dikolom ini"
-										style={styles.answer} />
+										style={styles.answer}
+									/>
 								) : (
 									<Input
 										multiline={true}
 										value={this.state.answer}
-										onChangeText={(e) => this.setState({answer: e})}
+										onChangeText={e => this.setState({ answer: e })}
 										placeholder="Silahkan isi dengan jawaban anda"
-										style={styles.answer} />
+										style={styles.answer}
+									/>
 								)}
 							</Item>
 						</View>
@@ -186,13 +236,13 @@ class QuestionPage extends Component {
 								<Button
 									primary
 									style={styles.buttonBack}
-									onPress={() => this.setState({nextActivityDesc: false})}>
+									onPress={() => this.setState({ nextActivityDesc: false })}>
 									<Text style={styles.buttonText}>BACK</Text>
 								</Button>
 								<Button
 									primary
 									style={styles.button}
-									onPress={() => this.setState({isModalVisible: true})}>
+									onPress={() => this.setState({ isModalVisible: true })}>
 									<LinearGradient
 										colors={['#20E6CD', '#2D38F9']}
 										style={styles.linearGradient}>
@@ -211,7 +261,7 @@ class QuestionPage extends Component {
 								<Button
 									primary
 									style={styles.button}
-									onPress={() => this.setState({nextActivityDesc: true})}>
+									onPress={() => this.setState({ nextActivityDesc: true })}>
 									<LinearGradient
 										colors={['#20E6CD', '#2D38F9']}
 										style={styles.linearGradient}>
@@ -227,7 +277,7 @@ class QuestionPage extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
 	loading: state.loading,
 	success: state.success,
 	sessionPersistance: state.sessionPersistance,
@@ -235,10 +285,12 @@ const mapStateToProps = (state) => ({
 	cartProducts: state.cartProducts
 })
 
-const mapDispatchToProps = (dispatch) => ({
-	sendProductsOnCart: (data, accessToken) => dispatch(sendProductsOnCart(data, accessToken)),
+const mapDispatchToProps = dispatch => ({
+	sendProductsOnCart: (data, accessToken) =>
+		dispatch(sendProductsOnCart(data, accessToken)),
 	postAnswer: (data, accessToken) => dispatch(postAnswer(data, accessToken)),
-	fetchQuestionWithStep: (step, accessToken) => dispatch(fetchQuestionWithStep(step, accessToken))
+	fetchQuestionWithStep: (step, accessToken) =>
+		dispatch(fetchQuestionWithStep(step, accessToken))
 })
 
 const styles = StyleSheet.create({

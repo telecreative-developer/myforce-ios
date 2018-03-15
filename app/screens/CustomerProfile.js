@@ -90,11 +90,14 @@ class CustomerProfile extends Component {
 			this.props.navigation.state.params.id_customer,
 			this.props.sessionPersistance.accessToken
 		)
-		await this.setState({id_pic: this.props.picsCustomers[0].id_pic})
+		await this.setState({ id_pic: this.props.picsCustomers[0].id_pic })
 	}
 
 	componentWillReceiveProps(props) {
-		if(props.success.condition === true && props.success.process_on === 'POST_PIPELINE') {
+		if (
+			props.success.condition === true &&
+			props.success.process_on === 'POST_PIPELINE'
+		) {
 			Alert.alert('Success Add Pipeline', 'Your pipeline has been added')
 		}
 	}
@@ -117,9 +120,12 @@ class CustomerProfile extends Component {
 	}
 
 	handleCheckStepper(step, id_pipeline, in_process) {
-		if(in_process) {
-			Alert.alert('Pipeline in Progress', 'Please wait a confirmation from your manager to take the next step')
-		}else{
+		if (in_process) {
+			Alert.alert(
+				'Pipeline in Progress',
+				'Please wait a confirmation from your manager to take the next step'
+			)
+		} else {
 			this.handleSetStep(step, id_pipeline)
 		}
 	}
@@ -128,7 +134,8 @@ class CustomerProfile extends Component {
 		if (this.state.pipelineTabs === 'active') {
 			return (
 				<View>
-					{this.props.sessionPersistance.id === this.props.navigation.state.params.id && (
+					{this.props.sessionPersistance.id ===
+						this.props.navigation.state.params.id && (
 						<View style={styles.addPipeline}>
 							<Button
 								full
@@ -140,24 +147,31 @@ class CustomerProfile extends Component {
 						</View>
 					)}
 					<FlatList
-						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false)}
+						data={this.props.pipelines.filter(
+							p => p.step !== 7 && p.lose === false
+						)}
 						keyExtractor={this.key}
-						renderItem={this.renderItemsActive} />
+						renderItem={this.renderItemsActive}
+					/>
 				</View>
 			)
 		} else if (this.state.pipelineTabs === 'close') {
 			return (
 				<FlatList
-					data={this.props.pipelines.filter(p => p.step === 7 && p.lose === false)}
+					data={this.props.pipelines.filter(
+						p => p.step === 7 && p.lose === false
+					)}
 					keyExtractor={this.key}
-					renderItem={this.renderItemsClose} />
+					renderItem={this.renderItemsClose}
+				/>
 			)
 		} else if (this.state.pipelineTabs === 'lose') {
 			return (
 				<FlatList
 					data={this.props.pipelines.filter(p => p.lose === true)}
 					keyExtractor={this.key}
-					renderItem={this.renderItemsLose} />
+					renderItem={this.renderItemsLose}
+				/>
 			)
 		}
 	}
@@ -174,52 +188,56 @@ class CustomerProfile extends Component {
 	}
 
 	handleSetStep(step, id_pipeline) {
-		this.setState({isModalVisible: true, step, id_pipeline})
+		this.setState({ isModalVisible: true, step, id_pipeline })
 	}
 
 	confirmToNextStep() {
 		this.setState({ isModalVisible: false })
-		this.props.navigation.navigate('Stepper', {step: this.state.step, id_pipeline: this.state.id_pipeline, id_customer: this.props.navigation.state.params.id_customer})
+		this.props.navigation.navigate('Stepper', {
+			step: this.state.step,
+			id_pipeline: this.state.id_pipeline,
+			id_customer: this.props.navigation.state.params.id_customer
+		})
 	}
 
 	renderTextSellingProccess() {
 		const { step } = this.state
-		if(step === 1) {
+		if (step === 1) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 1</Text>
 					<Text style={styles.titleModal}>Identify Opportunities</Text>
 				</View>
 			)
-		}else if(step === 2) {
+		} else if (step === 2) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 2</Text>
 					<Text style={styles.titleModal}>Clarify Needs</Text>
 				</View>
 			)
-		}else if(step === 3) {
+		} else if (step === 3) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 3</Text>
 					<Text style={styles.titleModal}>IDENTIFY OPPORTUNITIES</Text>
 				</View>
 			)
-		}else if(step === 4) {
+		} else if (step === 4) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 4</Text>
 					<Text style={styles.titleModal}>Develop Criteria</Text>
 				</View>
 			)
-		}else if(step === 5) {
+		} else if (step === 5) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 5</Text>
 					<Text style={styles.titleModal}>Gain Commitment</Text>
 				</View>
 			)
-		}else if(step === 6) {
+		} else if (step === 6) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 6</Text>
@@ -248,17 +266,27 @@ class CustomerProfile extends Component {
 					<View style={styles.picDirection}>
 						<Icon name="md-contact" size={18} color={'#000'}/>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>{data.name}</Text>
+							<Text key={index} style={styles.data}>
+								{data.name}
+							</Text>
 						))}
 					</View>
 				</View>
 				<View>
-					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+					{this.props.sessionPersistance.id ===
+					this.props.navigation.state.params.id ? (
 						<PipelineProgress
-							onPress={() => this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)}
-							currentPosition={item.step-1} />
+							onPress={() =>
+								this.handleCheckStepper(
+									item.step,
+									item.id_pipeline,
+									item.step_process
+								)
+							}
+							currentPosition={item.step - 1}
+						/>
 					) : (
-						<PipelineProgress currentPosition={item.step-1} />
+						<PipelineProgress currentPosition={item.step - 1} />
 					)}
 				</View>
 				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
@@ -288,12 +316,14 @@ class CustomerProfile extends Component {
 					</View>
 					<View style={styles.picDirection}>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>{data.name}</Text>
+							<Text key={index} style={styles.data}>
+								{data.name}
+							</Text>
 						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step-1} />
+					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
 				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
 					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
@@ -322,12 +352,14 @@ class CustomerProfile extends Component {
 					</View>
 					<View style={styles.picDirection}>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>{data.name}</Text>
+							<Text key={index} style={styles.data}>
+								{data.name}
+							</Text>
 						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step-1} />
+					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
 				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
 					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
@@ -469,8 +501,7 @@ class CustomerProfile extends Component {
 										Cancel
 									</Text>
 								</Button>
-								<Button
-									onPress={() => this.confirmToNextStep()}>
+								<Button onPress={() => this.confirmToNextStep()}>
 									<Text style={styles.modalYesButton}>Take the next step.</Text>
 								</Button>
 							</FooterTab>
@@ -531,13 +562,13 @@ class CustomerProfile extends Component {
 									</H3>
 								</TouchableHighlight>
 								<View style={styles.headerDirection}>
-									<Icon name="md-pin" size={15} color={'#fff'}/>
-									<Text style={styles.dataAddress}>
-										{state.params.address}
-									</Text>
+									<Icon name="md-pin" size={15} />
+									<Text style={styles.dataAddress}>{state.params.address}</Text>
 								</View>
-								<Text style={{fontSize: 14, paddingTop: 15, paddingLeft: 20, fontWeight: 'bold', color: '#fff' }}>PIC List:</Text>
-								<FlatList 
+								<Text style={{ fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>
+									PIC List:
+								</Text>
+								<FlatList
 									data={this.props.picsCustomers}
 									keyExtractor={this.key}
 									renderItem={this.renderItemsPic}
@@ -570,7 +601,9 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'close' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.step === 7 && p.lose === false).length
+											this.props.pipelines.filter(
+												p => p.step === 7 && p.lose === false
+											).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>CLOSE</Text>
@@ -606,10 +639,14 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
 	return {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-		fetchPipelines: (id, accessToken) => dispatch(fetchPipelines(id, accessToken)),
-		fetchPipelinesRealtime: (id, accessToken) => dispatch(fetchPipelinesRealtime(id, accessToken)),
-		postPipeline: (data, accessToken) => dispatch(postPipeline(data, accessToken)),
-		fetchPicsWithIDCustomer: (id, accessToken) => dispatch(fetchPicsWithIDCustomer(id, accessToken))
+		fetchPipelines: (id, accessToken) =>
+			dispatch(fetchPipelines(id, accessToken)),
+		fetchPipelinesRealtime: (id, accessToken) =>
+			dispatch(fetchPipelinesRealtime(id, accessToken)),
+		postPipeline: (data, accessToken) =>
+			dispatch(postPipeline(data, accessToken)),
+		fetchPicsWithIDCustomer: (id, accessToken) =>
+			dispatch(fetchPicsWithIDCustomer(id, accessToken))
 	}
 }
 
@@ -868,7 +905,7 @@ const styles = StyleSheet.create({
 		fontSize: 35,
 		fontWeight: '900',
 		color: '#20E6CD',
-		fontStyle: 'italic', 
+		fontStyle: 'italic',
 		textAlign: 'center',
 		backgroundColor: 'transparent'
 	},
@@ -876,7 +913,7 @@ const styles = StyleSheet.create({
 		fontSize: 35,
 		fontWeight: '900',
 		color: '#ffffff',
-		fontStyle: 'italic', 
+		fontStyle: 'italic',
 		textAlign: 'center',
 		backgroundColor: 'transparent'
 	},

@@ -71,27 +71,6 @@ class Product extends Component {
 	render() {
 		return (
 			<Container>
-				<Header style={styles.header}>
-					<Left>
-						<TouchableHighlight underlayColor={'transparent'}>
-							<Thumbnail
-								small
-								rounded
-								source={{ uri: this.props.sessionPersistance.avatar }}
-							/>
-						</TouchableHighlight>
-					</Left>
-					<Body>
-						<Text style={styles.title}>PRODUCTS</Text>
-					</Body>
-					<Right>
-						{/* <TouchableHighlight
-							underlayColor={'transparent'}
-							onPress={() => this.props.setNavigate('Profile')}>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableHighlight> */}
-					</Right>
-				</Header>
 				<Content style={styles.content}>
 					<FlatList
 						data={this.props.products}

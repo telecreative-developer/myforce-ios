@@ -161,19 +161,22 @@ class Register extends Component {
 						<Label>First Name</Label>
 						<Input
 							value={this.state.first_name}
-							onChangeText={first_name => this.setState({ first_name })} />
+							onChangeText={first_name => this.setState({ first_name })}
+						/>
 					</Item>
 					<Item floatingLabel>
 						<Label>Last Name</Label>
 						<Input
 							value={this.state.last_name}
-							onChangeText={last_name => this.setState({ last_name })} />
+							onChangeText={last_name => this.setState({ last_name })}
+						/>
 					</Item>
 					<Item floatingLabel>
 						<Label>Username</Label>
 						<Input
 							value={this.state.username}
-							onChangeText={username => this.setState({ username })} />
+							onChangeText={username => this.setState({ username })}
+						/>
 					</Item>
 					<View style={styles.genderView}>
 						<Text style={styles.gender}>Gender</Text>
@@ -191,7 +194,8 @@ class Register extends Component {
 						<Label>Email</Label>
 						<Input
 							value={this.state.email}
-							onChangeText={email => this.setState({ email })} />
+							onChangeText={email => this.setState({ email })}
+						/>
 					</Item>
 					<Item floatingLabel>
 						<Label>Address</Label>
@@ -204,14 +208,16 @@ class Register extends Component {
 						<Label>Phone Number</Label>
 						<Input
 							value={this.state.phone_number}
-							onChangeText={phone_number => this.setState({ phone_number })} />
+							onChangeText={phone_number => this.setState({ phone_number })}
+						/>
 					</Item>
 					{this.state.bank_name_other ? (
 						<Item floatingLabel>
 							<Label>Bank Name</Label>
 							<Input
 								value={this.state.bank_name}
-								onChangeText={bank_name => this.setState({ bank_name })} />
+								onChangeText={bank_name => this.setState({ bank_name })}
+							/>
 						</Item>
 					) : (
 						<View style={styles.genderView}>
@@ -242,14 +248,16 @@ class Register extends Component {
 							value={this.state.rekening_number}
 							onChangeText={rekening_number =>
 								this.setState({ rekening_number })
-							} />
+							}
+						/>
 					</Item>
 					<Item floatingLabel last>
 						<Label>Password</Label>
 						<Input
 							secureTextEntry
 							value={this.state.password}
-							onChangeText={password => this.setState({ password })} />
+							onChangeText={password => this.setState({ password })}
+						/>
 					</Item>
 					<Item floatingLabel>
 						<Label>Confirm Password</Label>
@@ -258,7 +266,8 @@ class Register extends Component {
 							value={this.state.confirm_password}
 							onChangeText={confirm_password =>
 								this.setState({ confirm_password })
-							} />
+							}
+						/>
 					</Item>
 				</Form>
 				<View style={styles.button}>{this.renderButtons()}</View>
