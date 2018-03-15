@@ -106,7 +106,10 @@ class Club extends Component {
 			<Container>
 				<View style={styles.customerHeader}>
 					<LinearGradient
-						colors={['#ee8084', '#dc6cbe']}
+						start={{ x: 0.0, y: 0.25 }}
+						end={{ x: 1.5, y: 1 }}
+						locations={[0, 0.5, 0.6]}
+						colors={['#ee8084', '#dc6cbe', '#dc6cbe']}
 						style={styles.linearGradient}>
 						<Grid>
 							<Col style={styles.leftCol}>
@@ -220,6 +223,7 @@ const styles = StyleSheet.create({
 	profileName: {
 		marginTop: 5,
 		marginLeft: 25,
+		fontWeight: 'bold',
 		color: '#ffffff',
 		backgroundColor: 'transparent'
 	},
@@ -250,7 +254,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	periodeText: {
-		fontSize: 14,
+		fontSize: 16,
 		backgroundColor: 'transparent',
 		color: '#ffffff',
 		textAlign: 'center'

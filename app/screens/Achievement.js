@@ -213,6 +213,9 @@ class Achievements extends Component {
 			<Container>
 				<View style={styles.customerHeader}>
 					<LinearGradient
+						start={{ x: 0.0, y: 0.25 }}
+						end={{ x: 1.5, y: 1 }}
+						locations={[0, 0.6]}
 						colors={['#20E6CD', '#2D38F9']}
 						style={styles.linearGradient}>
 						<Grid>
@@ -495,6 +498,7 @@ const styles = StyleSheet.create({
 	profileName: {
 		marginTop: 5,
 		marginLeft: 25,
+		fontWeight: 'bold',
 		color: '#ffffff',
 		backgroundColor: 'transparent'
 	},
@@ -516,7 +520,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent'
 	},
 	dataPipeline: {
-		fontSize: 14,
+		fontSize: 16,
 		color: '#ffffff',
 		backgroundColor: 'transparent'
 	},
@@ -570,10 +574,10 @@ const styles = StyleSheet.create({
 		color: '#e87e04'
 	},
 	chartTarget: {
-		fontSize: 16
+		fontSize: 18,
 	},
 	chartTargetUnder: {
-		fontSize: 16,
+		fontSize: 18,
 		marginBottom: 15
 	},
 	chartYear: {
@@ -625,7 +629,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	periodeText: {
-		fontSize: 14,
+		fontSize: 16,
 		backgroundColor: 'transparent',
 		color: '#ffffff',
 		textAlign: 'center'

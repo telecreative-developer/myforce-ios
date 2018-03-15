@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import { StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native'
 import {
 	Container,
 	Content,
@@ -23,6 +23,7 @@ import { fetchPics } from '../actions/pics'
 import FlatList from 'searchable-flatlist'
 import { setNavigate } from '../actions/processor'
 import defaultAvatar from '../assets/images/default-avatar.png'
+import bg from '../assets/images/bg-list.jpeg'
 
 const { width, height } = Dimensions.get('window')
 
@@ -76,24 +77,50 @@ class CustomerList extends Component {
 	render() {
 		return (
 			<Container>
-				<View style={styles.searchView}>
-					<Item style={styles.searchForm} rounded>
-						<Input
-							placeholder="Search"
-							onChangeText={name => this.setState({ search: name })}
-						/>
-						<Icon size={25} name="ios-search" />
-					</Item>
-				</View>
-				<Content style={styles.content}>
-					<FlatList
-						searchProperty={'name'}
-						searchTerm={this.state.search}
-						data={this.props.customers}
-						keyExtractor={this.key}
-						renderItem={this.renderItems}
-					/>
-				</Content>
+				<Header style={styles.header}>
+					<Left>
+						<TouchableOpacity
+							onPress={() => this.props.setNavigate('Profile', '')}>
+							{this.props.sessionPersistance.avatar === '' ? (
+								<Thumbnail rounded small source={defaultAvatar} />
+							) : (
+								<Thumbnail
+									small
+									rounded
+									source={{ uri: this.props.sessionPersistance.avatar }} />
+							)}
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Text style={styles.title}>CUSTOMERS</Text>
+					</Body>
+					<Right>
+						{/* <TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
+							<Icon name="ios-notifications" size={25} />
+						</TouchableOpacity> */}
+					</Right>
+				</Header>
+				<ImageBackground
+					source={bg}
+					imageStyle={styles.cardImage}
+					style={styles.bg}>
+					<View style={styles.searchView}>
+						<Item style={styles.searchForm} rounded>
+							<Input
+								placeholder="Search"
+								onChangeText={name => this.setState({ search: name })} />
+							<Icon size={25} name="ios-search" />
+						</Item>
+					</View>
+					<Content style={styles.content}>
+						<FlatList
+							searchProperty={'name'}
+							searchTerm={this.state.search}
+							data={this.props.customers}
+							keyExtractor={this.key}
+							renderItem={this.renderItems} />
+					</Content>
+				</ImageBackground>
 			</Container>
 		)
 	}
@@ -123,9 +150,20 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		justifyContent: 'center',
 		borderRadius: 5,
-		height: height / 8,
+		minHeight: height / 8,
+		height: 'auto',
 		backgroundColor: '#ffffff',
 		marginBottom: '3%'
+	},
+	bg: {
+		display: 'flex',
+		width: width,
+		justifyContent: 'center',
+		flex: 1,
+		backgroundColor: '#000000'
+	},
+	cardImage: {
+		opacity: 0.8
 	},
 	contentCard: {
 		display: 'flex',
@@ -145,11 +183,11 @@ const styles = StyleSheet.create({
 	textPerson: {
 		color: '#000000',
 		marginLeft: 5,
-		fontSize: 14
+		fontSize: 16
 	},
 	text: {
 		color: '#000000',
-		fontSize: 11,
+		fontSize: 16,
 		marginTop: 5
 	},
 	cardHeader: {
