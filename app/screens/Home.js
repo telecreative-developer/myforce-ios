@@ -136,7 +136,10 @@ class Home extends Component {
 				this.props.navigate.data
 			)
 		} else if (this.props.navigate.link === 'Profile') {
-			this.props.navigation.navigate(this.props.navigate.link)
+			this.props.navigation.navigate(
+				this.props.navigate.link,
+				this.props.navigate.data
+			)
 		} else if (this.props.navigate.link === 'CustomerProfile') {
 			this.props.navigation.navigate(
 				this.props.navigate.link,
@@ -158,13 +161,15 @@ class Home extends Component {
 					</Body>
 					<Right />
 				</Header>
-				<Header style={styles.headerCheckIn} hasTabs>
-					<Left />
-					<Body>
-						<Text>Check In</Text>
-					</Body>
-					<Right />
-				</Header>
+				{this.props.sessionPersistance.id_check !== null && (
+					<Header style={styles.headerCheckIn} hasTabs>
+						<Left />
+						<Body>
+							<Text>Check In</Text>
+						</Body>
+						<Right />
+					</Header>
+				)}
 				{this.renderContent()}
 				<Footer style={styles.footerWrap}>
 					<FooterTab>

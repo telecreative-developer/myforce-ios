@@ -1,23 +1,15 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native'
 import {
-	Container,
-	Content,
-	Header,
-	Left,
-	H3,
-	Body,
-	Right,
-	Thumbnail,
-	View,
-	Item,
-	Input,
-	Text
-} from 'native-base'
+	StyleSheet,
+	TouchableOpacity,
+	Dimensions,
+	ImageBackground,
+	View
+} from 'react-native'
+import { Container, Content, H3, Body, Item, Input, Text } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import ContactCard from '../components/ContactCard'
 import { connect } from 'react-redux'
-import { filterCustomersWithId } from '../actions/customers'
 import { fetchPipelinesWithUserId } from '../actions/pipelines'
 import { fetchPics } from '../actions/pics'
 import FlatList from 'searchable-flatlist'
@@ -38,7 +30,6 @@ class CustomerList extends Component {
 
 	componentDidMount() {
 		const { id, accessToken } = this.props.sessionPersistance
-		this.props.filterCustomersWithId(id)
 		this.props.fetchPics(accessToken)
 		this.props.fetchPipelinesWithUserId(id, accessToken)
 	}
@@ -77,29 +68,6 @@ class CustomerList extends Component {
 	render() {
 		return (
 			<Container>
-				<Header style={styles.header}>
-					<Left>
-						<TouchableOpacity
-							onPress={() => this.props.setNavigate('Profile', '')}>
-							{this.props.sessionPersistance.avatar === '' ? (
-								<Thumbnail rounded small source={defaultAvatar} />
-							) : (
-								<Thumbnail
-									small
-									rounded
-									source={{ uri: this.props.sessionPersistance.avatar }} />
-							)}
-						</TouchableOpacity>
-					</Left>
-					<Body>
-						<Text style={styles.title}>CUSTOMERS</Text>
-					</Body>
-					<Right>
-						{/* <TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableOpacity> */}
-					</Right>
-				</Header>
 				<ImageBackground
 					source={bg}
 					imageStyle={styles.cardImage}
@@ -108,7 +76,8 @@ class CustomerList extends Component {
 						<Item style={styles.searchForm} rounded>
 							<Input
 								placeholder="Search"
-								onChangeText={name => this.setState({ search: name })} />
+								onChangeText={name => this.setState({ search: name })}
+							/>
 							<Icon size={25} name="ios-search" />
 						</Item>
 					</View>
@@ -118,7 +87,8 @@ class CustomerList extends Component {
 							searchTerm={this.state.search}
 							data={this.props.customers}
 							keyExtractor={this.key}
-							renderItem={this.renderItems} />
+							renderItem={this.renderItems}
+						/>
 					</Content>
 				</ImageBackground>
 			</Container>
@@ -136,11 +106,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
 	return {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-		filterCustomersWithId: id => dispatch(filterCustomersWithId(id)),
 		filterCustomersWithName: name => dispatch(filterCustomersWithName(name)),
 		fetchPics: accessToken => dispatch(fetchPics(accessToken)),
-		fetchPipelinesWithUserId: (id, accessToken) =>
-			dispatch(fetchPipelinesWithUserId(id, accessToken))
+		fetchPipelinesWithUserId: (id, accessToken) => dispatch(fetchPipelinesWithUserId(id, accessToken))
 	}
 }
 

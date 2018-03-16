@@ -83,11 +83,7 @@ class Club extends Component {
 			{item.users[0].avatar === '' || item.users[0].avatar === null ? (
 				<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
 			) : (
-				<Thumbnail
-					small
-					source={{ uri: item.users[0].avatar }}
-					style={{ marginRight: 10 }}
-				/>
+				<Thumbnail small source={{ uri: item.users[0].avatar }} style={{ marginRight: 10 }} />
 			)}
 			<View>
 				<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${

@@ -27,7 +27,7 @@ const HorizontalJoker = props => {
 				colors={['#20E6CD', '#2D38F9']}
 				style={styles.linearGradient}>
 				<View style={styles.content}>
-					{props.avatar === '' ? (
+					{props.avatar === '' || props.avatar === null ? (
 						<Thumbnail source={defaultAvatar} />
 					) : (
 						<Thumbnail source={{ uri: props.avatar }} />

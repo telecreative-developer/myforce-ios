@@ -91,18 +91,6 @@ export const fetchPipelinesWithUserId = (id, accessToken) => {
 	}
 }
 
-export const fetchPipelinesRealtime = (id, accessToken) => {
-	return async dispatch => {
-		const pipelines = await app.service('pipelines')
-		await pipelines.on('created', () =>
-			dispatch(fetchPipelines(id, accessToken))
-		)
-		await pipelines.on('removed', () =>
-			dispatch(fetchPipelines(id, accessToken))
-		)
-	}
-}
-
 export const fetchPipelinesSuccess = data => ({
 	type: FETCH_PIPELINES_SUCCESS,
 	payload: data

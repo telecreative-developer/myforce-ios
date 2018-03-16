@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
 	StyleSheet,
 	Dimensions,
@@ -41,6 +41,7 @@ import defaultAvatar from '../assets/images/default-avatar.png'
 import { connect } from 'react-redux'
 import { fetchCustomers, searchCustomersPlace } from '../actions/customers'
 import { setNavigate } from '../actions/processor'
+import { checkIn } from '../actions/checks'
 import image from '../assets/images/add-user.png'
 import ornament from '../assets/images/ornament.png'
 
@@ -52,7 +53,7 @@ const LONGITUDE = 0
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
-class Activity extends Component {
+class Activity extends PureComponent {
 	constructor() {
 		super()
 
@@ -93,7 +94,6 @@ class Activity extends Component {
 
 	async handleOpenDetail(dataCustomers) {
 		await this.setState({ dataCustomers })
-
 		await Animated.timing(this.animatedValue, {
 			toValue: 0,
 			duration: 200
@@ -117,7 +117,7 @@ class Activity extends Component {
 		}).start()
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.fetchCustomers(this.props.sessionPersistance.accessToken)
 		navigator.geolocation.getCurrentPosition(
 			position => {
@@ -215,18 +215,37 @@ class Activity extends Component {
 						<Text style={styles.customerAddress}>
 							{this.state.dataCustomers.address}
 						</Text>
-						<TouchableOpacity style={styles.centerButton} onPress={() => {}}>
-							<LinearGradient
-								colors={['#20E6CD', '#2D38F9']}
-								style={styles.linearGradient}>
-								{this.props.loading.condition === true &&
-								this.props.loading.process_on === 'LOADING_CHECK_CUSTOMER' ? (
+						{this.props.loading.condition === true &&
+						this.props.loading.process_on === 'LOADING_CHECK_IN' ? (
+							<TouchableOpacity style={styles.centerButton}>
+								<LinearGradient
+									colors={['#20E6CD', '#2D38F9']}
+									style={styles.linearGradient}>
 									<Text style={styles.buttonText}>LOADING...</Text>
-								) : (
+								</LinearGradient>
+							</TouchableOpacity>
+						) : (
+							<TouchableOpacity
+								style={styles.centerButton}
+								onPress={() =>
+									this.props.checkIn(
+										{
+											id: this.props.sessionPersistance.id,
+											id_customer: this.state.dataCustomers.id_customer,
+											longitude: this.state.dataCustomers.longitude,
+											latitude: this.state.dataCustomers.latitude
+										},
+										this.state.dataCustomers,
+										this.props.sessionPersistance.accessToken
+									)
+								}>
+								<LinearGradient
+									colors={['#20E6CD', '#2D38F9']}
+									style={styles.linearGradient}>
 									<Text style={styles.buttonText}>CHECK IN</Text>
-								)}
-							</LinearGradient>
-						</TouchableOpacity>
+								</LinearGradient>
+							</TouchableOpacity>
+						)}
 					</Animated.View>
 					<Animated.View style={[styles.footer, animatedStyle]}>
 						{this.state.showBoxContent ? (
@@ -296,6 +315,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+	checkIn: (data, customers, accessToken) => dispatch(checkIn(data, customers, accessToken)),
 	fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 	searchCustomersPlace: (input, accessToken) =>

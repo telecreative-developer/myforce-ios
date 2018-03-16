@@ -1,6 +1,5 @@
 import {
 	FETCH_CUSTOMERS_SUCCESS,
-	FILTER_CUSTOMERS_WITH_ID,
 	RECEIVE_CUSTOMER_PLACES,
 	INPUT_DATA_TO_CUSTOMER
 } from '../constants'
@@ -69,11 +68,6 @@ export const fetchCustomers = accessToken => {
 const fetchCustomersSuccess = data => ({
 	type: FETCH_CUSTOMERS_SUCCESS,
 	payload: data
-})
-
-export const filterCustomersWithId = id => ({
-	type: FILTER_CUSTOMERS_WITH_ID,
-	id_user: id
 })
 
 export const searchCustomersPlace = (input, accessToken) => {

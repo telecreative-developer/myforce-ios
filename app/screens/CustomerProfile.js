@@ -41,9 +41,7 @@ import PipelineProgress from '../components/PipelineProgress'
 import { fetchPicsWithIDCustomer } from '../actions/pics'
 import {
 	fetchPipelines,
-	postPipeline,
-	fetchPipelinesRealtime
-} from '../actions/pipelines'
+	postPipeline } from '../actions/pipelines'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
@@ -75,10 +73,6 @@ class CustomerProfile extends Component {
 			this.props.sessionPersistance.accessToken
 		)
 		await this.props.fetchPicsWithIDCustomer(
-			this.props.navigation.state.params.id_customer,
-			this.props.sessionPersistance.accessToken
-		)
-		await this.props.fetchPipelinesRealtime(
 			this.props.navigation.state.params.id_customer,
 			this.props.sessionPersistance.accessToken
 		)
@@ -126,8 +120,8 @@ class CustomerProfile extends Component {
 		if (this.state.pipelineTabs === 'active') {
 			return (
 				<View>
-					{this.props.sessionPersistance.id ===
-						this.props.navigation.state.params.id && (
+					{this.props.sessionPersistance.checks[0].id_customer ===
+						this.props.navigation.state.params.id_customer && (
 						<View style={styles.addPipeline}>
 							<Button
 								full
@@ -139,9 +133,7 @@ class CustomerProfile extends Component {
 						</View>
 					)}
 					<FlatList
-						data={this.props.pipelines.filter(
-							p => p.step !== 7 && p.lose === false
-						)}
+						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
 					/>
@@ -256,7 +248,7 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={18} color={'#000'}/>
+						<Icon name="md-contact" size={18} color={'#000'} />
 						{item.pics.map((data, index) => (
 							<Text key={index} style={styles.data}>
 								{data.name}
@@ -281,10 +273,19 @@ class CustomerProfile extends Component {
 						<PipelineProgress currentPosition={item.step - 1} />
 					)}
 				</View>
-				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
-					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{fontSize: 14}}>Order Summary</Text>
-					</Button>
+				<View
+					style={{
+						justifyContent: 'center',
+						flexDirection: 'row',
+						display: 'flex',
+						width: '100%',
+						paddingVertical: 20
+					}}>
+					{item.step >= 4 && (
+						<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
+							<Text style={{ fontSize: 14 }}>Order Summary</Text>
+						</Button>
+					)}
 				</View>
 			</View>
 		</View>
@@ -354,7 +355,7 @@ class CustomerProfile extends Component {
 
 	renderItemsPic = ({ item }) => (
 		<TouchableOpacity style={styles.headerDirection}>
-			<Icon name="md-contact" size={15} color={'#fff'}/>
+			<Icon name="md-contact" size={15} color={'#fff'} />
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
 	)
@@ -496,39 +497,42 @@ class CustomerProfile extends Component {
 				</Header>
 				<Content style={styles.content} showsVerticalScrollIndicator={false}>
 					<View style={styles.customerHeader}>
-					<LinearGradient
-						start={{ x: 0.0, y: 0.25 }}
-						end={{ x: 1.5, y: 1 }}
-						locations={[0, 0.5, 0.6]}
-						colors={['#20E6CD', '#2D38F9', '#2D38F9']}
-						style={styles.linearGradient}>
-						<View style={styles.headerDirectionTitle}>
-							<View style={{backgroundColor: 'transparent'}}>
-								<TouchableHighlight underlayColor={'transparent'}>
-									<H3 style={styles.headerDirectionTitle}>
-										{state.params.name}
-									</H3>
-								</TouchableHighlight>
-								<View style={styles.headerDirection}>
-									<Icon name="md-pin" size={15} />
-									<Text style={styles.dataAddress}>{state.params.address}</Text>
-								</View>
-								<Text style={{ fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>
-									PIC List:
-								</Text>
-								<FlatList
-									data={this.props.picsCustomers}
-									keyExtractor={this.key}
-									renderItem={this.renderItemsPic}
-								/>
-								{/* <TouchableOpacity
+						<LinearGradient
+							start={{ x: 0.0, y: 0.25 }}
+							end={{ x: 1.5, y: 1 }}
+							locations={[0, 0.5, 0.6]}
+							colors={['#20E6CD', '#2D38F9', '#2D38F9']}
+							style={styles.linearGradient}>
+							<View style={styles.headerDirectionTitle}>
+								<View style={{ backgroundColor: 'transparent' }}>
+									<TouchableHighlight underlayColor={'transparent'}>
+										<H3 style={styles.headerDirectionTitle}>
+											{state.params.name}
+										</H3>
+									</TouchableHighlight>
+									<View style={styles.headerDirection}>
+										<Icon name="md-pin" size={15} />
+										<Text style={styles.dataAddress}>
+											{state.params.address}
+										</Text>
+									</View>
+									<Text
+										style={{ fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>
+										PIC List:
+									</Text>
+									<FlatList
+										data={this.props.picsCustomers}
+										keyExtractor={this.key}
+										renderItem={this.renderItemsPic}
+									/>
+									{/* <TouchableOpacity
 									style={styles.headerDirection}
 									onPress={() => navigate('ChoosePic')}>
 									<Icon name="md-add" size={15} color={'#2D38F9'}/>
 									<Text style={styles.dataAddPic}>Add More PIC</Text>
 								</TouchableOpacity> */}
+								</View>
 							</View>
-						</View>
 						</LinearGradient>
 					</View>
 					<View style={styles.customerTotal}>
@@ -587,14 +591,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
 	return {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-		fetchPipelines: (id, accessToken) =>
-			dispatch(fetchPipelines(id, accessToken)),
-		fetchPipelinesRealtime: (id, accessToken) =>
-			dispatch(fetchPipelinesRealtime(id, accessToken)),
-		postPipeline: (data, accessToken) =>
-			dispatch(postPipeline(data, accessToken)),
-		fetchPicsWithIDCustomer: (id, accessToken) =>
-			dispatch(fetchPicsWithIDCustomer(id, accessToken))
+		fetchPipelines: (id_customer, accessToken) => 	dispatch(fetchPipelines(id_customer, accessToken)),
+		postPipeline: (data, accessToken) => dispatch(postPipeline(data, accessToken)),
+		fetchPicsWithIDCustomer: (id, accessToken) => dispatch(fetchPicsWithIDCustomer(id, accessToken))
 	}
 }
 
@@ -685,7 +684,7 @@ const styles = StyleSheet.create({
 	linearGradient: {
 		width: '100%',
 		height: 'auto',
-		paddingVertical: 20,
+		paddingVertical: 20
 	},
 	headerDirection: {
 		display: 'flex',
@@ -696,9 +695,7 @@ const styles = StyleSheet.create({
 	headerDirectionTitle: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginLeft: 20,
-		color: '#fff',
-		fontWeight: 'bold'
+		marginLeft: 20
 	},
 	customerTotal: {
 		width: '100%',
