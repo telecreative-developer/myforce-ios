@@ -37,7 +37,8 @@ class CustomerList extends Component {
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
-		<TouchableOpacity
+		<TouchableHighlight
+			underlayColor={'transparent'}
 			onPress={() => this.props.setNavigate('CustomerProfile', item)}>
 			<View style={styles.card}>
 				<View style={styles.contentCard}>
@@ -62,7 +63,7 @@ class CustomerList extends Component {
 					</View>
 				</View>
 			</View>
-		</TouchableOpacity>
+		</TouchableHighlight>
 	)
 
 	render() {
