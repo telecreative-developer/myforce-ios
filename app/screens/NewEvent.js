@@ -112,11 +112,7 @@ class NewEvent extends Component {
 					<Body>
 						<Text style={styles.title}>NEW EVENT</Text>
 					</Body>
-					<Right>
-						{/* <Button transparent badge onPress={() => navigate('Cart')}>
-							<Icon name="ios-notifications" size={25} />
-						</Button> */}
-					</Right>
+					<Right />
 				</Header>
 				<Content style={styles.content} scrollEnabled={false}>
 					<View style={styles.image}>

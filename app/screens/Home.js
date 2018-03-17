@@ -21,9 +21,9 @@ import {
 	Right,
 	Text,
 	Thumbnail,
-	Button
+	Button,
+	Icon
 } from 'native-base'
-import Icon from 'react-native-vector-icons/Ionicons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
@@ -145,8 +145,6 @@ class Home extends Component {
 				this.props.navigate.link,
 				this.props.navigate.data
 			)
-		} else if (this.props.navigate.link === 'Calendar') {
-			this.props.navigation.navigate(this.props.navigate.link)
 		} else if (this.props.navigate.link === 'Notifications') {
 			this.props.navigation.navigate(this.props.navigate.link)
 		} else if (this.props.navigate.link === 'NewEvent') {
@@ -159,7 +157,11 @@ class Home extends Component {
 					<Body>
 						<Text style={styles.title}>{title}</Text>
 					</Body>
-					<Right />
+					<Right>
+						<Button transparent onPress={() => this.props.navigation.navigate('Calendar')}>
+							<Icon name='calendar' />
+						</Button>
+					</Right>
 				</Header>
 				{this.props.sessionPersistance.id_check !== null && (
 					<Header style={styles.headerCheckIn} hasTabs>

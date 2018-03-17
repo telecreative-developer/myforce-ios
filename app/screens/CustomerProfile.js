@@ -39,9 +39,7 @@ import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import PipelineProgress from '../components/PipelineProgress'
 import { fetchPicsWithIDCustomer } from '../actions/pics'
-import {
-	fetchPipelines,
-	postPipeline } from '../actions/pipelines'
+import { fetchPipelines, postPipeline, fetchPipelineProducts} from '../actions/pipelines'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
@@ -71,7 +69,8 @@ class CustomerProfile extends Component {
 					picture: 'http://www.nusacopy.com/images/a/produk/rental-fotocopy-warna.jpg',
 					subproduct: 'Test'
 				}
-			]
+			],
+			dataPic: {}
 		}
 	}
 
@@ -128,20 +127,21 @@ class CustomerProfile extends Component {
 		if (this.state.pipelineTabs === 'active') {
 			return (
 				<View>
-					{this.props.sessionPersistance.checks[0].id_customer ===
-						this.props.navigation.state.params.id_customer && (
-						<View style={styles.addPipeline}>
-							<Button
-								full
-								style={styles.addPipelineDirection}
-								onPress={() => this.setState({ modalNewPipeline: true })}>
-								<Icon name="md-add" size={20} color={'#ffffff'} />
-								<Text style={styles.addPipelineText}>Add Pipeline</Text>
-							</Button>
-						</View>
+					{this.props.sessionPersistance.checks[0] !== undefined && (
+						this.props.sessionPersistance.checks[0].id_customer === this.props.navigation.state.params.id_customer && (
+							<View style={styles.addPipeline}>
+								<Button
+									full
+									style={styles.addPipelineDirection}
+									onPress={() => this.setState({ modalNewPipeline: true })}>
+									<Icon name="md-add" size={20} color={'#ffffff'} />
+									<Text style={styles.addPipelineText}>Add Pipeline</Text>
+								</Button>
+							</View>
+						)
 					)}
 					<FlatList
-						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false)}
+						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false || p.step === 7 && p.step_process === true)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
 					/>
@@ -151,7 +151,7 @@ class CustomerProfile extends Component {
 			return (
 				<FlatList
 					data={this.props.pipelines.filter(
-						p => p.step === 7 && p.lose === false
+						p => p.step === 7 && p.lose === false && p.step_process === false
 					)}
 					keyExtractor={this.key}
 					renderItem={this.renderItemsClose}
@@ -190,6 +190,12 @@ class CustomerProfile extends Component {
 			id_pipeline: this.state.id_pipeline,
 			id_customer: this.props.navigation.state.params.id_customer
 		})
+	}
+
+	async handleOpenOrderCart(id_pipeline, totalPrice) {
+		const { accessToken } = await this.props.sessionPersistance
+		await this.setState({totalPrice, isModalVisibleCart: true})
+		await this.props.fetchPipelineProducts(id_pipeline, accessToken)
 	}
 
 	renderTextSellingProccess() {
@@ -290,7 +296,7 @@ class CustomerProfile extends Component {
 						paddingVertical: 20
 					}}>
 					{item.step >= 4 && (
-						<Button small style={{ backgroundColor: '#2D38F9', height: 40 }} onPress={() => this.setState({isModalVisibleCart: true})}>
+						<Button small style={{ backgroundColor: '#2D38F9', height: 40 }} onPress={() => this.handleOpenOrderCart(item.id_pipeline, item.total)}>
 							<Text style={{ fontSize: 14 }}>Order Summary</Text>
 						</Button>
 					)}
@@ -372,7 +378,7 @@ class CustomerProfile extends Component {
 	)
 
 	renderItemsPic = ({ item }) => (
-		<TouchableOpacity style={styles.headerDirection} onPress={() => this.setState({modalPic: true})}>
+		<TouchableOpacity style={styles.headerDirection} onPress={() => this.setState({modalPic: true, dataPic: item})}>
 			<Icon name="md-contact" size={15} color={'#fff'}/>
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
@@ -381,11 +387,11 @@ class CustomerProfile extends Component {
 	renderItemCart = ({ item }) => {
 		return (
 			<ImageBackground
-				source={{ uri: item.picture }}
+				source={{ uri: item.subproducts[0].picture }}
 				imageStyle={styles.cardImage}
 				style={styles.itemCart}>
 				<TouchableHighlight underlayColor={'transparent'}>
-					<Text style={styles.itemText}>{item.subproduct}</Text>
+					<Text style={styles.itemText}>{item.subproducts[0].subproduct}</Text>
 				</TouchableHighlight>
 			</ImageBackground>
 		)
@@ -450,25 +456,25 @@ class CustomerProfile extends Component {
 								<Form>
 									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>PIC Name</Label>
-										<Input value="Rizaldi Halim" />
+										<Input value={this.state.dataPic.name} />
 									</Item>
 									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Job</Label>
-										<Input value="Branch Manager" />
+										<Input value={this.state.dataPic.job} />
 									</Item>
 									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Phone Number</Label>
-										<Input value="+62 859 8006 4003" />
+										<Input value={this.state.dataPic.phone} />
 									</Item>
 									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Email</Label>
-										<Input value="nando@gmail.com" />
+										<Input value={this.state.dataPic.email} />
 									</Item>
 									<Item floatingLabel style={{borderColor: 'transparent'}}>
 										<Label>Address</Label>
 										<Input
 											multiline={true}
-											value="JL. Pegangsaan 2, Jakarta Utara"
+											value={this.state.dataPic.address}
 											style={styles.picAddress}
 										/>
 									</Item>
@@ -518,17 +524,17 @@ class CustomerProfile extends Component {
 							</TouchableHighlight>
 						</View>
 						<Text style={styles.modalTitle}>Order Cart</Text>
-						<Text style={styles.modalTotal}>Total Item: 1</Text>
+						<Text style={styles.modalTotal}>Total Item: {this.props.pipelineProducts.length}</Text>
 						<View style={{width: width / 1.3}}>
 							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.productCategory}>Total Price</Label>
-								<Input value={this.state.totalPrice} onChangeText={(totalPrice) => this.setState({totalPrice})} keyboardType='numeric'/>
+								<Input disabled value={`Rp. ${JSON.stringify(this.state.totalPrice)}`} />
 							</Item>
 						</View>
 						<View>
 							<FlatList
 								showsVerticalScrollIndicator={false}
-								data={this.state.cartProducts}
+								data={this.props.pipelineProducts}
 								style={styles.container}
 								keyExtractor={this.key}
 								renderItem={this.renderItemCart} />
@@ -594,7 +600,7 @@ class CustomerProfile extends Component {
 									onPress={() => this.setState({ pipelineTabs: 'active' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.step !== 7).length
+											this.props.pipelines.filter(p => p.step !== 7 && p.lose === false || p.step === 7 && p.step_process === true).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>ACTIVE</Text>
@@ -606,7 +612,7 @@ class CustomerProfile extends Component {
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
 											this.props.pipelines.filter(
-												p => p.step === 7 && p.lose === false
+												p => p.step === 7 && p.lose === false && p.step_process === false
 											).length
 										)}
 									</H1>
@@ -637,7 +643,8 @@ const mapStateToProps = state => ({
 	pipelines: state.pipelines,
 	sessionPersistance: state.sessionPersistance,
 	picsCustomers: state.picsCustomers,
-	success: state.success
+	success: state.success,
+	pipelineProducts: state.pipelineProducts
 })
 
 const mapDispatchToProps = dispatch => {
@@ -645,7 +652,8 @@ const mapDispatchToProps = dispatch => {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 		fetchPipelines: (id_customer, accessToken) => 	dispatch(fetchPipelines(id_customer, accessToken)),
 		postPipeline: (data, accessToken) => dispatch(postPipeline(data, accessToken)),
-		fetchPicsWithIDCustomer: (id, accessToken) => dispatch(fetchPicsWithIDCustomer(id, accessToken))
+		fetchPicsWithIDCustomer: (id, accessToken) => dispatch(fetchPicsWithIDCustomer(id, accessToken)),
+		fetchPipelineProducts: (id_pipeline, accessToken) => dispatch(fetchPipelineProducts(id_pipeline, accessToken))
 	}
 }
 

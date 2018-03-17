@@ -2,6 +2,7 @@ import { FETCH_USERS_SUCCESS } from '../constants'
 import { url } from '../lib/server'
 import { saveSessionForPersistance } from './session'
 import { setLoading, setSuccess, setFailed } from './processor'
+import { login } from './login'
 
 export const fetchUsers = accessToken => {
 	return async dispatch => {
@@ -80,6 +81,60 @@ export const postAvatar = (id, avatar, accessToken) => {
 	}
 }
 
+export const postCover = (id, cover, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_POST_COVER'))
+		try {
+			const responseUploadCover = await fetch(`${url}/upload-cover-user`, {
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify({ uri: cover })
+			})
+			const dataUploadCover = await responseUploadCover.json()
+			const responseUsers = await fetch(`${url}/users/${id}`, {
+				method: 'PATCH',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify({
+					cover: `${url}/files/users/covers/${dataUploadCover.id}`
+				})
+			})
+			const dataUsers = await responseUsers.json()
+			const responseUserWithEmail = await fetch(
+				`${url}/users?email=${dataUsers.email}`,
+				{
+					method: 'GET',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+						Authorization: accessToken
+					}
+				}
+			)
+			const dataUserWithEmail = await responseUserWithEmail.json()
+			await dispatch(
+				saveSessionForPersistance({ ...dataUserWithEmail.data[0], accessToken })
+			)
+			await dispatch(
+				setSuccess(true, 'SUCCESS_POST_COVER', {
+					...dataUserWithEmail.data[0]
+				})
+			)
+			await dispatch(setLoading(false, 'LOADING_POST_COVER'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_POST_COVER', e))
+			dispatch(setLoading(false, 'LOADING_POST_COVER'))
+		}
+	}
+}
+
 export const updateUser = (id, item, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'UPDATE_USER'))
@@ -115,3 +170,26 @@ const fetchUsersSuccess = data => ({
 	type: FETCH_USERS_SUCCESS,
 	payload: data
 })
+
+export const updatePassword = (id, email, password, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_UPDATE_PASSWORD'))
+		try {
+			await fetch(`${url}/users/${id}`, {
+				method: 'PATCH',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify({password})
+			})
+			await dispatch(login(email, password))
+			await dispatch(setSuccess(true, 'SUCCESS_UPDATE_PASSWORD'))
+			await dispatch(setLoading(false, 'LOADING_UPDATE_PASSWORD'))
+		} catch (e) {
+			await dispatch(setFailed(true, 'FAILED_UPDATE_PASSWORD', e))
+			await dispatch(setLoading(false, 'LOADING_UPDATE_PASSWORD'))
+		}
+	}
+}

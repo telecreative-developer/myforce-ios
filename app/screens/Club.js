@@ -63,8 +63,8 @@ class Club extends Component {
 				name={item.users[0].first_name}
 				company={item.customers[0].name}
 				pipeline={item.pipelines[0].pipeline}
-				avatar={item.users[0].avatar}
-				step={item.pipelines[0].step}
+				avatar={''}
+				step={item.pipelines[0].step-1}
 			/>
 		</TouchableOpacity>
 	)
@@ -80,15 +80,21 @@ class Club extends Component {
 			<Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15 }}>
 				{index + 1}
 			</Text>
-			{item.users[0].avatar === '' || item.users[0].avatar === null ? (
-				<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
+			{item.users[0] !== undefined ? (
+				item.users[0].avatar ? (
+					<Thumbnail small source={{ uri: item.users[0].avatar }} style={{ marginRight: 10 }} />
+				) : (
+					<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
+				)
 			) : (
-				<Thumbnail small source={{ uri: item.users[0].avatar }} style={{ marginRight: 10 }} />
+				<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
 			)}
 			<View>
-				<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${
-					item.users[0].first_name
-				} ${item.users[0].last_name}`}</Text>
+				{item.users[0] !== undefined ? (
+					<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${item.users[0].first_name} ${item.users[0].last_name}`}</Text>
+				) : (
+					<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
+				)}
 				<Text style={{ fontSize: 14 }}>
 					{JSON.stringify(item.point)} Points
 				</Text>

@@ -6,7 +6,7 @@ import { sessionPersistance } from './session'
 import { products } from './products'
 import { subproducts } from './subproducts'
 import { users } from './users'
-import { pipelines, pipelinesWithUserId } from './pipelines'
+import { pipelines, pipelinesWithUserId, pipelineProducts } from './pipelines'
 import { pics, picsCustomers, resultPics } from './pics'
 import { questionWithStep } from './questions'
 import { sellingProcessWithStep } from './sellingprocess'
@@ -15,6 +15,7 @@ import { cartProducts } from './cart'
 import { target } from './targets'
 import { events } from './events'
 import { points } from './points'
+import { checks } from './checks'
 
 const config = {
 	key: 'root',
@@ -27,6 +28,8 @@ const reducers = persistCombineReducers(config, {
 	loading,
 	success,
 	failed,
+	checks,
+	pipelineProducts,
 	navigate,
 	activePageHome,
 	customers,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
 	StyleSheet,
-	TouchableOpacity,
+	TouchableHighlight,
 	Dimensions,
 	ImageBackground,
 	View

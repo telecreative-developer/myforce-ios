@@ -4,7 +4,8 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	View,
-	Image
+	Image,
+	Alert
 } from 'react-native'
 import {
 	Container,
@@ -18,25 +19,89 @@ import {
 	Form,
 	Label,
 	Input,
-	Item
+	Item,
+	Spinner
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import image from '../assets/images/password.png'
+import { connect } from 'react-redux'
+import { updatePassword } from '../actions/users'
 
 const { width, height } = Dimensions.get('window')
 
-export default class ChangePassword extends Component {
+class ChangePassword extends Component {
+	constructor() {
+		super()
+
+		this.state = {
+			password: '',
+			confirmPassword: ''
+		}
+	}
+
+	componentWillReceiveProps(props) {
+		if (
+			props.loading.condition === false &&
+			props.loading.process_on === 'LOADING_UPDATE_PASSWORD' &&
+			props.failed.condition === true &&
+			props.failed.process_on === 'FAILED_UPDATE_PASSWORD'
+		) {
+			Alert.alert('Failed update password')
+		} else if (
+			props.loading.condition === false &&
+			props.loading.process_on === 'LOADING_UPDATE_PASSWORD' &&
+			props.success.condition === true &&
+			props.success.process_on === 'SUCCESS_UPDATE_PASSWORD'
+		) {
+			props.navigation.goBack()
+			Alert.alert('Password updated', 'Your password has been updated')
+		}
+	}
+
+	renderButtons() {
+		const { password, confirmPassword } = this.state
+		const { sessionPersistance } = this.props
+		if(password !== '' && confirmPassword !== '') {
+			if(password === confirmPassword) {
+				return (
+					this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_UPDATE_PASSWORD' ? (
+						<Button primary style={styles.button}>
+							<Spinner color='#FFFFFF' />
+						</Button>
+					) : (
+						<Button primary style={styles.button} onPress={() => this.props.updatePassword(sessionPersistance.id, sessionPersistance.email, password, sessionPersistance.accessToken)}>
+							<LinearGradient
+								colors={['#20E6CD', '#2D38F9']}
+								style={styles.linearGradient}>
+								<Text style={styles.buttonText}>CHANGE PASSWORD</Text>
+							</LinearGradient>
+						</Button>
+					)
+				)
+			}else{
+				return (
+					<Button bordered>
+						<Text style={styles.buttonText}>CHANGE PASSWORD</Text>
+					</Button>
+				)
+			}
+		}else {
+			return (
+				<Button bordered>
+					<Text style={styles.buttonText}>CHANGE PASSWORD</Text>
+				</Button>
+			)
+		}
+	}
+
 	render() {
 		const { navigate, goBack } = this.props.navigation
 		return (
 			<Container style={styles.container}>
 				<Header style={styles.header}>
 					<Left>
-						<Button
-							transparent
-							onPress={() => goBack()}
-							style={{ paddingLeft: 0 }}>
+						<Button transparent onPress={() => goBack()} style={{paddingLeft: 0}}>
 							<Text style={styles.cancel}>Cancel</Text>
 						</Button>
 					</Left>
@@ -50,40 +115,41 @@ export default class ChangePassword extends Component {
 				</View>
 				<View style={styles.paragraphView}>
 					<Text style={styles.paragraph}>
-						Hey, Kevin! Please enter your new password
+						Please enter your new password
 					</Text>
 				</View>
 				<Content scrollEnabled={false}>
 					<View style={styles.profileInfoView}>
 						<Form>
 							<Item stackedLabel style={styles.itemForm}>
-								<Label style={styles.labelText}>Current Password</Label>
-								<Input secureTextEntry />
-							</Item>
-							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.labelText}>New Password</Label>
-								<Input secureTextEntry />
+								<Input value={this.state.password} onChangeText={(password) => this.setState({password})} secureTextEntry />
 							</Item>
 							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.labelText}>Verify Password</Label>
-								<Input secureTextEntry />
+								<Input value={this.state.confirmPassword} onChangeText={(confirmPassword) => this.setState({confirmPassword})} secureTextEntry />
 							</Item>
 						</Form>
 					</View>
 					<View style={styles.buttonView}>
-						<Button primary style={styles.button}>
-							<LinearGradient
-								colors={['#20E6CD', '#2D38F9']}
-								style={styles.linearGradient}>
-								<Text style={styles.buttonText}>CHANGE PASSWORD</Text>
-							</LinearGradient>
-						</Button>
+						{this.renderButtons()}
 					</View>
 				</Content>
 			</Container>
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+	loading: state.loading,
+	success: state.success,
+	failed: state.failed,
+	sessionPersistance: state.sessionPersistance
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	updatePassword: (id, email, password, accessToken) => dispatch(updatePassword(id, email, password, accessToken))
+})
 
 const styles = StyleSheet.create({
 	container: {
@@ -152,3 +218,5 @@ const styles = StyleSheet.create({
 		marginTop: height / 20
 	}
 })
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, FlatList, View } from 'react-native'
+import { StyleSheet, Alert, Dimensions, FlatList, View } from 'react-native'
 import {
 	Header,
 	Left,
@@ -11,10 +11,13 @@ import {
 	Container,
 	Thumbnail,
 	List,
-	ListItem
+	ListItem,
+	H1,
+	SwipeRow,
+	Icon,
+	Badge
 } from 'native-base'
-import Icon from 'react-native-vector-icons/Ionicons'
-import Timeline from 'react-native-timeline-listview'
+import moment from 'moment'
 import { connect } from 'react-redux'
 import { fetchEvents } from '../actions/events'
 import { setNavigate } from '../actions/processor'
@@ -30,6 +33,43 @@ class Calendar extends Component {
 	handleBack() {
 		this.props.setNavigate('', '')
 		this.props.navigation.goBack()
+	}
+
+	handleDeleteEvent(id_event) {
+		Alert.alert(
+			'Delete Event',
+			'Are you sure want to delete this event?',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'OK', onPress: () => this.props.deleteEvent(id_event)},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	renderEvents({item}) {
+		return (
+			<SwipeRow
+				leftOpenValue={75}
+				rightOpenValue={-75}
+				disableRightSwipe={true}
+				body={
+					<Body>
+						<View style={{flexDirection: 'column', alignItems: 'flex-start', marginBottom: 30}}>
+							<Text style={{fontWeight: 'bold', fontSize: 20}}>{moment(item.time).format('LT')}</Text>
+							<Text note style={{fontWeight: 'bold', fontSize: 15}}>{moment(item.time).format('LL')}</Text>
+						</View>
+						<Text style={{fontSize: 30}}>{item.title}</Text>
+						<Text note style={{fontSize: 25}}>{item.description}</Text>
+					</Body>
+				}
+				right={
+					<Button danger onPress={() => this.handleDeleteEvent(item.id_event)}>
+						<Icon active name="trash" />
+					</Button>
+				}
+			/>
+		)
 	}
 
 	render() {
@@ -57,20 +97,10 @@ class Calendar extends Component {
 					</Right>
 				</Header>
 				<Content style={styles.content}>
-					<Timeline
-						timeStyle={{
-							textAlign: 'center',
-							backgroundColor: '#ff9797',
-							color: 'white',
-							fontWeight: 'bold',
-							padding: 5,
-							borderRadius: 100
-						}}
-						descriptionStyle={{ color: 'gray' }}
-						timeContainerStyle={{ minWidth: 150 }}
-						options={{ removeClippedSubviews: false }}
-						innerCircle={'dot'}
-						data={this.props.events.reverse()}
+					<FlatList
+						data={this.props.events}
+						keyExtractor={(item, index) => index}
+						renderItem={this.renderEvents}
 					/>
 				</Content>
 			</Container>
@@ -97,13 +127,6 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		fontWeight: 'bold'
-	},
-	content: {
-		paddingRight: width / 6,
-		paddingLeft: width / 6,
-		paddingTop: height / 58,
-		width: '100%',
-		backgroundColor: 'transparent'
 	},
 	listItem: {
 		padding: 15

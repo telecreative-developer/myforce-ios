@@ -1,6 +1,7 @@
 import {
 	FETCH_PIPELINES_SUCCESS,
-	FETCH_PIPELINES_WITH_USER_ID_SUCCESS
+	FETCH_PIPELINES_WITH_USER_ID_SUCCESS,
+	FETCH_PIPELINE_PRODUCTS_SUCCESS
 } from '../constants'
 import { url } from '../lib/server'
 import moment from 'moment'
@@ -65,6 +66,11 @@ export const fetchPipelines = (id_customer, accessToken) => {
 	}
 }
 
+export const fetchPipelinesSuccess = data => ({
+	type: FETCH_PIPELINES_SUCCESS,
+	payload: data
+})
+
 export const fetchPipelinesWithUserId = (id, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_FETCH_PIPELINES_WITH_USER_ID'))
@@ -91,12 +97,35 @@ export const fetchPipelinesWithUserId = (id, accessToken) => {
 	}
 }
 
-export const fetchPipelinesSuccess = data => ({
-	type: FETCH_PIPELINES_SUCCESS,
+export const fetchPipelinesWithUserIdSuccess = data => ({
+	type: FETCH_PIPELINES_WITH_USER_ID_SUCCESS,
 	payload: data
 })
 
-export const fetchPipelinesWithUserIdSuccess = data => ({
-	type: FETCH_PIPELINES_WITH_USER_ID_SUCCESS,
+export const fetchPipelineProducts = (id_pipeline, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_FETCH_PIPELINE_PRODUCTS'))
+		try {
+			const response = await fetch(`${url}/pipeline-products?id_pipeline=${id_pipeline}&$sort[createdAt]=-1`, {
+				method: 'GET',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				}
+			})
+			const data = await response.json()
+			await dispatch(fetchPipelineProductsSuccess(data.data))
+			await dispatch(setSuccess(false, 'SUCCESS_FETCH_PIPELINE_PRODUCTS'))
+			await dispatch(setLoading(false, 'LOADING_FETCH_PIPELINE_PRODUCTS'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_FETCH_PIPELINE_PRODUCTS', e))
+			dispatch(setLoading(false, 'LOADING_FETCH_PIPELINE_PRODUCTS'))
+		}
+	}
+}
+
+export const fetchPipelineProductsSuccess = data => ({
+	type: FETCH_PIPELINE_PRODUCTS_SUCCESS,
 	payload: data
 })

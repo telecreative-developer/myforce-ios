@@ -41,7 +41,7 @@ import defaultAvatar from '../assets/images/default-avatar.png'
 import { connect } from 'react-redux'
 import { fetchCustomers, searchCustomersPlace } from '../actions/customers'
 import { setNavigate } from '../actions/processor'
-import { checkIn } from '../actions/checks'
+import { checkIn, checkOut, fetchDataCheckIn } from '../actions/checks'
 import image from '../assets/images/add-user.png'
 import ornament from '../assets/images/ornament.png'
 
@@ -119,6 +119,7 @@ class Activity extends PureComponent {
 
 	componentWillMount() {
 		this.props.fetchCustomers(this.props.sessionPersistance.accessToken)
+		this.props.fetchDataCheckIn(this.props.sessionPersistance.id_check, this.props.sessionPersistance.accessToken)
 		navigator.geolocation.getCurrentPosition(
 			position => {
 				this.setState({
@@ -175,6 +176,39 @@ class Activity extends PureComponent {
 		</ListItem>
 	)
 
+	handleCheckOut() {
+		Alert.alert(
+			'Check Out',
+			'Are you sure to check out?',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Check Out', onPress: () => this.props.checkOut(this.props.sessionPersistance.id_check, this.props.sessionPersistance.id, this.props.sessionPersistance.accessToken)},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	handleCheckIn() {
+		Alert.alert(
+			'Check In',
+			'Are you sure to check in?',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Check In', onPress: () => this.props.checkIn(
+					{
+						id: this.props.sessionPersistance.id,
+						id_customer: this.state.dataCustomers.id_customer,
+						longitude: this.state.dataCustomers.longitude,
+						latitude: this.state.dataCustomers.latitude
+					},
+					this.state.dataCustomers,
+					this.props.sessionPersistance.accessToken
+				)},
+			],
+			{ cancelable: false }
+		)
+	}
+
 	render() {
 		const animatedStyle = { height: this.animatedValue }
 		const animatedStyleDetail = { height: this.animatedValueDetail }
@@ -227,18 +261,7 @@ class Activity extends PureComponent {
 						) : (
 							<TouchableOpacity
 								style={styles.centerButton}
-								onPress={() =>
-									this.props.checkIn(
-										{
-											id: this.props.sessionPersistance.id,
-											id_customer: this.state.dataCustomers.id_customer,
-											longitude: this.state.dataCustomers.longitude,
-											latitude: this.state.dataCustomers.latitude
-										},
-										this.state.dataCustomers,
-										this.props.sessionPersistance.accessToken
-									)
-								}>
+								onPress={() => this.handleCheckIn()}>
 								<LinearGradient
 									colors={['#20E6CD', '#2D38F9']}
 									style={styles.linearGradient}>
@@ -247,59 +270,87 @@ class Activity extends PureComponent {
 							</TouchableOpacity>
 						)}
 					</Animated.View>
-					<Animated.View style={[styles.footer, animatedStyle]}>
-						{this.state.showBoxContent ? (
-							<Icon
-								name="ios-arrow-down"
-								size={35}
-								style={styles.arrow}
-								onPress={() => this.handleCloseBoxContent()}
-							/>
-						) : (
-							<Icon
-								name="ios-arrow-up"
-								size={35}
-								style={styles.arrow}
-								onPress={() => this.handleShowBoxContent()}
-							/>
-						)}
-						<Text style={styles.find}>Lets Find Your Customer</Text>
-						<View style={styles.searchView}>
-							<Item style={styles.searchForm} rounded>
-								<Input
-									placeholder="Search"
-									onFocus={() => this.handleShowBoxContent()}
-									onChangeText={value => this.handleTypingSearch(value)}
+					{this.props.sessionPersistance.id_check !== null ? (
+						<Animated.View
+							style={[styles.footerConfirmation, {height: 400}]}>
+							<Text style={styles.addCustomer}>You're Check In</Text>
+							<Text style={styles.customerName}>{this.props.checks.customers[0].name}</Text>
+							<Text style={styles.customerAddress}>{this.props.checks.customers[0].address}</Text>
+							{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_CHECK_OUT' ? (
+								<TouchableOpacity style={styles.centerButton}>
+									<LinearGradient
+										colors={['#20E6CD', '#2D38F9']}
+										style={styles.linearGradient}>
+										<Text style={styles.buttonText}>LOADING...</Text>
+									</LinearGradient>
+								</TouchableOpacity>
+							) : (
+								<TouchableOpacity
+									style={styles.centerButton}
+									onPress={() => this.handleCheckOut()}>
+									<LinearGradient
+										colors={['#20E6CD', '#2D38F9']}
+										style={styles.linearGradient}>
+										<Text style={styles.buttonText}>CHECK OUT</Text>
+									</LinearGradient>
+								</TouchableOpacity>
+							)}
+						</Animated.View>
+					) : (
+						<Animated.View style={[styles.footer, animatedStyle]}>
+							{this.state.showBoxContent ? (
+								<Icon
+									name="ios-arrow-down"
+									size={35}
+									style={styles.arrow}
+									onPress={() => this.handleCloseBoxContent()}
 								/>
-								<Icon size={25} name="ios-search" />
-							</Item>
-						</View>
-						{this.state.value === '' ? (
-							<Image source={ornament} style={styles.ornament} />
-						) : (
-							<View
-								style={{ width: width / 1.5, marginTop: 15, height: height }}>
-								{this.props.resultCustomersPlace.length === 0 ? (
-									<View>
-										<View style={{ alignItems: 'center', marginVertical: 100 }}>
-											<Text>Customer Not Found</Text>
-										</View>
-										<Button
-											block
-											onPress={() => this.props.setNavigate('AddCustomer')}>
-											<Text>CREATE NEW CUSTOMER</Text>
-										</Button>
-									</View>
-								) : (
-									<FlatList
-										data={this.props.resultCustomersPlace}
-										keyExtractor={this.key}
-										renderItem={this.renderItemsCustomer}
+							) : (
+								<Icon
+									name="ios-arrow-up"
+									size={35}
+									style={styles.arrow}
+									onPress={() => this.handleShowBoxContent()}
+								/>
+							)}
+							<Text style={styles.find}>Lets Find Your Customer</Text>
+							<View style={styles.searchView}>
+								<Item style={styles.searchForm} rounded>
+									<Input
+										placeholder="Search"
+										onFocus={() => this.handleShowBoxContent()}
+										onChangeText={value => this.handleTypingSearch(value)}
 									/>
-								)}
+									<Icon size={25} name="ios-search" />
+								</Item>
 							</View>
-						)}
-					</Animated.View>
+							{this.state.value === '' ? (
+								<Image source={ornament} style={styles.ornament} />
+							) : (
+								<View
+									style={{ width: width / 1.5, marginTop: 15, height: height }}>
+									{this.props.resultCustomersPlace.length === 0 ? (
+										<View>
+											<View style={{ alignItems: 'center', marginVertical: 100 }}>
+												<Text>Customer Not Found</Text>
+											</View>
+											<Button
+												block
+												onPress={() => this.props.setNavigate('AddCustomer')}>
+												<Text>CREATE NEW CUSTOMER</Text>
+											</Button>
+										</View>
+									) : (
+										<FlatList
+											data={this.props.resultCustomersPlace}
+											keyExtractor={this.key}
+											renderItem={this.renderItemsCustomer}
+										/>
+									)}
+								</View>
+							)}
+						</Animated.View>
+					)}
 				</View>
 			</Container>
 		)
@@ -311,15 +362,17 @@ const mapStateToProps = state => ({
 	loading: state.loading,
 	success: state.success,
 	sessionPersistance: state.sessionPersistance,
-	resultCustomersPlace: state.resultCustomersPlace
+	resultCustomersPlace: state.resultCustomersPlace,
+	checks: state.checks
 })
 
 const mapDispatchToProps = dispatch => ({
 	checkIn: (data, customers, accessToken) => dispatch(checkIn(data, customers, accessToken)),
+	checkOut: (id_check, id, accessToken) => dispatch(checkOut(id_check, id, accessToken)),
 	fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-	searchCustomersPlace: (input, accessToken) =>
-		dispatch(searchCustomersPlace(input, accessToken))
+	fetchDataCheckIn: (id_check, accessToken) => dispatch(fetchDataCheckIn(id_check, accessToken)),
+	searchCustomersPlace: (input, accessToken) => dispatch(searchCustomersPlace(input, accessToken))
 })
 
 const styles = StyleSheet.create({
