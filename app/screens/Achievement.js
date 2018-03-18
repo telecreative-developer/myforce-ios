@@ -279,18 +279,15 @@ class Achievements extends Component {
 												data.step === 7
 										).length / this.props.target.target_month
 									) * 100
-								).toFixed(2)}{' '}
-								%
+								).toFixed(2)} %
 							</Text>
 							<Text style={styles.chartTargetUnder}>
-								{
-									this.props.pipelinesWithUserId.filter(
+								{this.props.pipelinesWithUserId.filter(
 										data =>
 											data.month === parseInt(moment().format('M')) &&
 											data.step === 7
 									).length
-								}{' '}
-								of {this.props.target.target_month} unit targets
+								} of {this.props.target.target_month} unit targets
 							</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar
@@ -322,8 +319,7 @@ class Achievements extends Component {
 														data.step === 7
 												).length / this.props.target.target_year
 											) * 100
-										).toFixed(2)}{' '}
-										%
+										).toFixed(2)} %
 									</Text>
 								</View>
 							</AnimatedBar>
@@ -334,8 +330,7 @@ class Achievements extends Component {
 											data.year === parseInt(moment().format('YYYY')) &&
 											data.step === 7
 									).length
-								}{' '}
-								of {this.props.target.target_year} unit targets
+								} of {this.props.target.target_year} unit targets
 							</Text>
 						</Col>
 					</Grid>
@@ -348,9 +343,7 @@ class Achievements extends Component {
 										data =>
 											data.month === parseInt(moment().format('M')) &&
 											data.step === 7
-									).length
-								}
-							/>
+									).length} />
 						</Col>
 						<Col style={styles.rightCharts}>
 							<Text style={styles.chartTitle}>Revenue ORS</Text>
@@ -364,8 +357,7 @@ class Achievements extends Component {
 												data.step === 7
 										).length / this.props.target.target_month
 									) * 100
-								).toFixed(2)}{' '}
-								%
+								).toFixed(2)} %
 							</Text>
 							<Text style={styles.chartTarget}>
 								Rp. {this.resultCompleteRevenueMonth()} Mio of
@@ -403,8 +395,7 @@ class Achievements extends Component {
 														data.step === 7
 												).length / this.props.target.target_year
 											) * 100
-										).toFixed(2)}{' '}
-										%
+										).toFixed(2)} %
 									</Text>
 								</View>
 							</AnimatedBar>
