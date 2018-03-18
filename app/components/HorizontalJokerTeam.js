@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		color: '#ffffff',
-		fontSize: 10,
+		fontSize: 12,
 		maxWidth: '90%'
 	},
 	cardHeader: {

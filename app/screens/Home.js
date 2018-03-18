@@ -4,6 +4,7 @@ import {
 	Dimensions,
 	View,
 	TouchableOpacity,
+	TouchableHighlight,
 	FlatList
 } from 'react-native'
 import {
@@ -35,6 +36,7 @@ import CustomerList from './CustomerList'
 import Activity from './Activity'
 import Product from './Product'
 import Club from './Club'
+import defaultAvatar from '../assets/images/default-avatar.png'
 
 const { width, height } = Dimensions.get('window')
 
@@ -153,7 +155,23 @@ class Home extends Component {
 		return (
 			<Container>
 				<Header style={styles.header}>
-					<Left />
+					<Left>
+						{this.props.sessionPersistance.avatar === '' ||
+						this.props.sessionPersistance.avatar === null ? (
+							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.props.navigation.navigate('Profile')}>
+								<Thumbnail small rounded source={defaultAvatar} />
+							</TouchableHighlight>
+						) : (
+							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.props.navigation.navigate('Profile')}>
+								<Thumbnail
+									rounded
+									small
+									source={{ uri: this.props.sessionPersistance.avatar }}
+									onPress={() => this.props.navigation.navigate('Profile')}
+								/>
+							</TouchableHighlight>
+						)}
+					</Left>
 					<Body>
 						<Text style={styles.title}>{title}</Text>
 					</Body>
@@ -164,13 +182,9 @@ class Home extends Component {
 					</Right>
 				</Header>
 				{this.props.sessionPersistance.id_check !== null && (
-					<Header style={styles.headerCheckIn} hasTabs>
-						<Left />
-						<Body>
-							<Text>Check In</Text>
-						</Body>
-						<Right />
-					</Header>
+					<View style={styles.headerCheckIn}>
+						<Text style={styles.titleCheckIn}>You're Checked In</Text>
+					</View>
 				)}
 				{this.renderContent()}
 				<Footer style={styles.footerWrap}>
@@ -333,8 +347,10 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 	headerCheckIn: {
-		height: 50,
-		backgroundColor: '#FFAB00'
+		height: 30,
+		backgroundColor: '#FFAB00',
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	footerText: {
 		fontSize: 10,

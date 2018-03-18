@@ -200,18 +200,18 @@ class Profile extends PureComponent {
 									</Button>
 								) : (
 									<Button success onPress={() => this.handleSendCover()}>
-										<Text style={{color: '#FFFFFF'}}>Save Cover</Text>
+										<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Save Cover</Text>
 									</Button>
 								)}
 							</View>
 							<View style={{margin: 5, marginTop: 22}}>
 								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_COVER' ? (
 									<Button danger disabled>
-										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+										<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Cancel Change</Text>
 									</Button>
 								) : (
 									<Button danger onPress={() => this.setState({isVisibleModalCover: false, hasChangeCover: false, coverBase64: ''})}>
-										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+										<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Cancel Change</Text>
 									</Button>
 								)}
 							</View>
@@ -220,12 +220,12 @@ class Profile extends PureComponent {
 						<View style={{flexDirection: 'row'}}>
 							<View style={{margin: 5, marginTop: 22}}>
 								<Button block onPress={() => this.handleChangeCover('camera')}>
-									<Text style={{color: '#FFFFFF'}}>Open Camera</Text>
+									<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Open Camera</Text>
 								</Button>
 							</View>
 							<View style={{margin: 5, marginTop: 22}}>
 								<Button block onPress={() => this.handleChangeCover('library')}>
-									<Text style={{color: '#FFFFFF'}}>Open Gallery</Text>
+									<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Open Gallery</Text>
 								</Button>
 							</View>
 						</View>
@@ -255,18 +255,18 @@ class Profile extends PureComponent {
 									</Button>
 								) : (
 									<Button success onPress={() => this.handleSendAvatar()}>
-										<Text style={{color: '#FFFFFF'}}>Save Avatar</Text>
+										<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Save Avatar</Text>
 									</Button>
 								)}
 							</View>
 							<View style={{margin: 5, marginTop: 22}}>
 								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_AVATAR' ? (
 									<Button success disabled>
-										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+										<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Cancel Change</Text>
 									</Button>
 								) : (
 									<Button danger onPress={() => this.setState({isVisibleModalPhotoProfile: false, hasChangeAvatar: false, avatarBase64: ''})}>
-										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+										<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Cancel Change</Text>
 									</Button>
 								)}
 							</View>
@@ -275,12 +275,12 @@ class Profile extends PureComponent {
 						<View style={{flexDirection: 'row'}}>
 							<View style={{margin: 5, marginTop: 22}}>
 								<Button onPress={() => this.handleChangeProfile('camera')}>
-									<Text style={{color: '#FFFFFF'}}>Open Camera</Text>
+									<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Open Camera</Text>
 								</Button>
 							</View>
 							<View style={{margin: 5, marginTop: 22}}>
 								<Button onPress={() => this.handleChangeProfile('library')}>
-									<Text style={{color: '#FFFFFF'}}>Open Gallery</Text>
+									<Text style={{color: '#FFFFFF', paddingHorizontal: 15}}>Open Gallery</Text>
 								</Button>
 							</View>
 						</View>
