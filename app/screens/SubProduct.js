@@ -18,14 +18,21 @@ import {
 	Button,
 	TouchableOpacity
 } from 'native-base'
+import Modal from 'react-native-modal'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import { fetchSubproducts } from '../actions/subproducts'
 import { setNavigate } from '../actions/processor'
 
 class SubProduct extends Component {
-	state = {
-		loading: false
+	constructor() {
+		super()
+
+		this.state = {
+			loading: false,
+			isModalZoomVisible: false,
+			dataZoom: {}
+		}
 	}
 
 	async componentDidMount() {
@@ -37,6 +44,10 @@ class SubProduct extends Component {
 		await this.setState({ loading: false })
 	}
 
+	handleZoomProduct(item) {
+		this.setState({isModalZoomVisible: true, dataZoom: item})
+	}
+
 	renderItem = ({ item }) => (
 		<ImageBackground
 			source={{ uri: item.picture }}
@@ -44,15 +55,12 @@ class SubProduct extends Component {
 			style={styles.item}>
 			<TouchableHighlight
 				underlayColor={'transparent'}
-				onPress={() =>
-					this.props.navigation.navigate('PDFProductViewer', {
-						file: item.file,
-						title: item.subproduct
-					})
-				}
 				style={{ flex: 1, justifyContent: 'center' }}>
 				<Text style={styles.itemText}>{item.subproduct}</Text>
 			</TouchableHighlight>
+			<Button onPress={() => this.handleZoomProduct(item)}>
+				<Text>View Detail</Text>
+			</Button>
 		</ImageBackground>
 	)
 
@@ -72,10 +80,24 @@ class SubProduct extends Component {
 		await this.setState({ loading: false })
 	}
 
+	renderModalZoom() {
+		return (
+			<Modal
+				onBackdropPress={() => this.setState({isModalZoomVisible: false})}
+				isVisible={this.state.isModalZoomVisible}>
+				<View style={styles.modalContent}>
+					<Text style={{marginBottom: 20, fontWeight: 'bold'}}>{this.state.dataZoom.subproduct}</Text>
+					<Image style={{width: 200, height: 200}} source={{uri: this.state.dataZoom.picture}} />
+				</View>
+			</Modal>
+		)
+	}
+
 	render() {
 		const { navigate, goBack } = this.props.navigation
 		return (
 			<Container>
+				{this.renderModalZoom()}
 				<Header style={styles.header}>
 					<Left style={{ flexDirection: 'row' }}>
 						<Button transparent onPress={() => this.handleBackButton()}>
@@ -90,11 +112,7 @@ class SubProduct extends Component {
 							{this.props.navigation.state.params.product}
 						</Text>
 					</Body>
-					<Right>
-						{/* <TouchableHighlight onPress={() => this.props.setNavigate({link: 'Notifications'})} underlayColor={'transparent'}>
-							<Icon name="ios-notifications" size={25} />
-						</TouchableHighlight> */}
-					</Right>
+					<Right />
 				</Header>
 				<FlatList
 					refreshing={this.state.loading}
@@ -126,6 +144,14 @@ const styles = StyleSheet.create({
 		flex: 1,
 		margin: 2
 	},
+	modalContent: {
+    backgroundColor: '#FFFFFF',
+		padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)'
+  },
 	item: {
 		backgroundColor: '#000000',
 		alignItems: 'center',

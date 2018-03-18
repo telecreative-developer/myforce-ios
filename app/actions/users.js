@@ -74,6 +74,7 @@ export const postAvatar = (id, avatar, accessToken) => {
 				})
 			)
 			await dispatch(setLoading(false, 'LOADING_POST_AVATAR'))
+			await dispatch(setSuccess(false, 'SUCCESS_POST_AVATAR'))
 		} catch (e) {
 			dispatch(setFailed(true, 'FAILED_POST_AVATAR', e))
 			dispatch(setLoading(false, 'LOADING_POST_AVATAR'))
@@ -128,6 +129,7 @@ export const postCover = (id, cover, accessToken) => {
 				})
 			)
 			await dispatch(setLoading(false, 'LOADING_POST_COVER'))
+			await dispatch(setSuccess(false, 'SUCCESS_POST_COVER'))
 		} catch (e) {
 			dispatch(setFailed(true, 'FAILED_POST_COVER', e))
 			dispatch(setLoading(false, 'LOADING_POST_COVER'))

@@ -285,15 +285,26 @@ class Activity extends PureComponent {
 									</LinearGradient>
 								</TouchableOpacity>
 							) : (
-								<TouchableOpacity
-									style={styles.centerButton}
-									onPress={() => this.handleCheckOut()}>
-									<LinearGradient
-										colors={['#20E6CD', '#2D38F9']}
-										style={styles.linearGradient}>
-										<Text style={styles.buttonText}>CHECK OUT</Text>
-									</LinearGradient>
-								</TouchableOpacity>
+								<View>
+									<TouchableOpacity
+										style={styles.centerButton}
+										onPress={() => this.handleCheckOut()}>
+										<LinearGradient
+											colors={['#20E6CD', '#2D38F9']}
+											style={styles.linearGradient}>
+											<Text style={styles.buttonText}>CHECK OUT</Text>
+										</LinearGradient>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={styles.centerButton}
+										onPress={() => this.props.setNavigate('CustomerProfile', this.props.checks.customers[0])}>
+										<LinearGradient
+											colors={['#20E6CD', '#2D38F9']}
+											style={styles.linearGradient}>
+											<Text style={styles.buttonText}>VIEW CUSTOMER</Text>
+										</LinearGradient>
+									</TouchableOpacity>
+								</View>
 							)}
 						</Animated.View>
 					) : (
