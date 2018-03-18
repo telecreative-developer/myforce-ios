@@ -54,13 +54,12 @@ class Calendar extends Component {
 				rightOpenValue={-75}
 				disableRightSwipe={true}
 				body={
-					<Body>
-						<View style={{flexDirection: 'column', alignItems: 'flex-start', marginBottom: 30}}>
-							<Text style={{fontWeight: 'bold', fontSize: 20}}>{moment(item.time).format('LT')}</Text>
-							<Text note style={{fontWeight: 'bold', fontSize: 15}}>{moment(item.time).format('LL')}</Text>
-						</View>
+					<Body style={{paddingLeft:10}}>
 						<Text style={{fontSize: 30}}>{item.title}</Text>
 						<Text note style={{fontSize: 25}}>{item.description}</Text>
+						<View style={{flexDirection: 'column', alignItems: 'flex-start', marginTop: 5}}>
+							<Text note style={{fontWeight: 'bold', fontSize: 18}}>{moment(item.time).format('LL')}, {moment(item.time).format('LT')}</Text>
+						</View>
 					</Body>
 				}
 				right={

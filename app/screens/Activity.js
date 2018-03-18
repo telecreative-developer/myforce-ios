@@ -285,7 +285,7 @@ class Activity extends PureComponent {
 									</LinearGradient>
 								</TouchableOpacity>
 							) : (
-								<View>
+								<View style={{display: 'flex', flexDirection: 'row'}}>
 									<TouchableOpacity
 										style={styles.centerButton}
 										onPress={() => this.handleCheckOut()}>
@@ -296,7 +296,7 @@ class Activity extends PureComponent {
 										</LinearGradient>
 									</TouchableOpacity>
 									<TouchableOpacity
-										style={styles.centerButton}
+										style={styles.centerButtonViewCustomer}
 										onPress={() => this.props.setNavigate('CustomerProfile', this.props.checks.customers[0])}>
 										<LinearGradient
 											colors={['#20E6CD', '#2D38F9']}
@@ -342,14 +342,17 @@ class Activity extends PureComponent {
 									style={{ width: width / 1.5, marginTop: 15, height: height }}>
 									{this.props.resultCustomersPlace.length === 0 ? (
 										<View>
-											<View style={{ alignItems: 'center', marginVertical: 100 }}>
-												<Text>Customer Not Found</Text>
+											<View style={{ alignItems: 'center', marginTop: 50, marginBottom: 25 }}>
+												<Icon name="ios-sad-outline" size={80} color={'#808080'} />
+												<Text style={{color: '#808080'}}>Customer Not Found</Text>
 											</View>
-											<Button
-												block
-												onPress={() => this.props.setNavigate('AddCustomer')}>
-												<Text>CREATE NEW CUSTOMER</Text>
-											</Button>
+											<View style={{justifyContent: 'center', flexDirection: 'row'}}>
+												<Button
+													style={{backgroundColor: '#2D38F9'}}
+													onPress={() => this.props.setNavigate('AddCustomer')}>
+													<Text style={{fontWeight:'bold', fontSize: 14}}>CREATE NEW CUSTOMER</Text>
+												</Button>
+											</View>
 										</View>
 									) : (
 										<FlatList
@@ -496,10 +499,16 @@ const styles = StyleSheet.create({
 		height: 100,
 		borderRadius: 100
 	},
+	centerButtonViewCustomer: {
+		width: 100,
+		height: 100,
+		borderRadius: 100,
+		marginLeft: 20
+	},
 	buttonText: {
 		textAlign: 'center',
 		backgroundColor: 'transparent',
-		color: '#000000',
+		color: '#fff',
 		fontWeight: '800',
 		fontStyle: 'italic'
 	},

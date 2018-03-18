@@ -55,12 +55,14 @@ class SubProduct extends Component {
 			style={styles.item}>
 			<TouchableHighlight
 				underlayColor={'transparent'}
-				style={{ flex: 1, justifyContent: 'center' }}>
+				style={{justifyContent: 'center'}}>
 				<Text style={styles.itemText}>{item.subproduct}</Text>
 			</TouchableHighlight>
-			<Button onPress={() => this.handleZoomProduct(item)}>
-				<Text>View Detail</Text>
-			</Button>
+			<View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
+				<Button style={{backgroundColor: '#2D38F9'}} onPress={() => this.handleZoomProduct(item)}>
+					<Text style={{paddingHorizontal: 10, color: '#fff'}}>Zoom Image</Text>
+				</Button>
+			</View>
 		</ImageBackground>
 	)
 
@@ -167,7 +169,8 @@ const styles = StyleSheet.create({
 	itemText: {
 		color: '#fff',
 		textAlign: 'center',
-		backgroundColor: 'transparent'
+		backgroundColor: 'transparent',
+		fontWeight: 'bold'
 	},
 	header: {
 		height: 70

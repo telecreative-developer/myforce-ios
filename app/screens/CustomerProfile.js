@@ -264,7 +264,7 @@ class CustomerProfile extends Component {
 					<View style={styles.picDirection}>
 						<Icon name="md-contact" size={18} color={'#000'} />
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>
+							<Text key={index} style={styles.dataPic}>
 								{data.name}
 							</Text>
 						))}
@@ -359,7 +359,7 @@ class CustomerProfile extends Component {
 					</View>
 					<View style={styles.picDirection}>
 						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>
+							<Text key={index} style={styles.dataPic}>
 								{data.name}
 							</Text>
 						))}
@@ -569,13 +569,13 @@ class CustomerProfile extends Component {
 										</H3>
 									</TouchableHighlight>
 									<View style={styles.headerDirection}>
-										<Icon name="md-pin" size={15} />
+										<Icon name="md-pin" size={15} color={"#fff"}/>
 										<Text style={styles.dataAddress}>
 											{state.params.address}
 										</Text>
 									</View>
 									<Text
-										style={{ fontSize: 12, paddingTop: 15, paddingLeft: 20 }}>
+										style={{ fontSize: 16, color: '#fff', fontWeight: 'bold', paddingTop: 15, paddingLeft: 20 }}>
 										PIC List:
 									</Text>
 									<FlatList
@@ -755,7 +755,9 @@ const styles = StyleSheet.create({
 	headerDirectionTitle: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginLeft: 20
+		fontWeight: 'bold',
+		color: '#fff',
+		marginLeft: 20,
 	},
 	customerTotal: {
 		width: '100%',
@@ -778,7 +780,8 @@ const styles = StyleSheet.create({
 		marginBottom: '2%',
 		flex: 1,
 		display: 'flex',
-		flexDirection: 'row'
+		flexDirection: 'row',
+		marginTop: 10
 	},
 	addPipeline: {
 		marginTop: '1%',
@@ -806,7 +809,8 @@ const styles = StyleSheet.create({
 	},
 	dataPic: {
 		fontSize: 16,
-		marginLeft: 5
+		marginLeft: 5,
+		color: '#000'
 	},
 	dataAddress: {
 		fontSize: 14,
