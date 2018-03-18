@@ -123,8 +123,8 @@ class Achievements extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={15} />
-						<View style={styles.picDirection}>
+						<Icon name="md-contact" size={18} />
+						<View>
 							{item.pics.map((data, index) => (
 								<Text key={index} style={styles.data}>
 									{data.name}
@@ -156,8 +156,8 @@ class Achievements extends Component {
 							)}
 						</View>
 					</View>
-					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={15} />
+					<View>
+						<Icon name="md-contact" size={18} />
 						<View style={styles.picDirection}>
 							{item.pics.map((data, index) => (
 								<Text key={index} style={styles.data}>
@@ -191,8 +191,8 @@ class Achievements extends Component {
 						</View>
 					</View>
 					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={15} />
-						<View style={styles.picDirection}>
+						<Icon name="md-contact" size={18} />
+						<View>
 							{item.pics.map((data, index) => (
 								<Text key={index} style={styles.data}>
 									{data.name}
@@ -697,9 +697,9 @@ const styles = StyleSheet.create({
 		marginLeft: 3
 	},
 	data: {
-		fontSize: 12,
-		color: '#181818',
-		marginLeft: 5
+		fontSize: 16,
+		marginLeft: 5,
+		color: '#000'
 	}
 })
 
