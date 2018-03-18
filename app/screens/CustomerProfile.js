@@ -281,10 +281,10 @@ class CustomerProfile extends Component {
 									item.step_process
 								)
 							}
-							currentPosition={item.step - 1}
+							currentPosition={item.step}
 						/>
 					) : (
-						<PipelineProgress currentPosition={item.step - 1} />
+						<PipelineProgress currentPosition={item.step} />
 					)}
 				</View>
 				<View
