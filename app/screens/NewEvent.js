@@ -121,10 +121,7 @@ class NewEvent extends Component {
 					<Form>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Event Name</Label>
-							<Input
-								value={this.state.title}
-								onChangeText={title => this.setState({ title })}
-							/>
+							<Input value={this.state.title} onChangeText={title => this.setState({ title })} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Description</Label>
@@ -135,24 +132,17 @@ class NewEvent extends Component {
 								style={{ paddingVertical: 15 }}
 							/>
 						</Item>
-						<Item
-							stackedLabel
-							style={styles.itemForm}
-							onPress={this.showDateTimePicker}>
+						<Item stackedLabel onPress={() => this.showDateTimePicker()}>
 							<Label>Date</Label>
-							<Input
-								disabled
-								placeholder="Select date"
-								value={moment(this.state.time).format('LLL')}
-								style={{ paddingVertical: 15 }}
-							/>
+							<View>
+								<Text>{moment(this.state.time).format('LLL')}</Text>
+							</View>
 						</Item>
 						<DateTimePicker
 							mode="datetime"
 							isVisible={this.state.isDateTimePickerVisible}
 							onConfirm={this.handleDatePicked}
-							onCancel={this.hideDateTimePicker}
-						/>
+							onCancel={this.hideDateTimePicker} />
 					</Form>
 					{this.props.loading.condition === true &&
 					this.props.loading.process_on === 'LOADING_POST_EVENT' ? (

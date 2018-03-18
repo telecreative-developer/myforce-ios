@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
 	Dimensions,
 	Image,
@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import {
 	Tab,
+	Spinner,
 	Tabs,
 	Content,
 	Form,
@@ -40,7 +41,7 @@ import ImagePicker from 'react-native-image-picker'
 
 const { width, height } = Dimensions.get('window')
 
-class Profile extends Component {
+class Profile extends PureComponent {
 	constructor() {
 		super()
 
@@ -128,6 +129,16 @@ class Profile extends Component {
 		}
 	}
 
+	componentWillReceiveProps(props) {
+		if(props.success.condition === true && props.success.process_on === 'SUCCESS_POST_COVER') {
+			this.setState({isVisibleModalCover: false, hasChangeCover: false, coverBase64: ''})
+		}
+
+		if(props.success.condition === true && props.success.process_on === 'SUCCESS_POST_AVATAR') {
+			this.setState({isVisibleModalPhotoProfile: false, hasChangeAvatar: false, avatarBase64: ''})
+		}
+	}
+
 	renderFixedHeader = () => {
 		const { navigate } = this.props.navigation
 		return (
@@ -141,8 +152,7 @@ class Profile extends Component {
 								name="ios-arrow-back"
 								size={25}
 								color="#fff"
-								style={styles.iconBack}
-							/>
+								style={styles.iconBack} />
 							<Text style={styles.back}>Back</Text>
 						</TouchableOpacity>
 					</View>
@@ -154,8 +164,7 @@ class Profile extends Component {
 								name="ios-settings"
 								size={25}
 								color="transparent"
-								style={styles.iconSetting}
-							/>
+								style={styles.iconSetting} />
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={() => this.props.navigation.navigate('Settings')}>
@@ -163,8 +172,7 @@ class Profile extends Component {
 								name="ios-settings"
 								size={25}
 								color="#fff"
-								style={styles.iconBell}
-							/>
+								style={styles.iconBell} />
 						</TouchableOpacity>
 					</View>
 				</Col>
@@ -186,14 +194,26 @@ class Profile extends Component {
 					{this.state.hasChangeCover ? (
 						<View style={{flexDirection: 'row'}}>
 							<View style={{margin: 5, marginTop: 22}}>
-								<Button success onPress={() => this.handleSendCover()}>
-									<Text style={{color: '#FFFFFF'}}>Save Cover</Text>
-								</Button>
+								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_COVER' ? (
+									<Button success>
+										<Spinner color='#FFFFFF' />
+									</Button>
+								) : (
+									<Button success onPress={() => this.handleSendCover()}>
+										<Text style={{color: '#FFFFFF'}}>Save Cover</Text>
+									</Button>
+								)}
 							</View>
 							<View style={{margin: 5, marginTop: 22}}>
-								<Button danger>
-									<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
-								</Button>
+								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_COVER' ? (
+									<Button danger disabled>
+										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+									</Button>
+								) : (
+									<Button danger onPress={() => this.setState({isVisibleModalCover: false, hasChangeCover: false, coverBase64: ''})}>
+										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+									</Button>
+								)}
 							</View>
 						</View>
 					) : (
@@ -229,14 +249,26 @@ class Profile extends Component {
 					{this.state.hasChangeAvatar ? (
 						<View style={{flexDirection: 'row'}}>
 							<View style={{margin: 5, marginTop: 22}}>
-								<Button success onPress={() => this.handleSendAvatar()}>
-									<Text style={{color: '#FFFFFF'}}>Save Avatar</Text>
-								</Button>
+								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_AVATAR' ? (
+									<Button success>
+										<Spinner color='#FFFFFF' />
+									</Button>
+								) : (
+									<Button success onPress={() => this.handleSendAvatar()}>
+										<Text style={{color: '#FFFFFF'}}>Save Avatar</Text>
+									</Button>
+								)}
 							</View>
 							<View style={{margin: 5, marginTop: 22}}>
-								<Button danger>
-									<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
-								</Button>
+								{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_POST_AVATAR' ? (
+									<Button success disabled>
+										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+									</Button>
+								) : (
+									<Button danger onPress={() => this.setState({isVisibleModalPhotoProfile: false, hasChangeAvatar: false, avatarBase64: ''})}>
+										<Text style={{color: '#FFFFFF'}}>Cancel Change</Text>
+									</Button>
+								)}
 							</View>
 						</View>
 					) : (
@@ -390,6 +422,7 @@ class Profile extends Component {
 const mapStateToProps = state => ({
 	users: state.users,
 	loading: state.loading,
+	success: state.success,
 	sessionPersistance: state.sessionPersistance
 })
 
