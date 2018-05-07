@@ -46,7 +46,8 @@ export const failed = (state = [], action) => {
 		case SET_FAILED:
 			return {
 				condition: action.condition,
-				process_on: action.process_on
+				process_on: action.process_on,
+				message: action.message
 			}
 		default:
 			return state

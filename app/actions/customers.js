@@ -5,7 +5,6 @@ import {
 } from '../constants'
 import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
-import { GOOGLE_PLACE_QUERY_AUTOCOMPLETE_KEY } from 'react-native-dotenv'
 import { postPICS } from '../actions/pics'
 
 export const postCustomer = (data, dataPIC, accessToken) => {

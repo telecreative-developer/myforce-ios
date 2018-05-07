@@ -85,7 +85,7 @@ class AddCustomerPreview extends Component {
 	async handlePostCustomer() {
 		const { sessionPersistance } = await this.props
 		await this.props.postCustomer(
-			this.state,
+			{...this.state, id_branch: sessionPersistance.id_branch},
 			this.props.pics,
 			sessionPersistance.accessToken
 		)

@@ -16,7 +16,7 @@ export const login = (email, password) => {
 			})
 			const data = await response.json()
 			if (data.code === 401 && data.name === 'NotAuthenticated') {
-				await dispatch(setFailed(true, 'login', 'Email or password incorrect'))
+				await dispatch(setFailed(true, 'PROCESS_LOGIN', 'Email or password incorrect'))
 				await dispatch(setLoading(false, 'PROCESS_LOGIN'))
 			} else {
 				await dispatch(setSuccess(true, 'PROCESS_LOGIN'))

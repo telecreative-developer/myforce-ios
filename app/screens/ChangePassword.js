@@ -27,6 +27,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import image from '../assets/images/password.png'
 import { connect } from 'react-redux'
 import { updatePassword } from '../actions/users'
+import { setNavigate } from '../actions/processor';
 
 const { width, height } = Dimensions.get('window')
 
@@ -54,9 +55,14 @@ class ChangePassword extends Component {
 			props.success.condition === true &&
 			props.success.process_on === 'SUCCESS_UPDATE_PASSWORD'
 		) {
-			props.navigation.goBack()
+			this.handleBack()
 			Alert.alert('Password updated', 'Your password has been updated')
 		}
+	}
+
+	async handleBack() {
+		await this.props.setNavigate()
+		await this.props.navigation.goBack()
 	}
 
 	renderButtons() {
@@ -96,12 +102,12 @@ class ChangePassword extends Component {
 	}
 
 	render() {
-		const { navigate, goBack } = this.props.navigation
+		const { navigate } = this.props.navigation
 		return (
 			<Container style={styles.container}>
 				<Header style={styles.header}>
 					<Left>
-						<Button transparent onPress={() => goBack()} style={{paddingLeft: 0}}>
+						<Button transparent onPress={() => this.handleBack()} style={{paddingLeft: 0}}>
 							<Text style={styles.cancel}>Cancel</Text>
 						</Button>
 					</Left>
@@ -148,7 +154,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-	updatePassword: (id, email, password, accessToken) => dispatch(updatePassword(id, email, password, accessToken))
+	updatePassword: (id, email, password, accessToken) => dispatch(updatePassword(id, email, password, accessToken)),
+	setNavigate: (link, data) => dispatch(setNavigate(link, data))
 })
 
 const styles = StyleSheet.create({

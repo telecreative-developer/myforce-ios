@@ -64,6 +64,8 @@ class CustomerProfile extends Component {
 			totalPrice: 0,
 			id_pipeline: '',
 			step: '',
+			rejectModal: false,
+			rejectMessage: '',
 			cartProducts: [
 				{
 					picture: 'http://www.nusacopy.com/images/a/produk/rental-fotocopy-warna.jpg',
@@ -218,14 +220,14 @@ class CustomerProfile extends Component {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 3</Text>
-					<Text style={styles.titleModal}>IDENTIFY OPPORTUNITIES</Text>
+					<Text style={styles.titleModal}>Develop Criteria</Text>
 				</View>
 			)
 		} else if (step === 4) {
 			return (
 				<View>
 					<Text style={styles.step}>STEP 4</Text>
-					<Text style={styles.titleModal}>Develop Criteria</Text>
+					<Text style={styles.titleModal}>Recommend Solution</Text>
 				</View>
 			)
 		} else if (step === 5) {
@@ -259,6 +261,13 @@ class CustomerProfile extends Component {
 									<Text>In progress</Text>
 								</Badge>
 							)}
+							{item.reject_status && (
+								<TouchableOpacity onPress={() => this.setState({rejectModal: true, rejectMessage: item.reject_message})}>
+									<Badge style={[styles.pipelineBadgeNew, {backgroundColor: '#D81B60'}]}>
+										<Text>Rejected</Text>
+									</Badge>
+								</TouchableOpacity>
+							)}
 						</View>
 					</View>
 					<View style={styles.picDirection}>
@@ -281,10 +290,10 @@ class CustomerProfile extends Component {
 									item.step_process
 								)
 							}
-							currentPosition={item.step}
+							currentPosition={item.step-1}
 						/>
 					) : (
-						<PipelineProgress currentPosition={item.step} />
+						<PipelineProgress currentPosition={item.step-1} />
 					)}
 				</View>
 				<View
@@ -541,6 +550,23 @@ class CustomerProfile extends Component {
 						</View>
 					</View>
         </Modal>
+				<Modal isVisible={this.state.rejectModal}>
+					<View style={styles.modalWrapperAddPipeline}>
+						<View style={styles.imageModal}>
+							<Text style={styles.pipelineModalText}>REJECTED INFO</Text>
+						</View>
+						<Content style={{padding: 50}}>
+							<Text>{this.state.rejectMessage}</Text>
+						</Content>
+						<Footer>
+							<FooterTab>
+								<Button onPress={() => this.setState({ rejectModal: false })}>
+									<Text style={styles.modalYesButton}>OKE</Text>
+								</Button>
+							</FooterTab>
+						</Footer>
+					</View>
+				</Modal>
 				<Header style={styles.header}>
 					<Left style={{ flexDirection: 'row' }}>
 						<Button transparent onPress={() => this.handleBackButton()}>

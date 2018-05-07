@@ -17,18 +17,17 @@ import {
 	H3,
 	Form,
 	Item,
-	Input,
 	Footer,
 	FooterTab,
 	ListItem,
 	Body,
-	input,
+	Textarea,
 	Label,
 	CheckBox,
-	Spinner
+	Spinner,
+	Icon
 } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
-import Icon from 'react-native-vector-icons/Ionicons'
 import { NavigationActions } from 'react-navigation'
 import bg from '../assets/images/meeting.jpg'
 import Modal from 'react-native-modal'
@@ -44,10 +43,14 @@ class QuestionPage extends Component {
 		super()
 
 		this.state = {
-			isModalVisible: false,
-			nextActivityDesc: false,
+			visibleModalMainQuestion: false,
+			visibleModalActivityDesc: false,
+			visibleModalMinusOfMeeting: false,
+			visibleModalTodoList: false,
 			answer: '',
-			activity_desc: ''
+			activity_desc: '',
+			minus_of_meeting: '',
+			todo_list: ''
 		}
 	}
 
@@ -82,7 +85,7 @@ class QuestionPage extends Component {
 	}
 
 	handlePostAnswer() {
-		const { answer, activity_desc } = this.state
+		const { answer, activity_desc, minus_of_meeting, todo_list } = this.state
 		const {
 			step,
 			id_pipeline,
@@ -110,6 +113,8 @@ class QuestionPage extends Component {
 				{
 					answer,
 					activity_desc,
+					minus_of_meeting,
+					todo_list,
 					step,
 					id_customer,
 					id_pipeline,
@@ -123,6 +128,8 @@ class QuestionPage extends Component {
 				{
 					answer,
 					activity_desc,
+					minus_of_meeting,
+					todo_list,
 					step,
 					id_customer,
 					id_pipeline,
@@ -139,139 +146,178 @@ class QuestionPage extends Component {
 		const { sessionPersistance, questionWithStep, loading } = this.props
 		return (
 			<Container>
-				{loading.condition === true &&
-				loading.process_on === 'LOADING_POST_ANSWER' ? (
-					<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
-						<View style={styles.modalWrapper}>
-							<View
-								style={{
-									flex: 1,
-									backgroundColor: 'transparent',
-									justifyContent: 'center',
-									flexDirection: 'column',
-									alignItems: 'center'
-								}}>
-								<Spinner />
-							</View>
-						</View>
-					</Modal>
-				) : (
-					<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
-						<View style={styles.modalWrapper}>
-							<View
-								style={{
-									flex: 1,
-									backgroundColor: 'transparent',
-									justifyContent: 'center',
-									flexDirection: 'column',
-									alignItems: 'center'
-								}}>
-								<Text style={styles.modalTitle}>Confirm Answer</Text>
-								<Text style={styles.modalAsk}>
-									Are you sure to submit your answer ?
-								</Text>
-							</View>
-							<Footer>
-								<FooterTab>
-									<Button
-										onPress={() => this.setState({ isModalVisible: false })}>
-										<Text note style={styles.modalCancelButton}>
-											Cancel
-										</Text>
-									</Button>
-									<Button onPress={() => this.handlePostAnswer()}>
-										<Text style={styles.modalYesButton}>
-											Yes, Submit Answer
-										</Text>
-									</Button>
-								</FooterTab>
-							</Footer>
-						</View>
-					</Modal>
-				)}
-				<Header hasTabs style={styles.header}>
-					<Left style={styles.backHeader}>
-						<Button transparent onPress={() => goBack()}>
-							<Icon name="ios-arrow-back" size={25} color="#ffffff" />
-							<Text style={styles.back}>Back</Text>
-						</Button>
-					</Left>
-				</Header>
-				<View style={styles.contentWrapper}>
-					<Image source={bg} style={styles.cardImage} />
-					<View style={styles.questionBox}>
-						<Text style={styles.greeting}>{`Hai, ${
-							sessionPersistance.first_name
-						}`}</Text>
-						{this.state.nextActivityDesc ? (
-							<Text style={styles.question}>
-								Deskripsikan aktivitas anda dalam step ini pada kolom dibawah
-							</Text>
-						) : (
-							<Text style={styles.question}>{questionWithStep.question}</Text>
-						)}
-						<View style={styles.container}>
-							<Item bordered regular>
-								{this.state.nextActivityDesc ? (
-									<Input
-										multiline={true}
-										value={this.state.activity_desc}
-										onChangeText={e => this.setState({ activity_desc: e })}
-										placeholder="Silahkan deskripsikan dikolom ini"
-										style={styles.answer}
-									/>
-								) : (
-									<Input
-										multiline={true}
-										value={this.state.answer}
-										onChangeText={e => this.setState({ answer: e })}
-										placeholder="Silahkan isi dengan jawaban anda"
-										style={styles.answer}
-									/>
-								)}
-							</Item>
-						</View>
-						{this.state.nextActivityDesc ? (
-							<View style={styles.buttonView}>
-								<Button
-									primary
-									style={styles.buttonBack}
-									onPress={() => this.setState({ nextActivityDesc: false })}>
-									<Text style={styles.buttonText}>BACK</Text>
-								</Button>
-								<Button
-									primary
-									style={styles.button}
-									onPress={() => this.setState({ isModalVisible: true })}>
-									<LinearGradient
-										colors={['#20E6CD', '#2D38F9']}
-										style={styles.linearGradient}>
-										<Text style={styles.buttonText}>FINISH</Text>
-									</LinearGradient>
-								</Button>
-							</View>
-						) : (
-							<View style={styles.buttonView}>
-								<Button
-									primary
-									style={styles.buttonBack}
-									onPress={() => goBack()}>
-									<Text style={styles.buttonText}>BACK</Text>
-								</Button>
-								<Button
-									primary
-									style={styles.button}
-									onPress={() => this.setState({ nextActivityDesc: true })}>
-									<LinearGradient
-										colors={['#20E6CD', '#2D38F9']}
-										style={styles.linearGradient}>
-										<Text style={styles.buttonText}>NEXT</Text>
-									</LinearGradient>
-								</Button>
-							</View>
-						)}
+				<Modal style={styles.modal} isVisible={this.state.visibleModalMainQuestion}>
+					<View style={styles.viewName}>
+						<Text style={styles.textName}>Hello, {sessionPersistance.first_name}!</Text>
 					</View>
-				</View>
+					<View style={styles.viewQuestion}>
+						<Text style={styles.textQuestion}>{questionWithStep.question}</Text>
+					</View>
+					<Form style={styles.form}>
+						<Textarea rowSpan={8} bordered placeholder="Masukan jawaban Anda disini" value={this.state.answer} onChangeText={(answer) => this.setState({answer})} />
+          </Form>
+					<View style={styles.containerButtonModal}>
+						<View style={styles.viewButtonModal}>
+							<Button block danger style={styles.buttonModalLeft} onPress={() => this.setState({visibleModalMainQuestion: false})}>
+								<Text>Cancel</Text>
+							</Button>
+						</View>
+						<View style={styles.viewButtonModal}>
+							{this.state.answer ? (
+								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalMainQuestion: false})}>
+									<Text>Save</Text>
+								</Button>
+							) : (
+								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
+									<Text>Save</Text>
+								</Button>
+							)}
+						</View>
+					</View>
+				</Modal>
+				<Modal style={styles.modal} isVisible={this.state.visibleModalActivityDesc}>
+					<View style={styles.viewName}>
+						<Text style={styles.textName}>Hello, {sessionPersistance.first_name}!</Text>
+					</View>
+					<View style={styles.viewQuestion}>
+						<Text style={styles.textQuestion}>Deskripsikan aktivitas anda pada kolom dibawah</Text>
+					</View>
+					<Form style={styles.form}>
+						<Textarea rowSpan={8} bordered placeholder="Masukan deskripsi Anda disini" value={this.state.activity_desc} onChangeText={(activity_desc) => this.setState({activity_desc})} />
+          </Form>
+					<View style={styles.containerButtonModal}>
+						<View style={styles.viewButtonModal}>
+							<Button block danger style={styles.buttonModalLeft} onPress={() => this.setState({visibleModalActivityDesc: false})}>
+								<Text>Cancel</Text>
+							</Button>
+						</View>
+						<View style={styles.viewButtonModal}>
+							{this.state.activity_desc ? (
+								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalActivityDesc: false})}>
+									<Text>Save</Text>
+								</Button>
+							) : (
+								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
+									<Text>Save</Text>
+								</Button>
+							)}
+						</View>
+					</View>
+				</Modal>
+				<Modal style={styles.modal} isVisible={this.state.visibleModalMinusOfMeeting}>
+					<View style={styles.viewName}>
+						<Text style={styles.textName}>Hello, {sessionPersistance.first_name}!</Text>
+					</View>
+					<View style={styles.viewQuestion}>
+						<Text style={styles.textQuestion}>Isi kolom dibawah</Text>
+					</View>
+					<Form style={styles.form}>
+						<Textarea rowSpan={8} bordered placeholder="Isi jawaban disini" value={this.state.minus_of_meeting} onChangeText={(minus_of_meeting) => this.setState({minus_of_meeting})} />
+          </Form>
+					<View style={styles.containerButtonModal}>
+						<View style={styles.viewButtonModal}>
+							<Button block danger style={styles.buttonModalLeft} onPress={() => this.setState({visibleModalMinusOfMeeting: false})}>
+								<Text>Cancel</Text>
+							</Button>
+						</View>
+						<View style={styles.viewButtonModal}>
+							{this.state.minus_of_meeting ? (
+								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalMinusOfMeeting: false})}>
+									<Text>Save</Text>
+								</Button>
+							) : (
+								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
+									<Text>Save</Text>
+								</Button>
+							)}
+						</View>
+					</View>
+				</Modal>
+				<Modal style={styles.modal} isVisible={this.state.visibleModalTodoList}>
+					<View style={styles.viewName}>
+						<Text style={styles.textName}>Hello, {sessionPersistance.first_name}!</Text>
+					</View>
+					<View style={styles.viewQuestion}>
+						<Text style={styles.textQuestion}>Isi kolom dibawah</Text>
+					</View>
+					<Form style={styles.form}>
+						<Textarea rowSpan={8} bordered placeholder="Isi jawaban disini" value={this.state.todo_list} onChangeText={(todo_list) => this.setState({todo_list})} />
+          </Form>
+					<View style={styles.containerButtonModal}>
+						<View style={styles.viewButtonModal}>
+							<Button block danger style={styles.buttonModalLeft} onPress={() => this.setState({visibleModalTodoList: false})}>
+								<Text>Cancel</Text>
+							</Button>
+						</View>
+						<View style={styles.viewButtonModal}>
+							{this.state.todo_list ? (
+								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalTodoList: false})}>
+									<Text>Save</Text>
+								</Button>
+							) : (
+								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
+									<Text>Save</Text>
+								</Button>
+							)}
+						</View>
+					</View>
+				</Modal>
+				<ImageBackground source={bg} style={styles.imageBackground}>
+					<View style={styles.container}>
+						<View style={styles.viewContainerRight}>
+							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMainQuestion: true})}>
+								<Text style={styles.textCard}>Main Question</Text>
+								{this.state.answer !== '' && (
+									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
+								)}
+							</TouchableOpacity>
+						</View>
+						<View style={styles.viewContainerLeft}>
+							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalActivityDesc: true})}>
+								<Text style={styles.textCard}>Activity Description</Text>
+								{this.state.activity_desc !== '' && (
+									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
+								)}
+							</TouchableOpacity>
+						</View>
+					</View>
+					<View style={styles.container}>
+						<View style={styles.viewContainerRight}>
+							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMinusOfMeeting: true})}>
+								<Text style={styles.textCard}>Minus of Meeting</Text>
+								{this.state.minus_of_meeting !== '' && (
+									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
+								)}
+							</TouchableOpacity>
+						</View>
+						<View style={styles.viewContainerLeft}>
+							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalTodoList: true})}>
+								<Text style={styles.textCard}>To Do List</Text>
+								{this.state.todo_list !== '' && (
+									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
+								)}
+							</TouchableOpacity>
+						</View>
+					</View>
+					<View style={{flexDirection: 'row'}}>
+						<View style={{width: width / 2.2, margin: 15}}>
+							<Button block danger>
+								<Text>Back</Text>
+							</Button>
+						</View>
+						<View style={{width: width / 2.2, margin: 15}}>
+							{this.state.answer && this.state.activity_desc && this.state.minus_of_meeting && this.state.todo_list ? (
+								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalTodoList: false})}>
+									<Text>Save</Text>
+								</Button>
+							) : (
+								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
+									<Text>Save</Text>
+								</Button>
+							)}
+						</View>
+					</View>
+				</ImageBackground>
 			</Container>
 		)
 	}
@@ -294,212 +340,59 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const styles = StyleSheet.create({
-	header: {
-		backgroundColor: 'transparent',
-		position: 'absolute',
-		zIndex: 100,
-		top: 0,
-		left: 0,
-		right: 0
+	modal: {
+		flex: 0.5, height: height / 4, backgroundColor: '#FFFFFF', borderRadius: 5
 	},
-	contentWrapper: {
-		alignItems: 'center',
-		flex: 1,
-		zIndex: -1,
-		backgroundColor: '#000000'
+	viewName: {
+		marginLeft: 20
 	},
-	cardImage: {
-		width: '100%',
-		height: '100%',
-		opacity: 0.5
+	textName: {
+		fontSize: 20, fontWeight: 'bold'
 	},
-	titleView: {
-		position: 'absolute',
-		zIndex: 2,
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
+	viewQuestion: {
+		marginLeft: 20, marginTop: 10
+	},
+	textQuestion: {
+		fontSize: 20
+	},
+	form: {
+		margin: 20
+	},
+	viewButton: {
+		margin: 20,
+		flexDirection: 'row',
 		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'transparent'
+		alignItems: 'center'
 	},
-	title: {
-		fontSize: 40,
-		fontWeight: '900',
-		color: '#ffffff',
-		fontStyle: 'italic'
-	},
-	description: {
-		fontSize: 14,
-		color: '#ffffff',
-		marginTop: 10
-	},
-	buttonText: {
-		textAlign: 'center',
-		backgroundColor: 'transparent',
-		color: '#000000',
-		fontWeight: '800',
-		fontStyle: 'italic',
-		fontSize: 24
-	},
-	linearGradient: {
-		flex: 1,
-		width: '100%',
-		height: '100%',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	centerButton: {
-		width: 100,
-		height: 100,
-		borderRadius: 100,
-		bottom: height / 3,
-		zIndex: 30
-	},
-	questionBox: {
-		width: width / 1.2,
-		height: height / 2.2,
-		backgroundColor: '#ffffff',
-		position: 'absolute',
-		zIndex: 1,
-		top: height / 3,
-		padding: 40
-	},
-	greeting: {
-		fontSize: 14,
-		color: '#2f4f4f',
-		fontWeight: '900',
-		marginBottom: 3
-	},
-	command: {
-		fontSize: 14,
-		color: '#2f4f4f'
-	},
-	question: {
-		fontSize: 14,
-		color: '#2f4f4f'
-	},
-	questionList: {
-		paddingTop: 4,
-		paddingBottom: 4
-	},
-	item: {
-		flexDirection: 'column'
-	},
-	line: {
-		flex: 1,
-		height: 0.3
+	imageBackground: {
+		alignItems: 'center', justifyContent: 'center', width: width, height: height
 	},
 	container: {
-		flex: 1,
-		marginTop: 30
+		justifyContent: 'center', flexDirection: 'row'
 	},
-	back: {
-		fontSize: 18,
-		color: '#ffffff'
+	viewContainerRight: {
+		justifyContent: 'center', alignItems: 'flex-start', margin: 15
 	},
-	questionContent: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		display: 'flex'
+	viewContainerLeft: {
+		justifyContent: 'center', alignItems: 'flex-end', margin: 15
 	},
-	inputItem: {
-		width: '40%',
-		flexDirection: 'row',
+	card: {
+		justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 10, borderColor: '#0D47A1', borderWidth: 5, width: width / 2.2, height: height / 4.2
+	},
+	textCard: {
+		fontSize: 20, fontWeight: 'bold'
+	},
+	viewButtonModal: {
+		width: width / 2.5
+	},
+	buttonModalLeft: {
 		marginRight: 10
 	},
-	input: {
-		fontSize: 14,
-		marginLeft: -4
+	buttonModalRight: {
+		marginLeft: 10
 	},
-	buttonView: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	button: {
-		width: '30%',
-		paddingTop: 0,
-		paddingBottom: 0
-	},
-	buttonBack: {
-		marginRight: 10,
-		marginLeft: 10,
-		borderRadius: 0,
-		width: '30%',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#e8649d'
-	},
-	buttonText: {
-		fontWeight: '900',
-		fontSize: 16,
-		fontStyle: 'italic',
-		color: 'black'
-	},
-	save: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		marginTop: 20
-	},
-	saveText: {
-		color: '#000080'
-	},
-	modal: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	modalWrapper: {
-		width: width / 2,
-		height: height / 5,
-		backgroundColor: '#ffffff',
-		borderRadius: 5,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	modalCancelButton: {
-		fontSize: 16
-	},
-	modalYesButton: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		backgroundColor: 'transparent'
-	},
-	modalTitle: {
-		fontSize: 18,
-		fontWeight: 'bold',
-		textAlign: 'center'
-	},
-	modalAsk: {
-		fontSize: 16,
-		textAlign: 'center',
-		marginTop: 10
-	},
-	cancelText: {
-		color: '#ffffff'
-	},
-	yesText: {
-		color: '#ffffff',
-		fontWeight: 'bold'
-	},
-	backHeader: {
-		flexDirection: 'row'
-	},
-	answer: {
-		borderRadius: 0,
-		height: 180,
-		fontSize: 14
-	},
-	greeting: {
-		fontSize: 14,
-		color: '#2f4f4f',
-		fontWeight: '900',
-		marginBottom: 3
+	containerButtonModal: {
+		flexDirection: 'row', justifyContent: 'center'
 	}
 })
 

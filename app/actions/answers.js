@@ -23,7 +23,7 @@ export const postAnswer = (item, accessToken) => {
 						'Content-Type': 'application/json',
 						Authorization: accessToken
 					},
-					body: JSON.stringify({ step: item.step + 1, step_process: true })
+					body: JSON.stringify({ step: item.step, step_process: true, reject_status: false, reject_message: null })
 				}
 			)
 			const dataPipelines = await responsePipelines.json()

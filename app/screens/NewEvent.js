@@ -60,9 +60,13 @@ class NewEvent extends Component {
 		}
 	}
 
-	showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true })
+	showDateTimePicker() {
+		this.setState({isDateTimePickerVisible: true})
+	}
 
-	hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false })
+	hideDateTimePicker() {
+		this.setState({ isDateTimePickerVisible: false })
+	}
 
 	handleDatePicked = time => {
 		this.setState({ time })

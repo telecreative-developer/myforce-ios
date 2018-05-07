@@ -274,8 +274,12 @@ class Activity extends PureComponent {
 						<Animated.View
 							style={[styles.footerConfirmation, {height: 400}]}>
 							<Text style={styles.addCustomer}>You're Check In</Text>
-							<Text style={styles.customerName}>{this.props.checks.customers[0].name}</Text>
-							<Text style={styles.customerAddress}>{this.props.checks.customers[0].address}</Text>
+							{this.props.checks.length !== 0 && (
+								<View>
+									<Text style={styles.customerName}>{this.props.checks.customers[0].name}</Text>
+									<Text style={styles.customerAddress}>{this.props.checks.customers[0].address}</Text>
+								</View>
+							)}
 							{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_CHECK_OUT' ? (
 								<TouchableOpacity style={styles.centerButton}>
 									<LinearGradient

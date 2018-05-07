@@ -31,7 +31,7 @@ class Calendar extends Component {
 	}
 
 	handleBack() {
-		this.props.setNavigate('', '')
+		this.props.setNavigate()
 		this.props.navigation.goBack()
 	}
 

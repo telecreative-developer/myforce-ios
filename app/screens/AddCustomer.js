@@ -42,10 +42,8 @@ class AddCustomer extends Component {
 		navigator.geolocation.getCurrentPosition(
 			position => {
 				this.setState({
-					region: {
-						latitude: position.coords.latitude,
-						longitude: position.coords.longitude
-					}
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude
 				})
 			},
 			error => {},

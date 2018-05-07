@@ -18,7 +18,7 @@ export const checkIn = (item, customers, accessToken) => {
 				body: JSON.stringify(item)
 			})
 			const data = await response.json()
-			await fetch(`${url}/users/${item.id}`, {
+			const a = await fetch(`${url}/users/${item.id}`, {
 				method: 'PATCH',
 				headers: {
 					Accept: 'application/json',

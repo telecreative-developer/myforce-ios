@@ -29,6 +29,7 @@ import { connect } from 'react-redux'
 import { isEmpty, isEmail } from 'validator'
 import { updateUser } from '../actions/users'
 import { login } from '../actions/login'
+import { setNavigate } from '../actions/processor';
 
 const { width, height } = Dimensions.get('window')
 
@@ -73,7 +74,7 @@ class EditProfile extends Component {
 			props.success.condition === true &&
 			props.success.process_on === 'UPDATE_USER'
 		) {
-			props.navigation.goBack()
+			this.handleBack()
 			Alert.alert('Profile updated', 'Your profile has been updated')
 		}
 	}
@@ -149,15 +150,20 @@ class EditProfile extends Component {
 		}
 	}
 
+	async handleBack() {
+		await this.props.setNavigate()
+		await this.props.navigation.goBack()
+	}
+
 	render() {
-		const { navigate, goBack } = this.props.navigation
+		const { navigate } = this.props.navigation
 		return (
 			<Container style={styles.container}>
 				<Header style={styles.header}>
 					<Left>
 						<Button
 							transparent
-							onPress={() => goBack()}
+							onPress={() => this.handleBack()}
 							style={{ paddingLeft: 0 }}>
 							<Text style={styles.cancel}>Cancel</Text>
 						</Button>
@@ -243,8 +249,8 @@ const mapStateToProps = state => ({
 const mapDipatchToProps = dispatch => {
 	return {
 		login: (email, password) => dispatch(login(email, password)),
-		updateUser: (id, data, accessToken) =>
-			dispatch(updateUser(id, data, accessToken))
+		updateUser: (id, data, accessToken) => dispatch(updateUser(id, data, accessToken)),
+		setNavigate: (link, data) => dispatch(setNavigate(link, data))
 	}
 }
 
