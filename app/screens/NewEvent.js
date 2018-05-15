@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
 	StyleSheet,
 	TouchableHighlight,
+	TouchableOpacity,
 	Dimensions,
 	View,
 	Image,
@@ -47,10 +48,7 @@ class NewEvent extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (
-			props.success.condition === true &&
-			props.success.process_on === 'SUCCESS_POST_EVENT'
-		) {
+		if (props.success.condition === true && props.success.process_on === 'SUCCESS_POST_EVENT') {
 			this.setState({
 				title: '',
 				description: '',
@@ -61,7 +59,7 @@ class NewEvent extends Component {
 	}
 
 	showDateTimePicker() {
-		this.setState({isDateTimePickerVisible: true})
+		this.setState({ isDateTimePickerVisible: true })
 	}
 
 	hideDateTimePicker() {
@@ -81,15 +79,10 @@ class NewEvent extends Component {
 
 	renderButton() {
 		const { title, description, time } = this.state
-		if (!isEmpty(title) && !isEmpty(description) && !isEmpty(time)) {
+		if (!isEmpty(title) && !isEmpty(description) && time !== '') {
 			return (
-				<Button
-					primary
-					style={styles.button}
-					onPress={() => this.handlePostEvent()}>
-					<LinearGradient
-						colors={['#20E6CD', '#2D38F9']}
-						style={styles.linearGradient}>
+				<Button primary style={styles.button} onPress={() => this.handlePostEvent()}>
+					<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 						<Text style={styles.buttonText}>NEXT</Text>
 					</LinearGradient>
 				</Button>
@@ -136,17 +129,21 @@ class NewEvent extends Component {
 								style={{ paddingVertical: 15 }}
 							/>
 						</Item>
-						<Item stackedLabel onPress={() => this.showDateTimePicker()}>
-							<Label>Date</Label>
-							<View>
-								<Text>{moment(this.state.time).format('LLL')}</Text>
-							</View>
-						</Item>
+						<TouchableOpacity
+							stackedLabel
+							onPress={() => this.showDateTimePicker()}
+							style={{ margin: 15, borderBottomWidth: 0.5, borderBottomColor: '#999999' }}>
+							<Text note>Date</Text>
+							<Text style={{ marginTop: 10, marginBottom: 10 }}>
+								{moment(this.state.time).format('LLL')}
+							</Text>
+						</TouchableOpacity>
 						<DateTimePicker
 							mode="datetime"
 							isVisible={this.state.isDateTimePickerVisible}
 							onConfirm={this.handleDatePicked}
-							onCancel={this.hideDateTimePicker} />
+							onCancel={() => this.hideDateTimePicker()}
+						/>
 					</Form>
 					{this.props.loading.condition === true &&
 					this.props.loading.process_on === 'LOADING_POST_EVENT' ? (

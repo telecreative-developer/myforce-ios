@@ -61,13 +61,8 @@ class AddCustomer extends Component {
 			!isEmpty(address)
 		) {
 			return (
-				<Button
-					primary
-					style={styles.button}
-					onPress={() => this.validationEmail()}>
-					<LinearGradient
-						colors={['#20E6CD', '#2D38F9']}
-						style={styles.linearGradient}>
+				<Button primary style={styles.button} onPress={() => this.validationEmail()}>
+					<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 						<Text style={styles.buttonText}>NEXT</Text>
 					</LinearGradient>
 				</Button>
@@ -116,23 +111,17 @@ class AddCustomer extends Component {
 					</View>
 					<Form>
 						<View style={{ alignItems: 'center', display: 'flex' }}>
-							<Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-								Customer Data
-							</Text>
+							<Text style={{ fontWeight: 'bold', fontSize: 18 }}>Customer Data</Text>
 						</View>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Customer Name</Label>
-							<Input
-								value={this.state.name}
-								onChangeText={name => this.setState({ name })}
-							/>
+							<Input value={this.state.name} onChangeText={name => this.setState({ name })} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>Email</Label>
 							<Input
 								value={this.state.email}
 								onChangeText={email => this.setState({ email })}
-								style={{ paddingVertical: 15 }}
 								autoCapitalize="none"
 								uppercase={false}
 							/>
@@ -142,7 +131,6 @@ class AddCustomer extends Component {
 							<Input
 								value={this.state.phone}
 								onChangeText={phone => this.setState({ phone })}
-								style={{ paddingVertical: 15 }}
 								keyboardType="numeric"
 							/>
 						</Item>
@@ -152,15 +140,11 @@ class AddCustomer extends Component {
 								value={this.state.address}
 								multiline={true}
 								onChangeText={address => this.setState({ address })}
-								style={{ paddingVertical: 15 }}
 							/>
 						</Item>
 					</Form>
 					<View style={styles.buttonView}>
-						<Button
-							primary
-							style={styles.buttonBack}
-							onPress={() => this.handleBack()}>
+						<Button primary style={styles.buttonBack} onPress={() => this.handleBack()}>
 							<Text style={styles.buttonText}>BACK</Text>
 						</Button>
 						{this.renderButton()}

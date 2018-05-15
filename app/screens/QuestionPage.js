@@ -6,6 +6,7 @@ import {
 	View,
 	TouchableOpacity,
 	Image,
+	ActivityIndicator,
 	ScrollView
 } from 'react-native'
 import {
@@ -49,7 +50,7 @@ class QuestionPage extends Component {
 			visibleModalTodoList: false,
 			answer: '',
 			activity_desc: '',
-			minus_of_meeting: '',
+			minutes_of_meeting: '',
 			todo_list: ''
 		}
 	}
@@ -85,7 +86,7 @@ class QuestionPage extends Component {
 	}
 
 	handlePostAnswer() {
-		const { answer, activity_desc, minus_of_meeting, todo_list } = this.state
+		const { answer, activity_desc, minutes_of_meeting, todo_list } = this.state
 		const {
 			step,
 			id_pipeline,
@@ -113,7 +114,7 @@ class QuestionPage extends Component {
 				{
 					answer,
 					activity_desc,
-					minus_of_meeting,
+					minutes_of_meeting,
 					todo_list,
 					step,
 					id_customer,
@@ -128,7 +129,7 @@ class QuestionPage extends Component {
 				{
 					answer,
 					activity_desc,
-					minus_of_meeting,
+					minutes_of_meeting,
 					todo_list,
 					step,
 					id_customer,
@@ -212,7 +213,7 @@ class QuestionPage extends Component {
 						<Text style={styles.textQuestion}>Isi kolom dibawah</Text>
 					</View>
 					<Form style={styles.form}>
-						<Textarea rowSpan={8} bordered placeholder="Isi jawaban disini" value={this.state.minus_of_meeting} onChangeText={(minus_of_meeting) => this.setState({minus_of_meeting})} />
+						<Textarea rowSpan={8} bordered placeholder="Isi jawaban disini" value={this.state.minutes_of_meeting} onChangeText={(minutes_of_meeting) => this.setState({minutes_of_meeting})} />
           </Form>
 					<View style={styles.containerButtonModal}>
 						<View style={styles.viewButtonModal}>
@@ -221,7 +222,7 @@ class QuestionPage extends Component {
 							</Button>
 						</View>
 						<View style={styles.viewButtonModal}>
-							{this.state.minus_of_meeting ? (
+							{this.state.minutes_of_meeting ? (
 								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalMinusOfMeeting: false})}>
 									<Text>Save</Text>
 								</Button>
@@ -264,18 +265,18 @@ class QuestionPage extends Component {
 				</Modal>
 				<ImageBackground source={bg} style={styles.imageBackground}>
 					<View style={styles.container}>
-						<View style={styles.viewContainerRight}>
-							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMainQuestion: true})}>
-								<Text style={styles.textCard}>Main Question</Text>
-								{this.state.answer !== '' && (
-									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
-								)}
-							</TouchableOpacity>
-						</View>
 						<View style={styles.viewContainerLeft}>
 							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalActivityDesc: true})}>
 								<Text style={styles.textCard}>Activity Description</Text>
 								{this.state.activity_desc !== '' && (
+									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
+								)}
+							</TouchableOpacity>
+						</View>
+						<View style={styles.viewContainerRight}>
+							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMainQuestion: true})}>
+								<Text style={styles.textCard}>Main Question</Text>
+								{this.state.answer !== '' && (
 									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
 								)}
 							</TouchableOpacity>
@@ -285,7 +286,7 @@ class QuestionPage extends Component {
 						<View style={styles.viewContainerRight}>
 							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMinusOfMeeting: true})}>
 								<Text style={styles.textCard}>Minus of Meeting</Text>
-								{this.state.minus_of_meeting !== '' && (
+								{this.state.minutes_of_meeting !== '' && (
 									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
 								)}
 							</TouchableOpacity>
@@ -306,10 +307,16 @@ class QuestionPage extends Component {
 							</Button>
 						</View>
 						<View style={{width: width / 2.2, margin: 15}}>
-							{this.state.answer && this.state.activity_desc && this.state.minus_of_meeting && this.state.todo_list ? (
-								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalTodoList: false})}>
-									<Text>Save</Text>
-								</Button>
+							{this.state.answer && this.state.activity_desc && this.state.minutes_of_meeting && this.state.todo_list ? (
+								this.props.loading.condition && this.props.loading.process_on === 'LOADING_POST_ANSWER' ? (
+									<Button block primary style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
+										<ActivityIndicator size="small" color="#FFFFFF" />
+									</Button>
+								) : (
+									<Button block primary style={styles.buttonModalRight} onPress={() => this.handlePostAnswer()}>
+										<Text>Save</Text>
+									</Button>
+								)
 							) : (
 								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
 									<Text>Save</Text>
