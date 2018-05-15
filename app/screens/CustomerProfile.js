@@ -39,7 +39,7 @@ import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import PipelineProgress from '../components/PipelineProgress'
 import { fetchPicsWithIDCustomer } from '../actions/pics'
-import { fetchPipelines, postPipeline, fetchPipelineProducts} from '../actions/pipelines'
+import { fetchPipelines, postPipeline, fetchPipelineProducts } from '../actions/pipelines'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
@@ -89,10 +89,7 @@ class CustomerProfile extends Component {
 	}
 
 	componentWillReceiveProps(props) {
-		if (
-			props.success.condition === true &&
-			props.success.process_on === 'POST_PIPELINE'
-		) {
+		if (props.success.condition === true && props.success.process_on === 'POST_PIPELINE') {
 			Alert.alert('Success Add Pipeline', 'Your pipeline has been added')
 		}
 	}
@@ -129,8 +126,9 @@ class CustomerProfile extends Component {
 		if (this.state.pipelineTabs === 'active') {
 			return (
 				<View>
-					{this.props.sessionPersistance.checks[0] !== undefined && (
-						this.props.sessionPersistance.checks[0].id_customer === this.props.navigation.state.params.id_customer && (
+					{this.props.sessionPersistance.checks[0] !== undefined &&
+						(this.props.sessionPersistance.checks[0].id_customer ===
+							this.props.navigation.state.params.id_customer && (
 							<View style={styles.addPipeline}>
 								<Button
 									full
@@ -140,10 +138,11 @@ class CustomerProfile extends Component {
 									<Text style={styles.addPipelineText}>Add Pipeline</Text>
 								</Button>
 							</View>
-						)
-					)}
+						))}
 					<FlatList
-						data={this.props.pipelines.filter(p => p.step !== 7 && p.lose === false || p.step === 7 && p.step_process === true)}
+						data={this.props.pipelines.filter(
+							p => (p.step !== 7 && p.lose === false) || (p.step === 7 && p.step_process === true)
+						)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
 					/>
@@ -196,7 +195,7 @@ class CustomerProfile extends Component {
 
 	async handleOpenOrderCart(id_pipeline, totalPrice) {
 		const { accessToken } = await this.props.sessionPersistance
-		await this.setState({totalPrice, isModalVisibleCart: true})
+		await this.setState({ totalPrice, isModalVisibleCart: true })
 		await this.props.fetchPipelineProducts(id_pipeline, accessToken)
 	}
 
@@ -258,12 +257,15 @@ class CustomerProfile extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In progress</Text>
+									<Text>Waiting for approval</Text>
 								</Badge>
 							)}
 							{item.reject_status && (
-								<TouchableOpacity onPress={() => this.setState({rejectModal: true, rejectMessage: item.reject_message})}>
-									<Badge style={[styles.pipelineBadgeNew, {backgroundColor: '#D81B60'}]}>
+								<TouchableOpacity
+									onPress={() =>
+										this.setState({ rejectModal: true, rejectMessage: item.reject_message })
+									}>
+									<Badge style={[styles.pipelineBadgeNew, { backgroundColor: '#D81B60' }]}>
 										<Text>Rejected</Text>
 									</Badge>
 								</TouchableOpacity>
@@ -280,20 +282,15 @@ class CustomerProfile extends Component {
 					</View>
 				</View>
 				<View>
-					{this.props.sessionPersistance.id ===
-					this.props.navigation.state.params.id ? (
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
 						<PipelineProgress
 							onPress={() =>
-								this.handleCheckStepper(
-									item.step,
-									item.id_pipeline,
-									item.step_process
-								)
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
 							}
-							currentPosition={item.step-1}
+							currentPosition={item.step - 1}
 						/>
 					) : (
-						<PipelineProgress currentPosition={item.step-1} />
+						<PipelineProgress currentPosition={item.step - 1} />
 					)}
 				</View>
 				<View
@@ -305,7 +302,10 @@ class CustomerProfile extends Component {
 						paddingVertical: 20
 					}}>
 					{item.step >= 4 && (
-						<Button small style={{ backgroundColor: '#2D38F9', height: 40 }} onPress={() => this.handleOpenOrderCart(item.id_pipeline, item.total)}>
+						<Button
+							small
+							style={{ backgroundColor: '#2D38F9', height: 40 }}
+							onPress={() => this.handleOpenOrderCart(item.id_pipeline, item.total)}>
 							<Text style={{ fontSize: 14 }}>Order Summary</Text>
 						</Button>
 					)}
@@ -325,7 +325,7 @@ class CustomerProfile extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In progress</Text>
+									<Text>Waiting for approval</Text>
 								</Badge>
 							)}
 						</View>
@@ -341,9 +341,16 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
-				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
-					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{fontSize: 14}}>Order Summary</Text>
+				<View
+					style={{
+						justifyContent: 'center',
+						flexDirection: 'row',
+						display: 'flex',
+						width: '100%',
+						paddingVertical: 20
+					}}>
+					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
+						<Text style={{ fontSize: 14 }}>Order Summary</Text>
 					</Button>
 				</View>
 			</View>
@@ -361,7 +368,7 @@ class CustomerProfile extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In progress</Text>
+									<Text>Waiting for approval</Text>
 								</Badge>
 							)}
 						</View>
@@ -377,9 +384,16 @@ class CustomerProfile extends Component {
 				<View>
 					<PipelineProgress currentPosition={item.step - 1} />
 				</View>
-				<View style={{justifyContent: 'center', flexDirection: 'row', display: 'flex', width: '100%', paddingVertical: 20}}>
-					<Button small style={{backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{fontSize: 14}}>Order Summary</Text>
+				<View
+					style={{
+						justifyContent: 'center',
+						flexDirection: 'row',
+						display: 'flex',
+						width: '100%',
+						paddingVertical: 20
+					}}>
+					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
+						<Text style={{ fontSize: 14 }}>Order Summary</Text>
 					</Button>
 				</View>
 			</View>
@@ -387,8 +401,10 @@ class CustomerProfile extends Component {
 	)
 
 	renderItemsPic = ({ item }) => (
-		<TouchableOpacity style={styles.headerDirection} onPress={() => this.setState({modalPic: true, dataPic: item})}>
-			<Icon name="md-contact" size={15} color={'#fff'}/>
+		<TouchableOpacity
+			style={styles.headerDirection}
+			onPress={() => this.setState({ modalPic: true, dataPic: item })}>
+			<Icon name="md-contact" size={15} color={'#fff'} />
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
 	)
@@ -442,8 +458,7 @@ class CustomerProfile extends Component {
 						</View>
 						<Footer>
 							<FooterTab>
-								<Button
-									onPress={() => this.setState({ modalNewPipeline: false })}>
+								<Button onPress={() => this.setState({ modalNewPipeline: false })}>
 									<Text note style={styles.modalCancelButton}>
 										Cancel
 									</Text>
@@ -463,23 +478,23 @@ class CustomerProfile extends Component {
 						<Content>
 							<View style={styles.formPicDirection}>
 								<Form>
-									<Item floatingLabel style={{borderColor: 'transparent'}}>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
 										<Label>PIC Name</Label>
 										<Input value={this.state.dataPic.name} />
 									</Item>
-									<Item floatingLabel style={{borderColor: 'transparent'}}>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
 										<Label>Job</Label>
 										<Input value={this.state.dataPic.job} />
 									</Item>
-									<Item floatingLabel style={{borderColor: 'transparent'}}>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
 										<Label>Phone Number</Label>
 										<Input value={this.state.dataPic.phone} />
 									</Item>
-									<Item floatingLabel style={{borderColor: 'transparent'}}>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
 										<Label>Email</Label>
 										<Input value={this.state.dataPic.email} />
 									</Item>
-									<Item floatingLabel style={{borderColor: 'transparent'}}>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
 										<Label>Address</Label>
 										<Input
 											multiline={true}
@@ -502,17 +517,13 @@ class CustomerProfile extends Component {
 				<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
 					<View style={styles.modalWrapper}>
 						<View>
-							<ImageBackground
-								source={bg}
-								imageStyle={styles.cardImage}
-								style={styles.card}>
+							<ImageBackground source={bg} imageStyle={styles.cardImage} style={styles.card}>
 								{this.renderTextSellingProccess()}
 							</ImageBackground>
 						</View>
 						<Footer>
 							<FooterTab>
-								<Button
-									onPress={() => this.setState({ isModalVisible: false })}>
+								<Button onPress={() => this.setState({ isModalVisible: false })}>
 									<Text note style={styles.modalCancelButton}>
 										Cancel
 									</Text>
@@ -524,17 +535,27 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
-				<Modal isVisible={this.state.isModalVisibleCart} style={styles.modal}   
+				<Modal
+					isVisible={this.state.isModalVisibleCart}
+					style={styles.modal}
 					onBackdropPress={() => this.setState({ isModalVisibleCart: false })}>
 					<View style={styles.cartContent}>
-						<View style={{width: '100%',alignItems: 'flex-end', paddingHorizontal: 20, paddingTop: 10,}}>
-							<TouchableHighlight underlayColor={'transparent'} onPress={() => this.setState({ isModalVisibleCart: false })}>
-								<Icon name="ios-close" size={35}/>
+						<View
+							style={{
+								width: '100%',
+								alignItems: 'flex-end',
+								paddingHorizontal: 20,
+								paddingTop: 10
+							}}>
+							<TouchableHighlight
+								underlayColor={'transparent'}
+								onPress={() => this.setState({ isModalVisibleCart: false })}>
+								<Icon name="ios-close" size={35} />
 							</TouchableHighlight>
 						</View>
 						<Text style={styles.modalTitle}>Order Cart</Text>
 						<Text style={styles.modalTotal}>Total Item: {this.props.pipelineProducts.length}</Text>
-						<View style={{width: width / 1.3}}>
+						<View style={{ width: width / 1.3 }}>
 							<Item stackedLabel style={styles.itemForm}>
 								<Label style={styles.productCategory}>Total Price</Label>
 								<Input disabled value={`Rp. ${JSON.stringify(this.state.totalPrice)}`} />
@@ -546,16 +567,17 @@ class CustomerProfile extends Component {
 								data={this.props.pipelineProducts}
 								style={styles.container}
 								keyExtractor={this.key}
-								renderItem={this.renderItemCart} />
+								renderItem={this.renderItemCart}
+							/>
 						</View>
 					</View>
-        </Modal>
+				</Modal>
 				<Modal isVisible={this.state.rejectModal}>
 					<View style={styles.modalWrapperAddPipeline}>
 						<View style={styles.imageModal}>
 							<Text style={styles.pipelineModalText}>REJECTED INFO</Text>
 						</View>
-						<Content style={{padding: 50}}>
+						<Content style={{ padding: 50 }}>
 							<Text>{this.state.rejectMessage}</Text>
 						</Content>
 						<Footer>
@@ -590,18 +612,20 @@ class CustomerProfile extends Component {
 							<View style={styles.headerDirectionTitle}>
 								<View style={{ backgroundColor: 'transparent' }}>
 									<TouchableHighlight underlayColor={'transparent'}>
-										<H3 style={styles.headerDirectionTitle}>
-											{state.params.name}
-										</H3>
+										<H3 style={styles.headerDirectionTitle}>{state.params.name}</H3>
 									</TouchableHighlight>
 									<View style={styles.headerDirection}>
-										<Icon name="md-pin" size={15} color={"#fff"}/>
-										<Text style={styles.dataAddress}>
-											{state.params.address}
-										</Text>
+										<Icon name="md-pin" size={15} color={'#fff'} />
+										<Text style={styles.dataAddress}>{state.params.address}</Text>
 									</View>
 									<Text
-										style={{ fontSize: 16, color: '#fff', fontWeight: 'bold', paddingTop: 15, paddingLeft: 20 }}>
+										style={{
+											fontSize: 16,
+											color: '#fff',
+											fontWeight: 'bold',
+											paddingTop: 15,
+											paddingLeft: 20
+										}}>
 										PIC List:
 									</Text>
 									<FlatList
@@ -622,19 +646,21 @@ class CustomerProfile extends Component {
 					<View style={styles.customerTotal}>
 						<Grid style={{ display: 'flex', alignItems: 'center' }}>
 							<Col>
-								<TouchableOpacity
-									onPress={() => this.setState({ pipelineTabs: 'active' })}>
+								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'active' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.step !== 7 && p.lose === false || p.step === 7 && p.step_process === true).length
+											this.props.pipelines.filter(
+												p =>
+													(p.step !== 7 && p.lose === false) ||
+													(p.step === 7 && p.step_process === true)
+											).length
 										)}
 									</H1>
 									<Text style={styles.totalText}>ACTIVE</Text>
 								</TouchableOpacity>
 							</Col>
 							<Col>
-								<TouchableOpacity
-									onPress={() => this.setState({ pipelineTabs: 'close' })}>
+								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'close' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
 											this.props.pipelines.filter(
@@ -646,12 +672,9 @@ class CustomerProfile extends Component {
 								</TouchableOpacity>
 							</Col>
 							<Col>
-								<TouchableOpacity
-									onPress={() => this.setState({ pipelineTabs: 'lose' })}>
+								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
-										{JSON.stringify(
-											this.props.pipelines.filter(p => p.lose === true).length
-										)}
+										{JSON.stringify(this.props.pipelines.filter(p => p.lose === true).length)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
 								</TouchableOpacity>
@@ -676,10 +699,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
 	return {
 		setNavigate: (link, data) => dispatch(setNavigate(link, data)),
-		fetchPipelines: (id_customer, accessToken) => 	dispatch(fetchPipelines(id_customer, accessToken)),
+		fetchPipelines: (id_customer, accessToken) =>
+			dispatch(fetchPipelines(id_customer, accessToken)),
 		postPipeline: (data, accessToken) => dispatch(postPipeline(data, accessToken)),
-		fetchPicsWithIDCustomer: (id, accessToken) => dispatch(fetchPicsWithIDCustomer(id, accessToken)),
-		fetchPipelineProducts: (id_pipeline, accessToken) => dispatch(fetchPipelineProducts(id_pipeline, accessToken))
+		fetchPicsWithIDCustomer: (id, accessToken) =>
+			dispatch(fetchPicsWithIDCustomer(id, accessToken)),
+		fetchPipelineProducts: (id_pipeline, accessToken) =>
+			dispatch(fetchPipelineProducts(id_pipeline, accessToken))
 	}
 }
 
@@ -783,7 +809,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		fontWeight: 'bold',
 		color: '#fff',
-		marginLeft: 20,
+		marginLeft: 20
 	},
 	customerTotal: {
 		width: '100%',
@@ -953,13 +979,13 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent'
 	},
 	cartContent: {
-    width: '100%',
-    height: '100%',
-    flex: 1,
-    backgroundColor: '#ffffff',
+		width: '100%',
+		height: '100%',
+		flex: 1,
+		backgroundColor: '#ffffff',
 		margin: 0,
 		alignItems: 'center',
-		overflow:'hidden'
+		overflow: 'hidden'
 	},
 	modalTitle: {
 		fontSize: 28,
@@ -1010,7 +1036,7 @@ const styles = StyleSheet.create({
 	productCategory: {
 		fontSize: 18,
 		color: '#696969'
-	},
+	}
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerProfile)

@@ -32,9 +32,7 @@ class ChoosePic extends Component {
 	renderItems = ({ item }) => (
 		<ListItem style={{ paddingHorizontal: 10 }}>
 			<Body>
-				<Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'left' }}>
-					{item.name}
-				</Text>
+				<Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'left' }}>{item.name}</Text>
 				<Text style={{ fontSize: 14, textAlign: 'left' }}>{item.job}</Text>
 				<Text style={{ fontSize: 14, textAlign: 'left' }}>{item.company}</Text>
 			</Body>
@@ -57,15 +55,13 @@ class ChoosePic extends Component {
 						</Button>
 					</Left>
 					<Body>
-						<Text style={styles.title}>
-							CHOOSE PIC ({this.props.pics.length})
-						</Text>
+						<Text style={styles.title}>CHOOSE PIC ({this.props.pics.length})</Text>
 					</Body>
 					<Right>
 						{this.props.pics.length === 0 ? (
 							<Button transparent badge style={{ paddingRight: 0 }}>
 								<Text note style={styles.back}>
-									Preview
+									Next
 								</Text>
 							</Button>
 						) : (
@@ -80,7 +76,7 @@ class ChoosePic extends Component {
 								}
 								style={{ paddingRight: 0 }}>
 								<Text note style={styles.back}>
-									Preview
+									Next
 								</Text>
 							</Button>
 						)}
@@ -91,10 +87,7 @@ class ChoosePic extends Component {
 						bordered
 						style={styles.buttonBack}
 						onPress={() =>
-							this.props.navigation.navigate(
-								'AddNewPic',
-								this.props.navigation.state.params
-							)
+							this.props.navigation.navigate('AddNewPic', this.props.navigation.state.params)
 						}>
 						<Icon name="ios-add" size={25} color="#2D38F9" />
 						<Text style={styles.buttonText}>Add New PIC</Text>

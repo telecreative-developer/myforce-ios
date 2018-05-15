@@ -6,6 +6,7 @@ import {
 import { url } from '../lib/server'
 import { setLoading, setSuccess, setFailed } from './processor'
 import { postPICS } from '../actions/pics'
+import { checkIn } from '../actions/checks'
 
 export const postCustomer = (data, dataPIC, accessToken) => {
 	return async dispatch => {
@@ -23,13 +24,21 @@ export const postCustomer = (data, dataPIC, accessToken) => {
 			const dataCustomer = await response.json()
 			await dataPIC.forEach((data, index) => {
 				dispatch(
-					postPICS(
-						{ ...data, id_customer: dataCustomer.id_customer },
-						dataCustomer,
-						accessToken
-					)
+					postPICS({ ...data, id_customer: dataCustomer.id_customer }, dataCustomer, accessToken)
 				)
 			})
+			await dispatch(
+				checkIn(
+					{
+						id: data.id,
+						id_customer: dataCustomer.id_customer,
+						longitude: dataCustomer.longitude,
+						latitude: dataCustomer.latitude
+					},
+					dataCustomer,
+					accessToken
+				)
+			)
 			await dispatch(setSuccess(true, 'SUCCESS_ADD_CUSTOMER'))
 			await dispatch(setLoading(false, 'LOADING_ADD_CUSTOMER'))
 		} catch (e) {
@@ -56,9 +65,7 @@ export const fetchCustomers = accessToken => {
 			await dispatch(setSuccess(true, 'SUCCESS_FETCH_CUSTOMERS'))
 			await dispatch(setLoading(false, 'LOADING_FETCH_CUSTOMERS'))
 		} catch (e) {
-			dispatch(
-				setFailed(true, 'FAILED_FETCH_CUSTOMERS', 'Failed get data customers')
-			)
+			dispatch(setFailed(true, 'FAILED_FETCH_CUSTOMERS', 'Failed get data customers'))
 			dispatch(setLoading(false, 'LOADING_FETCH_CUSTOMERS'))
 		}
 	}

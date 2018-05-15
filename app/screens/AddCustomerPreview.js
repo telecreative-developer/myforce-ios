@@ -85,7 +85,7 @@ class AddCustomerPreview extends Component {
 	async handlePostCustomer() {
 		const { sessionPersistance } = await this.props
 		await this.props.postCustomer(
-			{...this.state, id_branch: sessionPersistance.id_branch},
+			{ ...this.state, id_branch: sessionPersistance.id_branch },
 			this.props.pics,
 			sessionPersistance.accessToken
 		)
@@ -140,11 +140,7 @@ class AddCustomerPreview extends Component {
 						}}>
 						PIC Name
 					</Text>
-					<FlatList
-						data={this.props.pics}
-						keyExtractor={this.key}
-						renderItem={this.renderItems}
-					/>
+					<FlatList data={this.props.pics} keyExtractor={this.key} renderItem={this.renderItems} />
 					<View style={styles.buttonView}>
 						<Button
 							primary
@@ -154,20 +150,13 @@ class AddCustomerPreview extends Component {
 						</Button>
 						{this.props.loading.condition === true ? (
 							<Button primary style={styles.button}>
-								<LinearGradient
-									colors={['#20E6CD', '#2D38F9']}
-									style={styles.linearGradient}>
+								<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 									<Text style={styles.buttonText}>LOADING...</Text>
 								</LinearGradient>
 							</Button>
 						) : (
-							<Button
-								primary
-								style={styles.button}
-								onPress={() => this.handlePostCustomer()}>
-								<LinearGradient
-									colors={['#20E6CD', '#2D38F9']}
-									style={styles.linearGradient}>
+							<Button primary style={styles.button} onPress={() => this.handlePostCustomer()}>
+								<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 									<Text style={styles.buttonText}>SUBMIT</Text>
 								</LinearGradient>
 							</Button>
@@ -187,8 +176,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	postCustomer: (data, dataPic, accessToken) =>
-		dispatch(postCustomer(data, dataPic, accessToken))
+	postCustomer: (data, dataPic, accessToken) => dispatch(postCustomer(data, dataPic, accessToken))
 })
 
 const styles = StyleSheet.create({

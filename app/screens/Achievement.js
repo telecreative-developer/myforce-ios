@@ -117,7 +117,7 @@ class Achievements extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In progress</Text>
+									<Text>Waiting for approval</Text>
 								</Badge>
 							)}
 						</View>
@@ -151,7 +151,7 @@ class Achievements extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In progress</Text>
+									<Text>Waiting for approval</Text>
 								</Badge>
 							)}
 						</View>
@@ -185,7 +185,7 @@ class Achievements extends Component {
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
 								<Badge style={styles.pipelineBadgeNew}>
-									<Text>In progress</Text>
+									<Text>Waiting for approval</Text>
 								</Badge>
 							)}
 						</View>
