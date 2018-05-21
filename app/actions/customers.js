@@ -48,11 +48,11 @@ export const postCustomer = (data, dataPIC, accessToken) => {
 	}
 }
 
-export const fetchCustomers = accessToken => {
+export const fetchCustomers = (id, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_FETCH_CUSTOMERS'))
 		try {
-			const response = await fetch(`${url}/customers`, {
+			const response = await fetch(`${url}/customers?id=${id}&$sort[createdAt]=-1`, {
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',

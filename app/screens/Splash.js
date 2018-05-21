@@ -30,9 +30,7 @@ class Splash extends Component {
 	render() {
 		return (
 			<Container>
-				<LinearGradient
-					colors={['#20E6CD', '#2D38F9']}
-					style={styles.linearGradient}>
+				<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 					<Image source={logo} />
 				</LinearGradient>
 			</Container>

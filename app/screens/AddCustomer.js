@@ -33,6 +33,7 @@ class AddCustomer extends Component {
 			email: '',
 			phone: '',
 			address: '',
+			website: '',
 			latitude: '',
 			longitude: ''
 		}
@@ -52,14 +53,8 @@ class AddCustomer extends Component {
 	}
 
 	renderButton() {
-		const { name, email, phone, address } = this.state
-		if (
-			!isEmpty(name) &&
-			!isEmpty(email) &&
-			!isEmpty(phone) &&
-			isEmail(email) &&
-			!isEmpty(address)
-		) {
+		const { name, phone, address } = this.state
+		if (!isEmpty(name) && !isEmpty(phone) && !isEmpty(address)) {
 			return (
 				<Button primary style={styles.button} onPress={() => this.validationEmail()}>
 					<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
@@ -78,8 +73,12 @@ class AddCustomer extends Component {
 
 	validationEmail() {
 		const { email } = this.state
-		if (!isEmail(email)) {
-			Alert.alert('Gagal', 'Silahkan masukan alamat email yang valid')
+		if (!isEmpty(email)) {
+			if (!isEmail(email)) {
+				Alert.alert('Gagal', 'Silahkan masukan alamat email yang valid')
+			} else {
+				this.props.navigation.navigate('ChoosePic', this.state)
+			}
 		} else {
 			this.props.navigation.navigate('ChoosePic', this.state)
 		}
@@ -118,7 +117,7 @@ class AddCustomer extends Component {
 							<Input value={this.state.name} onChangeText={name => this.setState({ name })} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
-							<Label>Email</Label>
+							<Label>Email (Optional)</Label>
 							<Input
 								value={this.state.email}
 								onChangeText={email => this.setState({ email })}
@@ -140,6 +139,14 @@ class AddCustomer extends Component {
 								value={this.state.address}
 								multiline={true}
 								onChangeText={address => this.setState({ address })}
+							/>
+						</Item>
+						<Item stackedLabel style={styles.itemForm}>
+							<Label>Website (Optional)</Label>
+							<Input
+								value={this.state.website}
+								multiline={true}
+								onChangeText={website => this.setState({ website })}
 							/>
 						</Item>
 					</Form>

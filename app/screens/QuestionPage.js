@@ -14,6 +14,7 @@ import {
 	Text,
 	Header,
 	Left,
+	Right,
 	Button,
 	H3,
 	Form,
@@ -263,6 +264,16 @@ class QuestionPage extends Component {
 						</View>
 					</View>
 				</Modal>
+				<Header>
+					<Left>
+						<Button transparent onPress={() => this.props.navigation.goBack()}>
+							<Icon name='arrow-back' />
+							<Text>Back</Text>
+						</Button>
+					</Left>
+					<Body />
+					<Right />
+				</Header>
 				<ImageBackground source={bg} style={styles.imageBackground}>
 					<View style={styles.container}>
 						<View style={styles.viewContainerLeft}>
@@ -300,30 +311,21 @@ class QuestionPage extends Component {
 							</TouchableOpacity>
 						</View>
 					</View>
-					<View style={{flexDirection: 'row'}}>
-						<View style={{width: width / 2.2, margin: 15}}>
-							<Button block danger>
-								<Text>Back</Text>
+					{this.state.answer && this.state.activity_desc && this.state.minutes_of_meeting && this.state.todo_list ? (
+						this.props.loading.condition && this.props.loading.process_on === 'LOADING_POST_ANSWER' ? (
+							<Button block primary style={{margin: 18, backgroundColor: '#999999'}}>
+								<ActivityIndicator size="small" color="#FFFFFF" />
 							</Button>
-						</View>
-						<View style={{width: width / 2.2, margin: 15}}>
-							{this.state.answer && this.state.activity_desc && this.state.minutes_of_meeting && this.state.todo_list ? (
-								this.props.loading.condition && this.props.loading.process_on === 'LOADING_POST_ANSWER' ? (
-									<Button block primary style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
-										<ActivityIndicator size="small" color="#FFFFFF" />
-									</Button>
-								) : (
-									<Button block primary style={styles.buttonModalRight} onPress={() => this.handlePostAnswer()}>
-										<Text>Save</Text>
-									</Button>
-								)
-							) : (
-								<Button block style={[styles.buttonModalRight, {backgroundColor: '#999999'}]}>
-									<Text>Save</Text>
-								</Button>
-							)}
-						</View>
-					</View>
+						) : (
+							<Button block primary style={{margin: 18}} onPress={() => this.handlePostAnswer()}>
+								<Text>Save</Text>
+							</Button>
+						)
+					) : (
+						<Button block style={{margin: 18, backgroundColor: '#999999'}}>
+							<Text>Save</Text>
+						</Button>
+					)}
 				</ImageBackground>
 			</Container>
 		)
@@ -392,11 +394,11 @@ const styles = StyleSheet.create({
 	viewButtonModal: {
 		width: width / 2.5
 	},
-	buttonModalLeft: {
-		marginRight: 10
-	},
 	buttonModalRight: {
 		marginLeft: 10
+	},
+	buttonModalLeft: {
+		marginRight: 10
 	},
 	containerButtonModal: {
 		flexDirection: 'row', justifyContent: 'center'

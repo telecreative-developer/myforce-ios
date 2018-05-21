@@ -1,21 +1,6 @@
 import React, { Component } from 'react'
-import {
-	StyleSheet,
-	View,
-	TouchableOpacity,
-	Dimensions,
-	Alert
-} from 'react-native'
-import {
-	Content,
-	Form,
-	Item,
-	Input,
-	Label,
-	Button,
-	Text,
-	Spinner
-} from 'native-base'
+import { StyleSheet, View, TouchableOpacity, Dimensions, Alert } from 'react-native'
+import { Content, Form, Item, Input, Label, Button, Text, Spinner } from 'native-base'
 import { isEmpty, isEmail } from 'validator'
 import { login } from '../actions/login'
 import { connect } from 'react-redux'
@@ -53,10 +38,7 @@ class Login extends Component {
 		const { email, password } = this.state
 		if (!isEmpty(email) && !isEmpty(password)) {
 			return (
-				<Button
-					rounded
-					style={styles.loginButton}
-					onPress={() => this.handleLoginValidation()}>
+				<Button rounded style={styles.loginButton} onPress={() => this.handleLoginValidation()}>
 					{this.props.loading.condition === true &&
 					this.props.loading.process_on === 'PROCESS_LOGIN' ? (
 						<Spinner color="#FFFFFF" />

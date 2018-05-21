@@ -25,14 +25,14 @@ import { isEmpty, isEmail } from 'validator'
 const { height, width } = Dimensions.get('window')
 
 class AddNewPic extends Component {
-	constructor() {
-		super()
+	constructor(props) {
+		super(props)
 
 		this.state = {
 			name: '',
 			phone: '',
 			email: '',
-			address: '',
+			address: props.navigation.state.params.address,
 			job: ''
 		}
 	}
@@ -48,13 +48,8 @@ class AddNewPic extends Component {
 			isEmail(email)
 		) {
 			return (
-				<Button
-					primary
-					style={styles.button}
-					onPress={() => this.handleAddPic()}>
-					<LinearGradient
-						colors={['#20E6CD', '#2D38F9']}
-						style={styles.linearGradient}>
+				<Button primary style={styles.button} onPress={() => this.handleAddPic()}>
+					<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 						<Text style={styles.buttonText}>NEXT</Text>
 					</LinearGradient>
 				</Button>
@@ -104,10 +99,7 @@ class AddNewPic extends Component {
 					<Form>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>New PIC Name</Label>
-							<Input
-								value={this.state.name}
-								onChangeText={name => this.setState({ name })}
-							/>
+							<Input value={this.state.name} onChangeText={name => this.setState({ name })} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>PIC Company</Label>
@@ -115,17 +107,11 @@ class AddNewPic extends Component {
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>PIC Job</Label>
-							<Input
-								value={this.state.job}
-								onChangeText={job => this.setState({ job })}
-							/>
+							<Input value={this.state.job} onChangeText={job => this.setState({ job })} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>PIC Phone Number</Label>
-							<Input
-								value={this.state.phone}
-								onChangeText={phone => this.setState({ phone })}
-							/>
+							<Input value={this.state.phone} onChangeText={phone => this.setState({ phone })} />
 						</Item>
 						<Item stackedLabel style={styles.itemForm}>
 							<Label>PIC Email</Label>

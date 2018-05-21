@@ -25,6 +25,29 @@ export const postEvent = (item, accessToken) => {
 	}
 }
 
+export const updateEvent = (id_event, item, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_POST_EVENT'))
+		try {
+			await fetch(`${url}/events?id_event=${id_event}`, {
+				method: 'PATCH',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify(item)
+			})
+			await dispatch(fetchEvents(item.id, accessToken))
+			await dispatch(setSuccess(true, 'SUCCESS_POST_EVENT'))
+			await dispatch(setLoading(false, 'LOADING_POST_EVENT'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_POST_EVENT', e))
+			dispatch(setLoading(false, 'LOADING_POST_EVENT'))
+		}
+	}
+}
+
 export const fetchEvents = (id, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_FETCH_EVENTS'))

@@ -40,25 +40,35 @@ class Calendar extends Component {
 			'Delete Event',
 			'Are you sure want to delete this event?',
 			[
-				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
-				{text: 'OK', onPress: () => this.props.deleteEvent(id_event)},
+				{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
+				{ text: 'OK', onPress: () => this.props.deleteEvent(id_event) }
 			],
 			{ cancelable: false }
 		)
 	}
 
-	renderEvents({item}) {
+	renderEvents = ({ item }) => {
 		return (
 			<SwipeRow
-				leftOpenValue={75}
-				rightOpenValue={-75}
-				disableRightSwipe={true}
+				leftOpenValue={100}
+				rightOpenValue={-100}
+				left={
+					<Button
+						primary
+						onPress={() => this.props.navigation.navigate('NewEvent', { ...item, update: true })}>
+						<Icon active name="create" />
+					</Button>
+				}
 				body={
-					<Body style={{paddingLeft:10}}>
-						<Text style={{fontSize: 30}}>{item.title}</Text>
-						<Text note style={{fontSize: 25}}>{item.description}</Text>
-						<View style={{flexDirection: 'column', alignItems: 'flex-start', marginTop: 5}}>
-							<Text note style={{fontWeight: 'bold', fontSize: 18}}>{moment(item.time).format('LL')}, {moment(item.time).format('LT')}</Text>
+					<Body style={{ paddingLeft: 10 }}>
+						<Text style={{ fontSize: 30 }}>{item.title}</Text>
+						<Text note style={{ fontSize: 25 }}>
+							{item.description}
+						</Text>
+						<View style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: 5 }}>
+							<Text note style={{ fontWeight: 'bold', fontSize: 18 }}>
+								{moment(item.time).format('LL')}, {moment(item.time).format('LT')}
+							</Text>
 						</View>
 					</Body>
 				}

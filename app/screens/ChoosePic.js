@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, View, Image, FlatList } from 'react-native'
+import { StyleSheet, Alert, Dimensions, View, Image, FlatList } from 'react-native'
 import {
 	Container,
 	Content,
@@ -27,6 +27,18 @@ import { removePic } from '../actions/pics'
 const { height, width } = Dimensions.get('window')
 
 class ChoosePic extends Component {
+	handleRemovePic(item) {
+		Alert.alert(
+			'Remove PIC',
+			'Are you sure to remove the PIC',
+			[
+				{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
+				{ text: 'Remove', onPress: () => this.props.removePic(item) }
+			],
+			{ cancelable: false }
+		)
+	}
+
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
@@ -37,7 +49,7 @@ class ChoosePic extends Component {
 				<Text style={{ fontSize: 14, textAlign: 'left' }}>{item.company}</Text>
 			</Body>
 			<Right>
-				<Button onPress={() => this.props.removePic(item)}>
+				<Button onPress={() => this.handleRemovePic(item)}>
 					<Icon name="close" />
 				</Button>
 			</Right>

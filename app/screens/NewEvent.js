@@ -31,7 +31,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { isEmpty, isEmail } from 'validator'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import moment from 'moment'
-import { postEvent } from '../actions/events'
+import { updateEvent, postEvent } from '../actions/events'
 
 const { height, width } = Dimensions.get('window')
 
@@ -40,9 +40,11 @@ class NewEvent extends Component {
 		super()
 
 		this.state = {
+			id_event: '',
 			title: '',
 			description: '',
 			time: moment().format('LLL'),
+			update: false,
 			isDateTimePickerVisible: false
 		}
 	}
@@ -55,6 +57,18 @@ class NewEvent extends Component {
 				time: moment().format('LLL')
 			})
 			props.navigation.goBack()
+		}
+	}
+
+	componentWillMount() {
+		if (this.props.navigation.state.params) {
+			this.setState({
+				id_event: this.props.navigation.state.params.id_event,
+				title: this.props.navigation.state.params.title,
+				description: this.props.navigation.state.params.description,
+				time: this.props.navigation.state.params.time,
+				update: this.props.navigation.state.params.update
+			})
 		}
 	}
 
@@ -72,9 +86,13 @@ class NewEvent extends Component {
 	}
 
 	handlePostEvent() {
-		const { title, description, time } = this.state
+		const { id_event, title, description, time } = this.state
 		const { id, accessToken } = this.props.sessionPersistance
-		this.props.postEvent({ title, description, time, id }, accessToken)
+		if (this.state.update) {
+			this.props.updateEvent(id_event, { title, description, time, id }, accessToken)
+		} else {
+			this.props.postEvent({ title, description, time, id }, accessToken)
+		}
 	}
 
 	renderButton() {
@@ -83,7 +101,11 @@ class NewEvent extends Component {
 			return (
 				<Button primary style={styles.button} onPress={() => this.handlePostEvent()}>
 					<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
-						<Text style={styles.buttonText}>NEXT</Text>
+						{this.state.update ? (
+							<Text style={styles.buttonText}>UPDATE</Text>
+						) : (
+							<Text style={styles.buttonText}>SAVE</Text>
+						)}
 					</LinearGradient>
 				</Button>
 			)
@@ -91,7 +113,11 @@ class NewEvent extends Component {
 
 		return (
 			<Button primary style={styles.buttonBefore}>
-				<Text style={styles.buttonText}>NEXT</Text>
+				{this.state.update ? (
+					<Text style={styles.buttonText}>UPDATE</Text>
+				) : (
+					<Text style={styles.buttonText}>SAVE</Text>
+				)}
 			</Button>
 		)
 	}
@@ -174,6 +200,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+	updateEvent: (id_event, data, accessToken) => dispatch(updateEvent(id_event, data, accessToken)),
 	postEvent: (data, accessToken) => dispatch(postEvent(data, accessToken))
 })
 

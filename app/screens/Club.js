@@ -55,16 +55,13 @@ class Club extends Component {
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
-		<TouchableOpacity
-			onPress={() =>
-				this.props.setNavigate('CustomerProfile', item.customers[0])
-			}>
+		<TouchableOpacity onPress={() => this.props.setNavigate('CustomerProfile', item.customers[0])}>
 			<HorizontalJoker
 				name={item.users[0].first_name}
 				company={item.customers[0].name}
 				pipeline={item.pipelines[0].pipeline}
 				avatar={''}
-				step={item.pipelines[0].step-1}
+				step={item.pipelines[0].step - 1}
 			/>
 		</TouchableOpacity>
 	)
@@ -77,19 +74,17 @@ class Club extends Component {
 				marginTop: 30,
 				alignItems: 'center'
 			}}>
-			<Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15 }}>
-				{index + 1}
-			</Text>
+			<Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 15 }}>{index + 1}</Text>
 			{item.users[0].avatar ? (
 				<Thumbnail small source={{ uri: item.users[0].avatar }} style={{ marginRight: 10 }} />
 			) : (
 				<Thumbnail small source={defaultAvatar} style={{ marginRight: 10 }} />
 			)}
 			<View>
-				<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${item.users[0].first_name} ${item.users[0].last_name}`}</Text>
-				<Text style={{ fontSize: 14 }}>
-					{JSON.stringify(item.point)} Points
-				</Text>
+				<Text style={{ fontSize: 16, fontWeight: 'bold' }}>{`${item.users[0].first_name} ${
+					item.users[0].last_name
+				}`}</Text>
+				<Text style={{ fontSize: 14 }}>{JSON.stringify(item.point)} Points</Text>
 			</View>
 		</View>
 	)
@@ -111,18 +106,13 @@ class Club extends Component {
 									{sessionPersistance.avatar === '' ? (
 										<Thumbnail rounded large source={defaultAvatar} />
 									) : (
-										<Thumbnail
-											rounded
-											large
-											source={{ uri: sessionPersistance.avatar }}
-										/>
+										<Thumbnail rounded large source={{ uri: sessionPersistance.avatar }} />
 									)}
 									<View style={{ justifyContent: 'center' }}>
-										<TouchableOpacity
-											onPress={() => this.props.setNavigate('Profile')}>
-											<H3 style={styles.profileName}>{`${
-												sessionPersistance.first_name
-											} ${sessionPersistance.last_name}`}</H3>
+										<TouchableOpacity onPress={() => this.props.setNavigate('Profile')}>
+											<H3 style={styles.profileName}>{`${sessionPersistance.first_name} ${
+												sessionPersistance.last_name
+											}`}</H3>
 										</TouchableOpacity>
 									</View>
 								</View>
@@ -138,7 +128,7 @@ class Club extends Component {
 					<View style={styles.boardDirection}>
 						<View style={styles.leaderboard}>
 							<Text style={styles.leaderboardTitle}>
-								{this.props.sessionPersistance.branches[0].branch} Leaderboard
+								{sessionPersistance.branches[0].branch} Leaderboard
 							</Text>
 							<FlatList
 								data={this.props.points

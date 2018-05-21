@@ -118,8 +118,14 @@ class Activity extends PureComponent {
 	}
 
 	componentWillMount() {
-		this.props.fetchCustomers(this.props.sessionPersistance.accessToken)
-		this.props.fetchDataCheckIn(this.props.sessionPersistance.id_check, this.props.sessionPersistance.accessToken)
+		this.props.fetchCustomers(
+			this.props.sessionPersistance.id,
+			this.props.sessionPersistance.accessToken
+		)
+		this.props.fetchDataCheckIn(
+			this.props.sessionPersistance.id_check,
+			this.props.sessionPersistance.accessToken
+		)
 		navigator.geolocation.getCurrentPosition(
 			position => {
 				this.setState({
@@ -156,10 +162,7 @@ class Activity extends PureComponent {
 			tension: 50
 		}).start()
 		await this.setState({ value })
-		await this.props.searchCustomersPlace(
-			value,
-			this.props.sessionPersistance.accessToken
-		)
+		await this.props.searchCustomersPlace(value, this.props.sessionPersistance.accessToken)
 	}
 
 	key = (item, index) => index
@@ -181,8 +184,16 @@ class Activity extends PureComponent {
 			'Check Out',
 			'Are you sure to check out?',
 			[
-				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
-				{text: 'Check Out', onPress: () => this.props.checkOut(this.props.sessionPersistance.id_check, this.props.sessionPersistance.id, this.props.sessionPersistance.accessToken)},
+				{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
+				{
+					text: 'Check Out',
+					onPress: () =>
+						this.props.checkOut(
+							this.props.sessionPersistance.id_check,
+							this.props.sessionPersistance.id,
+							this.props.sessionPersistance.accessToken
+						)
+				}
 			],
 			{ cancelable: false }
 		)
@@ -193,17 +204,21 @@ class Activity extends PureComponent {
 			'Check In',
 			'Are you sure to check in?',
 			[
-				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
-				{text: 'Check In', onPress: () => this.props.checkIn(
-					{
-						id: this.props.sessionPersistance.id,
-						id_customer: this.state.dataCustomers.id_customer,
-						longitude: this.state.dataCustomers.longitude,
-						latitude: this.state.dataCustomers.latitude
-					},
-					this.state.dataCustomers,
-					this.props.sessionPersistance.accessToken
-				)},
+				{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
+				{
+					text: 'Check In',
+					onPress: () =>
+						this.props.checkIn(
+							{
+								id: this.props.sessionPersistance.id,
+								id_customer: this.state.dataCustomers.id_customer,
+								longitude: this.state.dataCustomers.longitude,
+								latitude: this.state.dataCustomers.latitude
+							},
+							this.state.dataCustomers,
+							this.props.sessionPersistance.accessToken
+						)
+				}
 			],
 			{ cancelable: false }
 		)
@@ -233,8 +248,7 @@ class Activity extends PureComponent {
 							/>
 						))}
 					</MapView>
-					<Animated.View
-						style={[styles.footerConfirmation, animatedStyleDetail]}>
+					<Animated.View style={[styles.footerConfirmation, animatedStyleDetail]}>
 						<View style={{ width: '100%', alignItems: 'flex-end' }}>
 							<TouchableHighlight
 								underlayColor={'transparent'}
@@ -243,68 +257,56 @@ class Activity extends PureComponent {
 							</TouchableHighlight>
 						</View>
 						<Text style={styles.addCustomer}>Customer Detail</Text>
-						<Text style={styles.customerName}>
-							{this.state.dataCustomers.name}
-						</Text>
-						<Text style={styles.customerAddress}>
-							{this.state.dataCustomers.address}
-						</Text>
+						<Text style={styles.customerName}>{this.state.dataCustomers.name}</Text>
+						<Text style={styles.customerAddress}>{this.state.dataCustomers.address}</Text>
 						{this.props.loading.condition === true &&
 						this.props.loading.process_on === 'LOADING_CHECK_IN' ? (
 							<TouchableOpacity style={styles.centerButton}>
-								<LinearGradient
-									colors={['#20E6CD', '#2D38F9']}
-									style={styles.linearGradient}>
+								<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 									<Text style={styles.buttonText}>LOADING...</Text>
 								</LinearGradient>
 							</TouchableOpacity>
 						) : (
-							<TouchableOpacity
-								style={styles.centerButton}
-								onPress={() => this.handleCheckIn()}>
-								<LinearGradient
-									colors={['#20E6CD', '#2D38F9']}
-									style={styles.linearGradient}>
+							<TouchableOpacity style={styles.centerButton} onPress={() => this.handleCheckIn()}>
+								<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 									<Text style={styles.buttonText}>CHECK IN</Text>
 								</LinearGradient>
 							</TouchableOpacity>
 						)}
 					</Animated.View>
 					{this.props.sessionPersistance.id_check !== null ? (
-						<Animated.View
-							style={[styles.footerConfirmation, {height: 400}]}>
+						<Animated.View style={[styles.footerConfirmation, { height: 400 }]}>
 							<Text style={styles.addCustomer}>You're Check In</Text>
 							{this.props.checks.length !== 0 && (
 								<View>
 									<Text style={styles.customerName}>{this.props.checks.customers[0].name}</Text>
-									<Text style={styles.customerAddress}>{this.props.checks.customers[0].address}</Text>
+									<Text style={styles.customerAddress}>
+										{this.props.checks.customers[0].address}
+									</Text>
 								</View>
 							)}
-							{this.props.loading.condition === true && this.props.loading.process_on === 'LOADING_CHECK_OUT' ? (
+							{this.props.loading.condition === true &&
+							this.props.loading.process_on === 'LOADING_CHECK_OUT' ? (
 								<TouchableOpacity style={styles.centerButton}>
-									<LinearGradient
-										colors={['#20E6CD', '#2D38F9']}
-										style={styles.linearGradient}>
+									<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 										<Text style={styles.buttonText}>LOADING...</Text>
 									</LinearGradient>
 								</TouchableOpacity>
 							) : (
-								<View style={{display: 'flex', flexDirection: 'row'}}>
+								<View style={{ display: 'flex', flexDirection: 'row' }}>
 									<TouchableOpacity
 										style={styles.centerButton}
 										onPress={() => this.handleCheckOut()}>
-										<LinearGradient
-											colors={['#20E6CD', '#2D38F9']}
-											style={styles.linearGradient}>
+										<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 											<Text style={styles.buttonText}>CHECK OUT</Text>
 										</LinearGradient>
 									</TouchableOpacity>
 									<TouchableOpacity
 										style={styles.centerButtonViewCustomer}
-										onPress={() => this.props.setNavigate('CustomerProfile', this.props.checks.customers[0])}>
-										<LinearGradient
-											colors={['#20E6CD', '#2D38F9']}
-											style={styles.linearGradient}>
+										onPress={() =>
+											this.props.setNavigate('CustomerProfile', this.props.checks.customers[0])
+										}>
+										<LinearGradient colors={['#20E6CD', '#2D38F9']} style={styles.linearGradient}>
 											<Text style={styles.buttonText}>VIEW CUSTOMER</Text>
 										</LinearGradient>
 									</TouchableOpacity>
@@ -342,19 +344,20 @@ class Activity extends PureComponent {
 							{this.state.value === '' ? (
 								<Image source={ornament} style={styles.ornament} />
 							) : (
-								<View
-									style={{ width: width / 1.5, marginTop: 15, height: height }}>
+								<View style={{ width: width / 1.5, marginTop: 15, height: height }}>
 									{this.props.resultCustomersPlace.length === 0 ? (
 										<View>
 											<View style={{ alignItems: 'center', marginTop: 50, marginBottom: 25 }}>
 												<Icon name="ios-sad-outline" size={80} color={'#808080'} />
-												<Text style={{color: '#808080'}}>Customer Not Found</Text>
+												<Text style={{ color: '#808080' }}>Customer Not Found</Text>
 											</View>
-											<View style={{justifyContent: 'center', flexDirection: 'row'}}>
+											<View style={{ justifyContent: 'center', flexDirection: 'row' }}>
 												<Button
-													style={{backgroundColor: '#2D38F9'}}
+													style={{ backgroundColor: '#2D38F9' }}
 													onPress={() => this.props.setNavigate('AddCustomer')}>
-													<Text style={{fontWeight:'bold', fontSize: 14}}>CREATE NEW CUSTOMER</Text>
+													<Text style={{ fontWeight: 'bold', fontSize: 14 }}>
+														CREATE NEW CUSTOMER
+													</Text>
 												</Button>
 											</View>
 										</View>
@@ -387,7 +390,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	checkIn: (data, customers, accessToken) => dispatch(checkIn(data, customers, accessToken)),
 	checkOut: (id_check, id, accessToken) => dispatch(checkOut(id_check, id, accessToken)),
-	fetchCustomers: accessToken => dispatch(fetchCustomers(accessToken)),
+	fetchCustomers: (id, accessToken) => dispatch(fetchCustomers(id, accessToken)),
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 	fetchDataCheckIn: (id_check, accessToken) => dispatch(fetchDataCheckIn(id_check, accessToken)),
 	searchCustomersPlace: (input, accessToken) => dispatch(searchCustomersPlace(input, accessToken))
