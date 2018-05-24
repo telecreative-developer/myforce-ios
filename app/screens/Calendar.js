@@ -19,7 +19,7 @@ import {
 } from 'native-base'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { fetchEvents } from '../actions/events'
+import { fetchEvents, deleteEvent } from '../actions/events'
 import { setNavigate } from '../actions/processor'
 
 const { width, height } = Dimensions.get('window')
@@ -41,7 +41,15 @@ class Calendar extends Component {
 			'Are you sure want to delete this event?',
 			[
 				{ text: 'Cancel', onPress: () => {}, style: 'cancel' },
-				{ text: 'OK', onPress: () => this.props.deleteEvent(id_event) }
+				{
+					text: 'OK',
+					onPress: () =>
+						this.props.deleteEvent(
+							id_event,
+							this.props.sessionPersistance.id,
+							this.props.sessionPersistance.accessToken
+						)
+				}
 			],
 			{ cancelable: false }
 		)
@@ -124,6 +132,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
+	deleteEvent: (id_event, id, accessToken) => dispatch(deleteEvent(id_event, id, accessToken)),
 	fetchEvents: (id, accessToken) => dispatch(fetchEvents(id, accessToken))
 })
 

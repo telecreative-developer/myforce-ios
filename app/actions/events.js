@@ -48,11 +48,33 @@ export const updateEvent = (id_event, item, accessToken) => {
 	}
 }
 
+export const deleteEvent = (id_event, id, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_DELETE_EVENT'))
+		try {
+			await fetch(`${url}/events?id_event=${id_event}`, {
+				method: 'DELETE',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				}
+			})
+			await dispatch(fetchEvents(id, accessToken))
+			await dispatch(setSuccess(true, 'SUCCESS_DELETE_EVENT'))
+			await dispatch(setLoading(false, 'LOADING_DELETE_EVENT'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_DELETE_EVENT', e))
+			dispatch(setLoading(false, 'LOADING_DELETE_EVENT'))
+		}
+	}
+}
+
 export const fetchEvents = (id, accessToken) => {
 	return async dispatch => {
 		await dispatch(setLoading(true, 'LOADING_FETCH_EVENTS'))
 		try {
-			const response = await fetch(`${url}/events?id=${id}`, {
+			const response = await fetch(`${url}/events?id=${id}&$sort[createdAt]=-1`, {
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',
