@@ -32,14 +32,16 @@ import {
 	Input,
 	Label,
 	Badge,
-	Picker
+	Picker,
+	ListItem,
+	Radio
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import PipelineProgress from '../components/PipelineProgress'
 import { fetchPicsWithIDCustomer } from '../actions/pics'
-import { fetchPipelines, postPipeline, fetchPipelineProducts } from '../actions/pipelines'
+import { fetchPipelines, postPipeline, fetchPipelineProducts, updatePipeline } from '../actions/pipelines'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
@@ -58,6 +60,7 @@ class CustomerProfile extends Component {
 			isModalVisibleCart: false,
 			isModalVisible: false,
 			modalNewPipeline: false,
+			isModalVisibleUpdate: false,
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
@@ -72,7 +75,11 @@ class CustomerProfile extends Component {
 					subproduct: 'Test'
 				}
 			],
-			dataPic: {}
+			dataPic: {},
+			pipelines:{},
+			probability:'',
+			project_type:''
+
 		}
 	}
 
@@ -199,6 +206,93 @@ class CustomerProfile extends Component {
 		await this.props.fetchPipelineProducts(id_pipeline, accessToken)
 	}
 
+	handleUpdatePipeline(item){
+		this.setState({isModalVisibleUpdate:true, pipelines: item, pipeline: item.pipeline})
+	}
+
+	async handeSaveUpdatePipeline(){
+		await this.props.updatePipeline(
+			{
+				...this.state.pipelines, 
+				pipeline: this.state.pipeline, 
+				pipeline_status: this.state.statusPipeline, 
+				probability: this.state.probability, 
+				close: this.state.stateclose,
+				drop: this.state.statedrop,
+				lose: this.state.stateclose,
+
+				project_type: this.state.project_type,
+			}, 
+			this.props.sessionPersistance.accessToken)
+		await this.setState({ pipeline: '', isModalVisibleUpdate:false })
+	}
+
+	setActive(){
+		this.setState({
+			stateactive: true,
+			stateloose: false,
+			statedrop: false,
+			stateclose: false,
+		})
+	}
+
+	setClose(){
+		this.setState({
+			stateactive: false,
+			stateclose: true,
+			statedrop: false,
+			stateloose: false
+		})
+	}
+
+	setDrope(){
+		this.setState({
+			stateactive: false,
+			statedrop: true,
+			stateclose: false,
+			stateloose: false
+		})
+	}
+
+	setLoose(){
+		this.setState({
+			stateactive: false,
+			stateloose: true,
+			stateclose: false,
+			statedrop: false,
+		})
+	}
+
+	setA(){
+		this.setState({
+			probability: 1
+		})
+	}
+
+	setB(){
+		this.setState({
+			probability: 2
+		})
+	}
+
+	setC(){
+		this.setState({
+			probability: 3
+		})
+	}
+
+	setProjectORS(){
+		this.setState({
+			project_type: 'ORS'
+		})
+	}
+
+	setProjectRENT(){
+		this.setState({
+			project_type: 'RENT'
+		})
+	}
+
 	renderTextSellingProccess() {
 		const { step } = this.state
 		if (step === 1) {
@@ -247,7 +341,7 @@ class CustomerProfile extends Component {
 	}
 
 	renderItemsActive = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(step, id_pipeline)}>
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
@@ -310,8 +404,15 @@ class CustomerProfile extends Component {
 						</Button>
 					)}
 				</View>
+				<View>
+					<View style={{margin: 25}}>
+						<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+							<Text>Edit</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsClose = ({ item }) => (
@@ -470,6 +571,143 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
+
+				<Modal isVisible={this.state.isModalVisibleUpdate}>
+						<View style={styles.modalWrapperAddPipeline}>
+							<Content>
+								<View style={styles.imageModal}>
+									<Image source={image} />
+									<Text style={styles.pipelineModalText}>UPDATE PIPELINE</Text>
+								</View>
+								<View style={styles.formDirection}>
+									<Form>
+										<Item floatingLabel>
+											<Label>Pipeline Title</Label>
+											<Input
+												value={this.state.pipeline}
+												onChangeText={pipeline => this.setState({ pipeline })}
+											/>
+										</Item>
+										<View style={styles.productCategoryView}>
+											<Label>PIC Name</Label>
+											<Picker
+												style={styles.picker}
+												mode="dropdown"
+												iosHeader="PIC Name"
+												selectedValue={this.state.id_pic}
+												onValueChange={id_pic => this.setState({ id_pic })}>
+												{this.props.picsCustomers.map((data, index) => (
+													<Item key={index} label={data.name} value={data.id_pic} />
+												))}
+											</Picker>
+										</View>
+										<View>
+											<Text>Status Pipeline</Text>
+											<View>
+												<ListItem onPress={() => this.setActive()}>
+													<Text>Active</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateactive}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setClose()}>
+													<Text>Close</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateclose}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setDrope()}>
+													<Text>Drope</Text>
+													<Right>
+														<Radio 
+															selected={this.state.statedrop}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setLoose()}>
+													<Text>Loose</Text>
+													<Right>
+														<Radio 
+															selected={this.state.statedrop}
+														/>
+													</Right>
+												</ListItem>
+											</View>
+											<View>
+												<Text>Probability</Text>
+												<View>
+													<ListItem onPress={() => this.setA()}>
+														<Text>A</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 1 ? true : false}
+															/>
+														</Right>
+													</ListItem>
+													<ListItem onPress={() => this.setB()}>
+														<Text>B</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 2 ? true : false}
+															/>
+														</Right>
+													</ListItem>
+													<ListItem onPress={() => this.setC()}>
+														<Text>C</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 3 ? true : false}
+															/>
+														</Right>
+													</ListItem>
+												</View>
+											</View>
+
+											<View>
+												<Text>Project Type</Text>
+												<View>
+													<ListItem onPress={() => this.setProjectORS()}>
+															<Text>ORS</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'ORS' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+														<ListItem onPress={() => this.setProjectRENT()}>
+															<Text>RENT</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'RENT' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+												</View>
+											</View>
+										</View>
+									</Form>
+								</View>
+								<Footer>
+									<FooterTab>
+										<Button onPress={() => this.setState({ isModalVisibleUpdate: false })}>
+											<Text note style={styles.modalCancelButton}>
+												Cancel
+											</Text>
+										</Button>
+										<Button onPress={() => this.handeSaveUpdatePipeline()}>
+											<Text style={styles.modalYesButton}>Submit</Text>
+										</Button>
+									</FooterTab>
+								</Footer>
+
+							</Content>
+						</View>
+				</Modal>
+
 				<Modal isVisible={this.state.modalPic}>
 					<View style={styles.modalWrapperAddPipeline}>
 						<View style={styles.imageModal}>
@@ -651,7 +889,7 @@ class CustomerProfile extends Component {
 										{JSON.stringify(
 											this.props.pipelines.filter(
 												p =>
-													(p.step !== 7 && p.lose === false) ||
+													(p.step !== 7 && p.lose === false && p.drop === false) ||
 													(p.step === 7 && p.step_process === true)
 											).length
 										)}
@@ -674,9 +912,19 @@ class CustomerProfile extends Component {
 							<Col>
 								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
-										{JSON.stringify(this.props.pipelines.filter(p => p.lose === true).length)}
+										{JSON.stringify(
+											this.props.pipelines.filter(p => p.lose === true).length)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
+								</TouchableOpacity>
+							</Col>
+							<Col>
+								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'lose' })}>
+									<H1 style={styles.totalText}>
+										{JSON.stringify(
+											this.props.pipelines.filter(p => p.lose === false && p.close === false).length)}
+									</H1>
+									<Text style={styles.totalText}>DROP</Text>
 								</TouchableOpacity>
 							</Col>
 						</Grid>
@@ -705,7 +953,8 @@ const mapDispatchToProps = dispatch => {
 		fetchPicsWithIDCustomer: (id, accessToken) =>
 			dispatch(fetchPicsWithIDCustomer(id, accessToken)),
 		fetchPipelineProducts: (id_pipeline, accessToken) =>
-			dispatch(fetchPipelineProducts(id_pipeline, accessToken))
+			dispatch(fetchPipelineProducts(id_pipeline, accessToken)),
+		updatePipeline: (item , accessToken) => dispatch(updatePipeline(item, accessToken))
 	}
 }
 

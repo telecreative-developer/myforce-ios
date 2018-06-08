@@ -129,3 +129,27 @@ export const fetchPipelineProductsSuccess = data => ({
 	type: FETCH_PIPELINE_PRODUCTS_SUCCESS,
 	payload: data
 })
+
+export const updatePipeline = (items, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_UPDATE_PIPELINE'))
+		try {
+			const response = await fetch(`${url}/pipelines/${items.id_pipeline}`, {
+				method: 'PUT',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify(items)
+			})
+			const data = await response.json()
+			await dispatch(fetchPipelines(items.id_customer, accessToken))
+			await dispatch(setSuccess(false, 'SUCCESS_UPDATE_PIPELINE'))
+			await dispatch(setLoading(false, 'SUCCESS_UPDATE_PIPELIE'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_UPDATE_PIPELINE', e))
+			dispatch(setLoading(false, 'LOADING_UPDATE_PIPELINE'))
+		}
+	}
+}
