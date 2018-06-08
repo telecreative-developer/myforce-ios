@@ -78,7 +78,11 @@ class CustomerProfile extends Component {
 			dataPic: {},
 			pipelines:{},
 			probability:'',
-			project_type:''
+			project_type:'',
+			statedrop:false,
+			stateclose:false,
+			stateactive:false,
+			stateloose:false,
 
 		}
 	}
@@ -173,6 +177,14 @@ class CustomerProfile extends Component {
 					renderItem={this.renderItemsLose}
 				/>
 			)
+		} else if (this.state.pipelineTabs === 'drop'){
+			return (
+				<FlatList 
+					data={this.props.pipelines.filter(p => p.drop === true )}
+					keyExtractor={this.key}
+					renderItem={this.renderItemsDrop}
+				/>
+			)
 		}
 	}
 
@@ -214,13 +226,11 @@ class CustomerProfile extends Component {
 		await this.props.updatePipeline(
 			{
 				...this.state.pipelines, 
-				pipeline: this.state.pipeline, 
-				pipeline_status: this.state.statusPipeline, 
-				probability: this.state.probability, 
+				pipeline: this.state.pipeline,
+				probability: this.state.probability,
 				close: this.state.stateclose,
 				drop: this.state.statedrop,
-				lose: this.state.stateclose,
-
+				lose: this.state.statelose,
 				project_type: this.state.project_type,
 			}, 
 			this.props.sessionPersistance.accessToken)
@@ -265,19 +275,19 @@ class CustomerProfile extends Component {
 
 	setA(){
 		this.setState({
-			probability: 1
+			probability: "A"
 		})
 	}
 
 	setB(){
 		this.setState({
-			probability: 2
+			probability: "B"
 		})
 	}
 
 	setC(){
 		this.setState({
-			probability: 3
+			probability: "C"
 		})
 	}
 
@@ -341,12 +351,18 @@ class CustomerProfile extends Component {
 	}
 
 	renderItemsActive = ({ item }) => (
-		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(step, id_pipeline)}>
+		
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
+			{console.log(item)}
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent:'space-between' , flex:1}}>
+								<H2>{item.pipeline}</H2>
+								<H3 style={{marginTop: 5, marginLeft: 10}}>Probability : {item.probability}</H3>
+								<H3>Project Type : </H3>
+							</View>
 						</View>
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
@@ -421,7 +437,9 @@ class CustomerProfile extends Component {
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View STYLE={{flexDirection:'row'}}>
+								<H2>{item.pipeline}</H2>
+							</View>
 						</View>
 						<View style={styles.badgeFlex}>
 							{item.step_process && (
@@ -459,6 +477,49 @@ class CustomerProfile extends Component {
 	)
 
 	renderItemsLose = ({ item }) => (
+		<View style={styles.customerPipeline}>
+			<View style={styles.pipelineContent}>
+				<View style={styles.leftPipeline}>
+					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.titleFlex}>
+							<H2>{item.pipeline}</H2>
+						</View>
+						<View style={styles.badgeFlex}>
+							{item.step_process && (
+								<Badge style={styles.pipelineBadgeNew}>
+									<Text>Waiting for approval</Text>
+								</Badge>
+							)}
+						</View>
+					</View>
+					<View style={styles.picDirection}>
+						{item.pics.map((data, index) => (
+							<Text key={index} style={styles.dataPic}>
+								{data.name}
+							</Text>
+						))}
+					</View>
+				</View>
+				<View>
+					<PipelineProgress currentPosition={item.step - 1} />
+				</View>
+				<View
+					style={{
+						justifyContent: 'center',
+						flexDirection: 'row',
+						display: 'flex',
+						width: '100%',
+						paddingVertical: 20
+					}}>
+					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
+						<Text style={{ fontSize: 14 }}>Order Summary</Text>
+					</Button>
+				</View>
+			</View>
+		</View>
+	)
+
+	renderItemsDrop = ({ item }) => (
 		<View style={styles.customerPipeline}>
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
@@ -632,7 +693,7 @@ class CustomerProfile extends Component {
 													<Text>Loose</Text>
 													<Right>
 														<Radio 
-															selected={this.state.statedrop}
+															selected={this.state.stateloose}
 														/>
 													</Right>
 												</ListItem>
@@ -644,7 +705,7 @@ class CustomerProfile extends Component {
 														<Text>A</Text>
 														<Right>
 															<Radio 
-																selected={this.state.probability === 1 ? true : false}
+																selected={this.state.probability === 'A' ? true : false}
 															/>
 														</Right>
 													</ListItem>
@@ -652,7 +713,7 @@ class CustomerProfile extends Component {
 														<Text>B</Text>
 														<Right>
 															<Radio 
-																selected={this.state.probability === 2 ? true : false}
+																selected={this.state.probability === 'B' ? true : false}
 															/>
 														</Right>
 													</ListItem>
@@ -660,7 +721,7 @@ class CustomerProfile extends Component {
 														<Text>C</Text>
 														<Right>
 															<Radio 
-																selected={this.state.probability === 3 ? true : false}
+																selected={this.state.probability === 'C' ? true : false}
 															/>
 														</Right>
 													</ListItem>
@@ -919,10 +980,10 @@ class CustomerProfile extends Component {
 								</TouchableOpacity>
 							</Col>
 							<Col>
-								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'lose' })}>
+								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'drop' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.lose === false && p.close === false).length)}
+											this.props.pipelines.filter(p => p.drop === true).length)}
 									</H1>
 									<Text style={styles.totalText}>DROP</Text>
 								</TouchableOpacity>
@@ -1126,7 +1187,7 @@ const styles = StyleSheet.create({
 	},
 	titleFlex: {
 		display: 'flex',
-		justifyContent: 'flex-start'
+		flexDirection: 'row'
 	},
 	iconFlex: {
 		flex: 1,
