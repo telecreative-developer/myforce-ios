@@ -32,20 +32,23 @@ import {
 	Input,
 	Label,
 	Badge,
-	Picker
+	Picker,
+	ListItem,
+	Radio
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import PipelineProgress from '../components/PipelineProgress'
 import { fetchPicsWithIDCustomer } from '../actions/pics'
-import { fetchPipelines, postPipeline, fetchPipelineProducts } from '../actions/pipelines'
+import { fetchPipelines, postPipeline, fetchPipelineProducts, updatePipeline } from '../actions/pipelines'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
 import { setNavigate } from '../actions/processor'
 import bg from '../assets/images/meeting.jpg'
 import LinearGradient from 'react-native-linear-gradient'
+import moment from 'moment'
 
 const { height, width } = Dimensions.get('window')
 
@@ -58,6 +61,7 @@ class CustomerProfile extends Component {
 			isModalVisibleCart: false,
 			isModalVisible: false,
 			modalNewPipeline: false,
+			isModalVisibleUpdate: false,
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
@@ -72,7 +76,15 @@ class CustomerProfile extends Component {
 					subproduct: 'Test'
 				}
 			],
-			dataPic: {}
+			dataPic: {},
+			pipelines:{},
+			probability:'',
+			project_type:'',
+			statedrop:false,
+			stateclose:false,
+			stateactive:false,
+			stateloose:false,
+
 		}
 	}
 
@@ -141,7 +153,7 @@ class CustomerProfile extends Component {
 						))}
 					<FlatList
 						data={this.props.pipelines.filter(
-							p => (p.step !== 7 && p.lose === false) || (p.step === 7 && p.step_process === true)
+							p => (p.step !== 7 && p.lose === false && p.drop === false) || (p.step === 7 && p.step_process === true)
 						)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
@@ -164,6 +176,14 @@ class CustomerProfile extends Component {
 					data={this.props.pipelines.filter(p => p.lose === true)}
 					keyExtractor={this.key}
 					renderItem={this.renderItemsLose}
+				/>
+			)
+		} else if (this.state.pipelineTabs === 'drop'){
+			return (
+				<FlatList 
+					data={this.props.pipelines.filter(p => p.drop === true )}
+					keyExtractor={this.key}
+					renderItem={this.renderItemsDrop}
 				/>
 			)
 		}
@@ -197,6 +217,91 @@ class CustomerProfile extends Component {
 		const { accessToken } = await this.props.sessionPersistance
 		await this.setState({ totalPrice, isModalVisibleCart: true })
 		await this.props.fetchPipelineProducts(id_pipeline, accessToken)
+	}
+
+	handleUpdatePipeline(item){
+		this.setState({isModalVisibleUpdate:true, pipelines: item, pipeline: item.pipeline})
+	}
+
+	async handeSaveUpdatePipeline(){
+		await this.props.updatePipeline(
+			{
+				...this.state.pipelines, 
+				pipeline: this.state.pipeline,
+				probability: this.state.probability,
+				close: this.state.stateclose,
+				drop: this.state.statedrop,
+				lose: this.state.stateloose,
+				project_type: this.state.project_type,
+			}, 
+			this.props.sessionPersistance.accessToken)
+		await this.setState({ pipeline: '', isModalVisibleUpdate:false })
+	}
+
+	setActive(){
+		this.setState({
+			stateactive: true,
+			stateloose: false,
+			statedrop: false,
+			stateclose: false,
+		})
+	}
+
+	setClose(){
+		this.setState({
+			stateactive: false,
+			stateclose: true,
+			statedrop: false,
+			stateloose: false
+		})
+	}
+
+	setDrope(){
+		this.setState({
+			stateactive: false,
+			statedrop: true,
+			stateclose: false,
+			stateloose: false
+		})
+	}
+
+	setLoose(){
+		this.setState({
+			stateactive: false,
+			stateloose: true,
+			stateclose: false,
+			statedrop: false,
+		})
+	}
+
+	setA(){
+		this.setState({
+			probability: "A"
+		})
+	}
+
+	setB(){
+		this.setState({
+			probability: "B"
+		})
+	}
+
+	setC(){
+		this.setState({
+			probability: "C"
+		})
+	}
+
+	setProjectORS(){
+		this.setState({
+			project_type: 'ORS'
+		})
+	}
+
+	setProjectRENT(){
+		this.setState({
+			project_type: 'RENT'
+		})
 	}
 
 	renderTextSellingProccess() {
@@ -247,38 +352,27 @@ class CustomerProfile extends Component {
 	}
 
 	renderItemsActive = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
+			{console.log(item)}
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
+							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-							{item.reject_status && (
-								<TouchableOpacity
-									onPress={() =>
-										this.setState({ rejectModal: true, rejectMessage: item.reject_message })
-									}>
-									<Badge style={[styles.pipelineBadgeNew, { backgroundColor: '#D81B60' }]}>
-										<Text>Rejected</Text>
-									</Badge>
-								</TouchableOpacity>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={18} color={'#000'} />
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
@@ -310,94 +404,176 @@ class CustomerProfile extends Component {
 						</Button>
 					)}
 				</View>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={{ margin: 10, backgroundColor: '#20E6CD', width: 200 }}>
+					{item.step_process && (
+						<Text style={{padding: 10, textAlign: 'center', color: '#2a2a2a'}}>Waiting for approval</Text>
+					)}
+					{item.reject_status && (
+						<TouchableOpacity
+							onPress={() =>
+								this.setState({ rejectModal: true, rejectMessage: item.reject_message })
+							}>
+							<Text>Rejected</Text>
+						</TouchableOpacity>
+					)}
+				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsClose = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)} >
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
+							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step - 1} />
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() =>
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+							}
+							currentPosition={item.step - 1}
+						/>
+					) : (
+						<PipelineProgress currentPosition={item.step - 1} />
+					)}
 				</View>
-				<View
-					style={{
-						justifyContent: 'center',
-						flexDirection: 'row',
-						display: 'flex',
-						width: '100%',
-						paddingVertical: 20
-					}}>
-					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{ fontSize: 14 }}>Order Summary</Text>
-					</Button>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
 				</View>
+				<Button full style={{ backgroundColor: '#2D38F9', margin: 10 }}>
+					<Text style={{ fontSize: 16, textAlign: 'center' }}>Order Summary</Text>
+				</Button>
 			</View>
-		</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsLose = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
+							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step - 1} />
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() =>
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+							}
+							currentPosition={item.step - 1}
+						/>
+					) : (
+						<PipelineProgress currentPosition={item.step - 1} />
+					)}
 				</View>
-				<View
-					style={{
-						justifyContent: 'center',
-						flexDirection: 'row',
-						display: 'flex',
-						width: '100%',
-						paddingVertical: 20
-					}}>
-					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{ fontSize: 14 }}>Order Summary</Text>
-					</Button>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
 				</View>
+				<Button full style={{ backgroundColor: '#2D38F9', margin: 10 }}>
+					<Text style={{ fontSize: 16, textAlign: 'center' }}>Order Summary</Text>
+				</Button>
 			</View>
-		</View>
+		</TouchableOpacity>
+	)
+
+	renderItemsDrop = ({ item }) => (
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
+			<View style={styles.pipelineContent}>
+				<View style={styles.leftPipeline}>
+					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
+						<View style={styles.titleFlex}>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
+							</View>
+						</View>
+					</View>
+				</View>
+				<View>
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() =>
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+							}
+							currentPosition={item.step - 1}
+						/>
+					) : (
+						<PipelineProgress currentPosition={item.step - 1} />
+					)}
+				</View>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
+				</View>
+				<Button full style={{ backgroundColor: '#2D38F9', margin: 10 }}>
+					<Text style={{ fontSize: 16, textAlign: 'center' }}>Order Summary</Text>
+				</Button>
+			</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsPic = ({ item }) => (
@@ -470,6 +646,142 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
+
+				<Modal isVisible={this.state.isModalVisibleUpdate}>
+						<View style={styles.modalWrapperAddPipeline}>
+							<Content>
+								<View style={styles.imageModal}>
+									<Image source={image} />
+									<Text style={styles.pipelineModalText}>UPDATE PIPELINE</Text>
+								</View>
+								<View style={styles.formDirection}>
+									<Form>
+										<Item stackedLabel>
+											<Label style={{color: 'blue', fontSize: 16}}>Pipeline Title</Label>
+											<Input
+												value={this.state.pipeline}
+												onChangeText={pipeline => this.setState({ pipeline })}
+											/>
+										</Item>
+										<View style={styles.productCategoryView}>
+											<Label style={{color: 'blue'}}>PIC Name</Label>
+											<Picker
+												style={styles.picker}
+												mode="dropdown"
+												iosHeader="PIC Name"
+												selectedValue={this.state.id_pic}
+												onValueChange={id_pic => this.setState({ id_pic })}>
+												{this.props.picsCustomers.map((data, index) => (
+													<Item key={index} label={data.name} value={data.id_pic} />
+												))}
+											</Picker>
+										</View>
+										<View>
+											<Text style={{paddingLeft: 10, color: 'blue'}}>Status Pipeline</Text>
+											<View style={{paddingLeft: 15}}>
+												<ListItem onPress={() => this.setActive()}>
+													<Text>Active</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateactive}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setClose()}>
+													<Text>Close</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateclose}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setDrope()}>
+													<Text>Drope</Text>
+													<Right>
+														<Radio 
+															selected={this.state.statedrop}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setLoose()}>
+													<Text>Loose</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateloose}
+														/>
+													</Right>
+												</ListItem>
+											</View>
+											<View>
+												<Text style={{paddingLeft: 10, paddingTop: 15, color: 'blue'}}>Probability</Text>
+												<View style={{paddingLeft: 15}}>
+													<ListItem onPress={() => this.setA()}>
+														<Text>A</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 'A' ? true : false}
+															/>
+														</Right>
+													</ListItem>
+													<ListItem onPress={() => this.setB()}>
+														<Text>B</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 'B' ? true : false}
+															/>
+														</Right>
+													</ListItem>
+													<ListItem onPress={() => this.setC()}>
+														<Text>C</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 'C' ? true : false}
+															/>
+														</Right>
+													</ListItem>
+												</View>
+											</View>
+
+											<View>
+												<Text style={{paddingLeft: 10, paddingTop: 15, color: 'blue'}}>Project Type</Text>
+												<View style={{paddingLeft: 15}}>
+													<ListItem onPress={() => this.setProjectORS()}>
+															<Text>ORS</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'ORS' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+														<ListItem onPress={() => this.setProjectRENT()}>
+															<Text>RENT</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'RENT' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+												</View>
+											</View>
+										</View>
+									</Form>
+								</View>
+							</Content>
+							<Footer>
+								<FooterTab>
+									<Button onPress={() => this.setState({ isModalVisibleUpdate: false })}>
+										<Text note style={styles.modalCancelButton}>
+											Cancel
+										</Text>
+									</Button>
+									<Button onPress={() => this.handeSaveUpdatePipeline()}>
+										<Text style={styles.modalYesButton}>Submit</Text>
+									</Button>
+								</FooterTab>
+							</Footer>
+						</View>
+				</Modal>
+
 				<Modal isVisible={this.state.modalPic}>
 					<View style={styles.modalWrapperAddPipeline}>
 						<View style={styles.imageModal}>
@@ -651,7 +963,7 @@ class CustomerProfile extends Component {
 										{JSON.stringify(
 											this.props.pipelines.filter(
 												p =>
-													(p.step !== 7 && p.lose === false) ||
+													(p.step !== 7 && p.lose === false && p.drop === false) ||
 													(p.step === 7 && p.step_process === true)
 											).length
 										)}
@@ -674,9 +986,19 @@ class CustomerProfile extends Component {
 							<Col>
 								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
-										{JSON.stringify(this.props.pipelines.filter(p => p.lose === true).length)}
+										{JSON.stringify(
+											this.props.pipelines.filter(p => p.lose === true).length)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
+								</TouchableOpacity>
+							</Col>
+							<Col>
+								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'drop' })}>
+									<H1 style={styles.totalText}>
+										{JSON.stringify(
+											this.props.pipelines.filter(p => p.drop === true).length)}
+									</H1>
+									<Text style={styles.totalText}>DROP</Text>
 								</TouchableOpacity>
 							</Col>
 						</Grid>
@@ -705,14 +1027,16 @@ const mapDispatchToProps = dispatch => {
 		fetchPicsWithIDCustomer: (id, accessToken) =>
 			dispatch(fetchPicsWithIDCustomer(id, accessToken)),
 		fetchPipelineProducts: (id_pipeline, accessToken) =>
-			dispatch(fetchPipelineProducts(id_pipeline, accessToken))
+			dispatch(fetchPipelineProducts(id_pipeline, accessToken)),
+		updatePipeline: (item , accessToken) => dispatch(updatePipeline(item, accessToken))
 	}
 }
 
 const styles = StyleSheet.create({
 	productCategoryView: {
 		marginLeft: 15,
-		marginTop: 30
+		marginTop: 30,
+		paddingBottom: 10
 	},
 	picker: {
 		marginLeft: -15
@@ -759,8 +1083,8 @@ const styles = StyleSheet.create({
 	picDirection: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 5,
-		marginLeft: 3
+		marginLeft: 3,
+		paddingBottom: 20
 	},
 	newsTitle: {
 		color: '#ffffff',
@@ -876,8 +1200,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5
 	},
 	titleFlex: {
-		display: 'flex',
-		justifyContent: 'flex-start'
+		alignItems: 'center'
 	},
 	iconFlex: {
 		flex: 1,
@@ -927,7 +1250,8 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	leftPipeline: {
-		padding: 30
+		padding: 30,
+		alignItems: 'center'
 	},
 	formDirection: {
 		flex: 1,
@@ -946,13 +1270,16 @@ const styles = StyleSheet.create({
 		marginLeft: 15
 	},
 	pipelineTitleDirection: {
-		flexDirection: 'row'
+		flexDirection: 'row',
 	},
 	titleFlex: {
 		flex: 0.8
 	},
 	badgeFlex: {
-		flex: 0.2
+		flex: 0.2,
+		backgroundColor: '#20E6CD',
+		width:100,
+		borderRadius: 5
 	},
 	rowDirection: {
 		display: 'flex',
