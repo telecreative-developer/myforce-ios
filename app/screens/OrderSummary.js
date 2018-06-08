@@ -54,6 +54,23 @@ const formatData = (data, numColumns) => {
 
 const numColumns = 3
 
+class SearchableFlatlist extends Component {
+	static INCLUDES = 'includes'
+	static WORDS = 'words'
+	getFilteredResults() {
+		let { data, type, searchProperty, searchTerm } = this.props
+		return data.filter(
+			item =>
+				type && type === SearchableFlatlist.WORDS
+					? new RegExp(`\\b${searchTerm}`, 'gi').test(item[searchProperty])
+					: new RegExp(`${searchTerm}`, 'gi').test(item[searchProperty])
+		)
+	}
+	render() {
+		return <FlatList {...this.props} data={this.getFilteredResults()} />
+	}
+}
+
 class OrderSummary extends Component {
 	constructor() {
 		super()
@@ -61,7 +78,8 @@ class OrderSummary extends Component {
 		this.state = {
 			id_product: '',
 			totalPrice: 0,
-			isModalVisibleCart: false
+			isModalVisibleCart: false,
+			search: ''
 		}
 	}
 
@@ -210,9 +228,9 @@ class OrderSummary extends Component {
 								}>
 								{this.props.products.map((data, index) => (
 									<Item
-										key={index}
-										label={data.product}
-										value={data.id_product}
+									key={index}
+									label={data.product}
+									value={data.id_product}
 									/>
 								))}
 							</Picker>
@@ -225,10 +243,17 @@ class OrderSummary extends Component {
 								/>
 							</Item>
 						</View>
+						<View>
+							<Item>
+								<Input placeholder="Search" value={this.state.search} onChangeText={(search) => this.setState({search})} />
+							</Item>
+						</View>
 					</Form>
-					<FlatList
+					<SearchableFlatlist
 						data={formatData(this.props.subproducts, numColumns)}
 						style={styles.container}
+						searchProperty="subproduct"
+						searchTerm={this.state.search}
 						keyExtractor={(item, index) => index}
 						renderItem={this.renderItem}
 						numColumns={numColumns}

@@ -48,6 +48,7 @@ import { NavigationActions } from 'react-navigation'
 import { setNavigate } from '../actions/processor'
 import bg from '../assets/images/meeting.jpg'
 import LinearGradient from 'react-native-linear-gradient'
+import moment from 'moment'
 
 const { height, width } = Dimensions.get('window')
 
@@ -152,7 +153,7 @@ class CustomerProfile extends Component {
 						))}
 					<FlatList
 						data={this.props.pipelines.filter(
-							p => (p.step !== 7 && p.lose === false) || (p.step === 7 && p.step_process === true)
+							p => (p.step !== 7 && p.lose === false && p.drop === false) || (p.step === 7 && p.step_process === true)
 						)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
@@ -230,7 +231,7 @@ class CustomerProfile extends Component {
 				probability: this.state.probability,
 				close: this.state.stateclose,
 				drop: this.state.statedrop,
-				lose: this.state.statelose,
+				lose: this.state.stateloose,
 				project_type: this.state.project_type,
 			}, 
 			this.props.sessionPersistance.accessToken)
@@ -357,38 +358,21 @@ class CustomerProfile extends Component {
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<View style={{flexDirection: 'row', justifyContent:'space-between' , flex:1}}>
-								<H2>{item.pipeline}</H2>
-								<H3 style={{marginTop: 5, marginLeft: 10}}>Probability : {item.probability}</H3>
-								<H3>Project Type : </H3>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
 							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-							{item.reject_status && (
-								<TouchableOpacity
-									onPress={() =>
-										this.setState({ rejectModal: true, rejectMessage: item.reject_message })
-									}>
-									<Badge style={[styles.pipelineBadgeNew, { backgroundColor: '#D81B60' }]}>
-										<Text>Rejected</Text>
-									</Badge>
-								</TouchableOpacity>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						<Icon name="md-contact" size={18} color={'#000'} />
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
@@ -420,146 +404,176 @@ class CustomerProfile extends Component {
 						</Button>
 					)}
 				</View>
-				<View>
-					<View style={{margin: 25}}>
-						<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
-							<Text>Edit</Text>
-						</TouchableOpacity>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
 					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={{ margin: 10, backgroundColor: '#20E6CD', width: 200 }}>
+					{item.step_process && (
+						<Text style={{padding: 10, textAlign: 'center', color: '#2a2a2a'}}>Waiting for approval</Text>
+					)}
+					{item.reject_status && (
+						<TouchableOpacity
+							onPress={() =>
+								this.setState({ rejectModal: true, rejectMessage: item.reject_message })
+							}>
+							<Text>Rejected</Text>
+						</TouchableOpacity>
+					)}
 				</View>
 			</View>
 		</TouchableOpacity>
 	)
 
 	renderItemsClose = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)} >
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<View STYLE={{flexDirection:'row'}}>
-								<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
 							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.data}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step - 1} />
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() =>
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+							}
+							currentPosition={item.step - 1}
+						/>
+					) : (
+						<PipelineProgress currentPosition={item.step - 1} />
+					)}
 				</View>
-				<View
-					style={{
-						justifyContent: 'center',
-						flexDirection: 'row',
-						display: 'flex',
-						width: '100%',
-						paddingVertical: 20
-					}}>
-					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{ fontSize: 14 }}>Order Summary</Text>
-					</Button>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
 				</View>
+				<Button full style={{ backgroundColor: '#2D38F9', margin: 10 }}>
+					<Text style={{ fontSize: 16, textAlign: 'center' }}>Order Summary</Text>
+				</Button>
 			</View>
-		</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsLose = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
+							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step - 1} />
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() =>
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+							}
+							currentPosition={item.step - 1}
+						/>
+					) : (
+						<PipelineProgress currentPosition={item.step - 1} />
+					)}
 				</View>
-				<View
-					style={{
-						justifyContent: 'center',
-						flexDirection: 'row',
-						display: 'flex',
-						width: '100%',
-						paddingVertical: 20
-					}}>
-					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{ fontSize: 14 }}>Order Summary</Text>
-					</Button>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
 				</View>
+				<Button full style={{ backgroundColor: '#2D38F9', margin: 10 }}>
+					<Text style={{ fontSize: 16, textAlign: 'center' }}>Order Summary</Text>
+				</Button>
 			</View>
-		</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsDrop = ({ item }) => (
-		<View style={styles.customerPipeline}>
+		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
+						<View style={styles.picDirection}>
+							<Icon name="md-contact" size={18} color={'#000'} />
+							{item.pics.map((data, index) => (
+								<Text key={index} style={styles.dataPic}>
+									{data.name}
+								</Text>
+							))}
+						</View>
 						<View style={styles.titleFlex}>
-							<H2>{item.pipeline}</H2>
+							<View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 15, left: 5}}>
+								<Text style={{alignSelf: 'flex-start', fontSize: 16}}>Title : <Text style={{fontWeight: 'bold'}}>{item.pipeline}</Text></Text>
+								<Text style={{alignSelf: 'center', fontSize: 16}}>Probability : <Text style={{fontWeight: 'bold'}}>{item.probability}</Text></Text>
+								<Text style={{alignSelf: 'flex-end', fontSize: 16}}>Project Type : <Text style={{fontWeight: 'bold'}}>{item.project_type}</Text></Text>
+							</View>
 						</View>
-						<View style={styles.badgeFlex}>
-							{item.step_process && (
-								<Badge style={styles.pipelineBadgeNew}>
-									<Text>Waiting for approval</Text>
-								</Badge>
-							)}
-						</View>
-					</View>
-					<View style={styles.picDirection}>
-						{item.pics.map((data, index) => (
-							<Text key={index} style={styles.dataPic}>
-								{data.name}
-							</Text>
-						))}
 					</View>
 				</View>
 				<View>
-					<PipelineProgress currentPosition={item.step - 1} />
+					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
+						<PipelineProgress
+							onPress={() =>
+								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+							}
+							currentPosition={item.step - 1}
+						/>
+					) : (
+						<PipelineProgress currentPosition={item.step - 1} />
+					)}
 				</View>
-				<View
-					style={{
-						justifyContent: 'center',
-						flexDirection: 'row',
-						display: 'flex',
-						width: '100%',
-						paddingVertical: 20
-					}}>
-					<Button small style={{ backgroundColor: '#2D38F9', height: 40 }}>
-						<Text style={{ fontSize: 14 }}>Order Summary</Text>
-					</Button>
+				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
+					<View>
+						<Text>{moment(item.createdAt).format('LLL')}</Text>
+					</View>
+					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
+						<Text style={{color: 'blue'}}>Edit</Text>
+					</TouchableOpacity>
 				</View>
+				<Button full style={{ backgroundColor: '#2D38F9', margin: 10 }}>
+					<Text style={{ fontSize: 16, textAlign: 'center' }}>Order Summary</Text>
+				</Button>
 			</View>
-		</View>
+		</TouchableOpacity>
 	)
 
 	renderItemsPic = ({ item }) => (
@@ -642,15 +656,15 @@ class CustomerProfile extends Component {
 								</View>
 								<View style={styles.formDirection}>
 									<Form>
-										<Item floatingLabel>
-											<Label>Pipeline Title</Label>
+										<Item stackedLabel>
+											<Label style={{color: 'blue', fontSize: 16}}>Pipeline Title</Label>
 											<Input
 												value={this.state.pipeline}
 												onChangeText={pipeline => this.setState({ pipeline })}
 											/>
 										</Item>
 										<View style={styles.productCategoryView}>
-											<Label>PIC Name</Label>
+											<Label style={{color: 'blue'}}>PIC Name</Label>
 											<Picker
 												style={styles.picker}
 												mode="dropdown"
@@ -663,8 +677,8 @@ class CustomerProfile extends Component {
 											</Picker>
 										</View>
 										<View>
-											<Text>Status Pipeline</Text>
-											<View>
+											<Text style={{paddingLeft: 10, color: 'blue'}}>Status Pipeline</Text>
+											<View style={{paddingLeft: 15}}>
 												<ListItem onPress={() => this.setActive()}>
 													<Text>Active</Text>
 													<Right>
@@ -699,8 +713,8 @@ class CustomerProfile extends Component {
 												</ListItem>
 											</View>
 											<View>
-												<Text>Probability</Text>
-												<View>
+												<Text style={{paddingLeft: 10, paddingTop: 15, color: 'blue'}}>Probability</Text>
+												<View style={{paddingLeft: 15}}>
 													<ListItem onPress={() => this.setA()}>
 														<Text>A</Text>
 														<Right>
@@ -729,8 +743,8 @@ class CustomerProfile extends Component {
 											</View>
 
 											<View>
-												<Text>Project Type</Text>
-												<View>
+												<Text style={{paddingLeft: 10, paddingTop: 15, color: 'blue'}}>Project Type</Text>
+												<View style={{paddingLeft: 15}}>
 													<ListItem onPress={() => this.setProjectORS()}>
 															<Text>ORS</Text>
 															<Right>
@@ -752,20 +766,19 @@ class CustomerProfile extends Component {
 										</View>
 									</Form>
 								</View>
-								<Footer>
-									<FooterTab>
-										<Button onPress={() => this.setState({ isModalVisibleUpdate: false })}>
-											<Text note style={styles.modalCancelButton}>
-												Cancel
-											</Text>
-										</Button>
-										<Button onPress={() => this.handeSaveUpdatePipeline()}>
-											<Text style={styles.modalYesButton}>Submit</Text>
-										</Button>
-									</FooterTab>
-								</Footer>
-
 							</Content>
+							<Footer>
+								<FooterTab>
+									<Button onPress={() => this.setState({ isModalVisibleUpdate: false })}>
+										<Text note style={styles.modalCancelButton}>
+											Cancel
+										</Text>
+									</Button>
+									<Button onPress={() => this.handeSaveUpdatePipeline()}>
+										<Text style={styles.modalYesButton}>Submit</Text>
+									</Button>
+								</FooterTab>
+							</Footer>
 						</View>
 				</Modal>
 
@@ -1022,7 +1035,8 @@ const mapDispatchToProps = dispatch => {
 const styles = StyleSheet.create({
 	productCategoryView: {
 		marginLeft: 15,
-		marginTop: 30
+		marginTop: 30,
+		paddingBottom: 10
 	},
 	picker: {
 		marginLeft: -15
@@ -1069,8 +1083,8 @@ const styles = StyleSheet.create({
 	picDirection: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 5,
-		marginLeft: 3
+		marginLeft: 3,
+		paddingBottom: 20
 	},
 	newsTitle: {
 		color: '#ffffff',
@@ -1186,8 +1200,7 @@ const styles = StyleSheet.create({
 		marginLeft: 5
 	},
 	titleFlex: {
-		display: 'flex',
-		flexDirection: 'row'
+		alignItems: 'center'
 	},
 	iconFlex: {
 		flex: 1,
@@ -1237,7 +1250,8 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	leftPipeline: {
-		padding: 30
+		padding: 30,
+		alignItems: 'center'
 	},
 	formDirection: {
 		flex: 1,
@@ -1256,13 +1270,16 @@ const styles = StyleSheet.create({
 		marginLeft: 15
 	},
 	pipelineTitleDirection: {
-		flexDirection: 'row'
+		flexDirection: 'row',
 	},
 	titleFlex: {
 		flex: 0.8
 	},
 	badgeFlex: {
-		flex: 0.2
+		flex: 0.2,
+		backgroundColor: '#20E6CD',
+		width:100,
+		borderRadius: 5
 	},
 	rowDirection: {
 		display: 'flex',
