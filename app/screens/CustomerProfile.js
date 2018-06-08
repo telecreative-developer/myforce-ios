@@ -49,6 +49,8 @@ import { setNavigate } from '../actions/processor'
 import bg from '../assets/images/meeting.jpg'
 import LinearGradient from 'react-native-linear-gradient'
 import moment from 'moment'
+import DatePicker from 'react-native-datepicker'
+
 
 const { height, width } = Dimensions.get('window')
 
@@ -84,7 +86,7 @@ class CustomerProfile extends Component {
 			stateclose:false,
 			stateactive:false,
 			stateloose:false,
-
+			install_date: ''
 		}
 	}
 
@@ -233,6 +235,7 @@ class CustomerProfile extends Component {
 				drop: this.state.statedrop,
 				lose: this.state.stateloose,
 				project_type: this.state.project_type,
+				install_date: this.state.install_date,
 			}, 
 			this.props.sessionPersistance.accessToken)
 		await this.setState({ pipeline: '', isModalVisibleUpdate:false })
@@ -295,6 +298,18 @@ class CustomerProfile extends Component {
 	setProjectORS(){
 		this.setState({
 			project_type: 'ORS'
+		})
+	}
+
+	setProjectFSMA(){
+		this.setState({
+			project_type: 'FSMA'
+		})
+	}
+
+	setProjectONF(){
+		this.setState({
+			project_type: 'ONF'
 		})
 	}
 
@@ -406,10 +421,11 @@ class CustomerProfile extends Component {
 				</View>
 				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
 					<View>
-						<Text>{moment(item.createdAt).format('LLL')}</Text>
+						<Text style={{margin: 10}}>Install Date: {moment(item.install_date).format('LLL')}</Text>
+						<Text style={{margin: 10}}>CreatedAt :{moment(item.createdAt).format('LLL')}</Text>
 					</View>
 					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
-						<Text style={{color: 'blue'}}>Edit</Text>
+						<Text style={{color: 'blue', margin: 10}}>Edit</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={{ margin: 10, backgroundColor: '#20E6CD', width: 200 }}>
@@ -465,7 +481,8 @@ class CustomerProfile extends Component {
 				</View>
 				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
 					<View>
-						<Text>{moment(item.createdAt).format('LLL')}</Text>
+						<Text style={{margin: 10}}>Install Date: {moment(item.install_date).format('LLL')}</Text>
+						<Text style={{margin: 10}}>CreatedAt :{moment(item.createdAt).format('LLL')}</Text>
 					</View>
 					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
 						<Text style={{color: 'blue'}}>Edit</Text>
@@ -514,7 +531,8 @@ class CustomerProfile extends Component {
 				</View>
 				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
 					<View>
-						<Text>{moment(item.createdAt).format('LLL')}</Text>
+						<Text style={{margin: 10}}>Install Date: {moment(item.install_date).format('LLL')}</Text>
+						<Text style={{margin: 10}}>CreatedAt :{moment(item.createdAt).format('LLL')}</Text>
 					</View>
 					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
 						<Text style={{color: 'blue'}}>Edit</Text>
@@ -563,7 +581,8 @@ class CustomerProfile extends Component {
 				</View>
 				<View style={{margin: 10, flexDirection:'row', justifyContent: 'space-between'}}>
 					<View>
-						<Text>{moment(item.createdAt).format('LLL')}</Text>
+						<Text style={{margin: 10}}>Install Date: {moment(item.install_date).format('LLL')}</Text>
+						<Text style={{margin: 10}}>CreatedAt :{moment(item.createdAt).format('LLL')}</Text>
 					</View>
 					<TouchableOpacity onPress={()=> this.handleUpdatePipeline(item)}>
 						<Text style={{color: 'blue'}}>Edit</Text>
@@ -753,6 +772,22 @@ class CustomerProfile extends Component {
 																/>
 															</Right>
 														</ListItem>
+														<ListItem onPress={() => this.setProjectFSMA()}>
+															<Text>FSMA</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'FSMA' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+														<ListItem onPress={() => this.setProjectONF()}>
+															<Text>ONF</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'ONF' ? true : false}
+																/>
+															</Right>
+														</ListItem>
 														<ListItem onPress={() => this.setProjectRENT()}>
 															<Text>RENT</Text>
 															<Right>
@@ -762,6 +797,32 @@ class CustomerProfile extends Component {
 															</Right>
 														</ListItem>
 												</View>
+											</View>
+											<View>
+												<Text>Install Date:</Text>
+												<DatePicker
+										        style={{width: 200}}
+										        date={this.state.install_date}
+										        mode="date"
+										        placeholder="select date"
+										        format="YYYY-MM-DD"
+										        minDate="1990-01-01"
+										        maxDate="2030-01-01"
+										        confirmBtnText="Confirm"
+										        cancelBtnText="Cancel"
+										        customStyles={{
+										          dateIcon: {
+										            position: 'absolute',
+										            left: 0,
+										            top: 4,
+										            marginLeft: 0
+										          },
+										          dateInput: {
+										            marginLeft: 36
+										          }
+										        }}
+										        onDateChange={(install_date) => this.setState({install_date})}
+										     />
 											</View>
 										</View>
 									</Form>

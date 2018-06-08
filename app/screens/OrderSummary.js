@@ -105,9 +105,10 @@ class OrderSummary extends Component {
 				source={{ uri: item.picture }}
 				imageStyle={styles.cardImage}
 				style={styles.item}>
-				<TouchableHighlight underlayColor={'transparent'}>
+				<TouchableOpacity underlayColor={'transparent'}>
 					<Text style={styles.itemText}>{item.subproduct}</Text>
-				</TouchableHighlight>
+					<Text style={styles.itemText}>Rp. {item.price}</Text>
+				</TouchableOpacity>
 				<Footer style={styles.cardFooter}>
 					<Button
 						full
