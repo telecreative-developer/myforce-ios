@@ -41,7 +41,7 @@ class Achievements extends Component {
 
 		this.state = {
 			pipelineTabs: 'active',
-			progress: 20
+			progress: 40
 		}
 	}
 
@@ -64,6 +64,18 @@ class Achievements extends Component {
 			)
 			.map(data => (revenueYear += data.total))
 		return revenueYear
+	}
+
+	resultCompletePipelineRevenueMonth(){
+		let pipelineRevenueMonth = 0
+		this.props.pipelinesWithUserId
+			.filter(
+				data =>
+					data.month === parseInt(moment().format('M')) &&
+					data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+			)
+			.map(data => (pipelineRevenueMonth += data.total))
+		return pipelineRevenueMonth
 	}
 
 	renderPipelineTabs() {
@@ -209,6 +221,7 @@ class Achievements extends Component {
 	)
 
 	render() {
+		console.log(this.props.target)
 		return (
 			<Container>
 				<View style={styles.customerHeader}>
@@ -337,13 +350,9 @@ class Achievements extends Component {
 					<Grid style={styles.chartsDirection}>
 						<Col style={styles.leftCharts}>
 							<PieCharts
-								target={this.props.target.target_month}
+								target={this.props.target.target_revenue_month}
 								completed={
-									this.props.pipelinesWithUserId.filter(
-										data =>
-											data.month === parseInt(moment().format('M')) &&
-											data.step === 7
-									).length} />
+									this.resultCompleteRevenueMonth()} />
 						</Col>
 						<Col style={styles.rightCharts}>
 							<Text style={styles.chartTitle}>Revenue ORS</Text>
@@ -351,30 +360,22 @@ class Achievements extends Component {
 							<Text style={styles.chartPercentage}>
 								{parseFloat(
 									parseFloat(
-										this.props.pipelinesWithUserId.filter(
-											data =>
-												data.month === parseInt(moment().format('M')) &&
-												data.step === 7
-										).length / this.props.target.target_month
+										this.resultCompleteRevenueMonth() / this.props.target.target_revenue_month
 									) * 100
 								).toFixed(2)} %
 							</Text>
 							<Text style={styles.chartTarget}>
-								Rp. {this.resultCompleteRevenueMonth()} Mio of
+								Rp. {this.resultCompleteRevenueMonth()} of
 							</Text>
 							<Text style={styles.chartTargetUnder}>
-								Rp. {this.props.target.target_revenue_month} Mio targets
+								Rp. {this.props.target.target_revenue_month} targets
 							</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar
 								progress={parseFloat(
 									parseFloat(
 										parseFloat(
-											this.props.pipelinesWithUserId.filter(
-												data =>
-													data.year === parseInt(moment().format('YYYY')) &&
-													data.step === 7
-											).length / this.props.target.target_year
+											this.resultCompleteRevenueYear() / this.props.target.target_revenue_year
 										) * 100
 									).toFixed(2) / 100
 								)}
@@ -388,25 +389,85 @@ class Achievements extends Component {
 								<View style={styles.row}>
 									<Text style={styles.barText}>
 										{parseFloat(
-											parseFloat(
-												this.props.pipelinesWithUserId.filter(
-													data =>
-														data.year === parseInt(moment().format('YYYY')) &&
-														data.step === 7
-												).length / this.props.target.target_year
+											parseFloat(this.resultCompleteRevenueYear() / this.props.target.target_revenue_year
 											) * 100
 										).toFixed(2)} %
 									</Text>
 								</View>
 							</AnimatedBar>
 							<Text style={styles.chartTarget}>
-								Rp. {this.resultCompleteRevenueYear()} Mio of
+								Rp. {this.resultCompleteRevenueYear()} of
 							</Text>
 							<Text style={styles.chartTarget}>
-								Rp. {this.props.target.target_revenue_year} Mio targets
+								Rp. {this.props.target.target_revenue_year} targets
 							</Text>
 						</Col>
 					</Grid>
+
+					<Grid style={styles.chartsDirection}>
+						<Col style={styles.leftCharts}>
+							<PieCharts
+								target={this.props.target.target_month}
+								completed={
+									this.props.pipelinesWithUserId.filter(
+										data =>
+											data.month === parseInt(moment().format('M')) &&
+											data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+									).length
+								}
+							/>
+						</Col>
+						<Col style={styles.rightCharts}>
+							<Text style={styles.chartTitle}>Pipeline Gross In</Text>
+							<Text style={styles.chartMonth}>Monthly</Text>
+							<Text style={styles.chartPercentage}>
+								{parseFloat(
+									parseFloat(
+										this.props.pipelinesWithUserId.filter(
+											data =>
+												data.month === parseInt(moment().format('M')) &&
+												data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+										).length / this.props.target.target_pipeline_month
+									) * 100
+								).toFixed(2)} %
+							</Text>
+							<Text style={styles.chartTargetUnder}>
+								{this.props.pipelinesWithUserId.filter(
+										data =>
+											data.month === parseInt(moment().format('M')) &&
+											data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+									).length
+								} of {this.props.target.target_pipeline_month} unit targets
+							</Text>
+						</Col>
+					</Grid>
+
+					<Grid style={styles.chartsDirection}>
+						<Col style={styles.leftCharts}>
+							<PieCharts
+								target={this.props.target.target_pipeline_revenue_month}
+								completed={
+									this.resultCompletePipelineRevenueMonth()
+								}
+							/>
+						</Col>
+						<Col style={styles.rightCharts}>
+							<Text style={styles.chartTitle}>Pipeline Revenue ORS</Text>
+							<Text style={styles.chartMonth}>Yearly</Text>
+							<Text style={styles.chartPercentage}>
+								{parseFloat(
+									parseFloat(
+										this.resultCompletePipelineRevenueMonth() / this.props.target.target_pipeline_revenue_month
+									) * 100
+								).toFixed(2)} %
+							</Text>
+							<Text style={styles.chartTargetUnder}>
+								{this.resultCompletePipelineRevenueMonth()
+								} of {this.props.target.target_pipeline_revenue_month} unit targets
+							</Text>
+						</Col>
+					</Grid>
+
 					<View style={styles.customerTotal}>
 						<Grid style={{ display: 'flex', alignItems: 'center' }}>
 							<Col>
