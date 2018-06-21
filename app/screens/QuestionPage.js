@@ -47,7 +47,7 @@ class QuestionPage extends Component {
 		this.state = {
 			visibleModalMainQuestion: false,
 			visibleModalActivityDesc: false,
-			visibleModalMinusOfMeeting: false,
+			visibleModalMinutesOfMeeting: false,
 			visibleModalTodoList: false,
 			answer: '',
 			activity_desc: '',
@@ -106,7 +106,9 @@ class QuestionPage extends Component {
 						id_branch,
 						total,
 						id_product: data.id_product,
-						id_subproduct: data.id_subproduct
+						id_subproduct: data.id_subproduct,
+						unit_price: data.price,
+						quantity: data.quantity
 					},
 					accessToken
 				)
@@ -206,7 +208,7 @@ class QuestionPage extends Component {
 						</View>
 					</View>
 				</Modal>
-				<Modal style={styles.modal} isVisible={this.state.visibleModalMinusOfMeeting}>
+				<Modal style={styles.modal} isVisible={this.state.visibleModalMinutesOfMeeting}>
 					<View style={styles.viewName}>
 						<Text style={styles.textName}>Hello, {sessionPersistance.first_name}!</Text>
 					</View>
@@ -218,13 +220,13 @@ class QuestionPage extends Component {
           </Form>
 					<View style={styles.containerButtonModal}>
 						<View style={styles.viewButtonModal}>
-							<Button block danger style={styles.buttonModalLeft} onPress={() => this.setState({visibleModalMinusOfMeeting: false})}>
+							<Button block danger style={styles.buttonModalLeft} onPress={() => this.setState({visibleModalMinutesOfMeeting: false})}>
 								<Text>Cancel</Text>
 							</Button>
 						</View>
 						<View style={styles.viewButtonModal}>
 							{this.state.minutes_of_meeting ? (
-								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalMinusOfMeeting: false})}>
+								<Button block primary style={styles.buttonModalRight} onPress={() => this.setState({visibleModalMinutesOfMeeting: false})}>
 									<Text>Save</Text>
 								</Button>
 							) : (
@@ -295,8 +297,8 @@ class QuestionPage extends Component {
 					</View>
 					<View style={styles.container}>
 						<View style={styles.viewContainerRight}>
-							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMinusOfMeeting: true})}>
-								<Text style={styles.textCard}>Minus of Meeting</Text>
+							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalMinutesOfMeeting: true})}>
+								<Text style={styles.textCard}>Minutes of Meeting</Text>
 								{this.state.minutes_of_meeting !== '' && (
 									<Icon name='checkmark-circle' style={{color: '#4CAF50'}} />
 								)}

@@ -78,8 +78,11 @@ class OrderSummary extends Component {
 		this.state = {
 			id_product: '',
 			totalPrice: 0,
+			quantity: 1,
 			isModalVisibleCart: false,
-			search: ''
+			isModalVisibleQty: false,
+			search: '',
+			subproducts: {}
 		}
 	}
 
@@ -113,7 +116,7 @@ class OrderSummary extends Component {
 					<Button
 						full
 						style={styles.cardButton}
-						onPress={() => this.props.addProductToCart(item)}>
+						onPress={() => this.setState({isModalVisibleQty: true, subproducts: item})}>
 						<Icon name="md-add" size={20} color={'#ffffff'} />
 						<Text>Add</Text>
 					</Button>
@@ -128,9 +131,10 @@ class OrderSummary extends Component {
 				source={{ uri: item.picture }}
 				imageStyle={styles.cardImage}
 				style={styles.itemCart}>
-				<TouchableHighlight underlayColor={'transparent'}>
+				<View>
 					<Text style={styles.itemText}>{item.subproduct}</Text>
-				</TouchableHighlight>
+					<Text>QTY: {item.quantity}</Text>
+				</View>
 				<Footer style={styles.cardFooterCart}>
 					<Button
 						full
@@ -152,6 +156,50 @@ class OrderSummary extends Component {
 		return (
 			<Container>
 				<Modal
+					isVisible={this.state.isModalVisibleQty}
+					style={styles.modal}
+					onBackdropPress={() => this.setState({ isModalVisibleQty: false })}>
+					<View style={styles.viewModalQty}>
+						<View style={styles.viewWrapModalQty}>
+							<View style={styles.flexOnly2}>
+								<Button
+									style={styles.btnMinQty}
+									onPress={() => this.setState({quantity: this.state.quantity-1})}>
+									<Text>-</Text>
+								</Button>
+							</View>
+							<View style={styles.flexOnly6}>
+								<Item stackedLabel style={styles.itemQty}>
+									<Label style={styles.productCategory}>Quantity</Label>
+									<Input keyboardType='numeric' value={JSON.stringify(this.state.quantity)} onChangeText={(quantity) => this.setState({quantity})} />
+								</Item>
+							</View>
+							<View style={styles.flexOnly2}>
+								<Button
+									style={styles.btnPlusQty}
+									onPress={() => this.setState({quantity: this.state.quantity+1})}>
+									<Text>+</Text>
+								</Button>
+							</View>
+						</View>
+						<View style={styles.viewFooterQty}>
+							<View style={styles.flexOnly7}>
+								<Button onPress={() => this.setState({isModalVisibleQty: false})} style={styles.btnCancelQty}><Text>Batal</Text></Button>
+							</View>
+							<View style={styles.flexOnly3}>
+								<Button
+									onPress={async () => {
+										await this.props.addProductToCart({...this.state.subproducts, quantity: this.state.quantity})
+										await this.setState({subproducts: {}, isModalVisibleQty: false})
+									}}
+									style={styles.btnSubmitQty}>
+									<Text>Oke</Text>
+								</Button>
+							</View>
+						</View>
+					</View>
+				</Modal>
+				<Modal
 					isVisible={this.state.isModalVisibleCart}
 					style={styles.modal}
 					onBackdropPress={() => this.setState({ isModalVisibleCart: false })}>
@@ -163,11 +211,11 @@ class OrderSummary extends Component {
 								paddingHorizontal: 20,
 								paddingTop: 10
 							}}>
-							<TouchableHighlight
+							<TouchableOpacity
 								underlayColor={'transparent'}
 								onPress={() => this.setState({ isModalVisibleCart: false })}>
 								<Icon name="ios-close" size={35} />
-							</TouchableHighlight>
+							</TouchableOpacity>
 						</View>
 						<Text style={styles.modalTitle}>Order Cart</Text>
 						<Text style={styles.modalTotal}>Total Item: {this.props.cartProducts.length}</Text>
@@ -289,6 +337,7 @@ class OrderSummary extends Component {
 }
 
 const mapStateToProps = state => {
+	console.log(state.cartProducts)
 	return {
 		sessionPersistance: state.sessionPersistance,
 		products: state.products,
@@ -435,6 +484,52 @@ const styles = StyleSheet.create({
 		margin: 0,
 		alignItems: 'center',
 		overflow: 'hidden'
+	},
+	viewModalQty:{
+		backgroundColor: '#FFFFFF', 
+		height: 150
+	},
+	viewWrapModalQty:{
+		flexDirection: 'row',
+		marginTop: 10, 
+		alignItems: 'center'
+	},
+	flexOnly2:{
+		flex: 0.2
+	},
+	flexOnly3:{
+		flex: 0.3
+	},
+	flexOnly6:{
+		flex: 0.6
+	},
+	flexOnly7:{
+		flex: 0.7
+	},
+	itemQty:{
+		marginLeft: 10, 
+		marginRight: 10
+	},
+	btnMinQty:{
+		alignSelf: 'flex-end', 
+		backgroundColor: '#20E6CD', 
+		borderRadius: 100
+	},
+	btnPlusQty:{
+		backgroundColor: '#20E6CD', 
+		borderRadius: 100
+	},
+	btnCancelQty:{
+		alignSelf: 'flex-end', 
+		marginRight: 10, 
+		backgroundColor: '#20E6CD'
+	},
+	btnSubmitQty:{
+		backgroundColor: '#20E6CD'
+	},
+	viewFooterQty:{
+		flexDirection: 'row', 
+		paddingTop: 10
 	},
 	modalTitle: {
 		fontSize: 28,

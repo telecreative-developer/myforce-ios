@@ -125,14 +125,21 @@ class CustomerProfile extends Component {
 		}
 	}
 
-	handleCheckStepper(step, id_pipeline, in_process) {
-		if (in_process) {
+	handleCheckStepper(item) {
+		if (item.in_process) {
 			Alert.alert(
 				'Pipeline in Progress',
 				'Please wait a confirmation from your manager to take the next step'
 			)
 		} else {
-			this.handleSetStep(step, id_pipeline)
+			if(item.step >= 4 && !item.probability && !item.install_date & !item.status_pipeline & !item.project_type) {
+				Alert.alert(
+					'Warning',
+					'Please complete Pipeline Data (probability, status pipeline, project type, install date) before go to Pipeline Activity, please edit pipeline for completing Pipeline Data.'
+				)
+			}else {
+				this.handleSetStep(item.step, item.id_pipeline)
+			}
 		}
 	}
 
@@ -367,7 +374,6 @@ class CustomerProfile extends Component {
 	}
 
 	renderItemsActive = ({ item }) => (
-		
 		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
 			{console.log(item)}
 			<View style={styles.pipelineContent}>
@@ -394,7 +400,7 @@ class CustomerProfile extends Component {
 					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
 						<PipelineProgress
 							onPress={() =>
-								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+								this.handleCheckStepper(item)
 							}
 							currentPosition={item.step - 1}
 						/>
@@ -410,7 +416,7 @@ class CustomerProfile extends Component {
 						width: '100%',
 						paddingVertical: 20
 					}}>
-					{item.step >= 4 && (
+					{item.step > 4 && (
 						<Button
 							small
 							style={{ backgroundColor: '#2D38F9', height: 40 }}
@@ -428,9 +434,9 @@ class CustomerProfile extends Component {
 						<Text style={{color: 'blue', margin: 10}}>Edit</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{ margin: 10, backgroundColor: '#20E6CD', width: 200 }}>
+				<View style={{ marginLeft: 15, backgroundColor: '#20E6CD', width: 200 }}>
 					{item.step_process && (
-						<Text style={{padding: 10, textAlign: 'center', color: '#2a2a2a'}}>Waiting for approval</Text>
+						<Text style={{textAlign: 'center', color: '#2a2a2a'}}>Waiting for approval</Text>
 					)}
 					{item.reject_status && (
 						<TouchableOpacity
@@ -441,6 +447,21 @@ class CustomerProfile extends Component {
 						</TouchableOpacity>
 					)}
 				</View>
+				{item.step > 0 && (
+					<View>
+						<View style={{flexDirection: 'row'}}>
+							<View style={{marginLeft: 20, marginBottom: 15}}>
+								<Text>Integration Status : {item.integration_status}</Text>
+							</View>
+							<View style={{marginLeft: 15, marginBottom: 15}}>
+								<Text>Integration Message : {item.integration_message}</Text>
+							</View>
+						</View>
+						<View style={{marginLeft: 20, marginBottom: 15}}>
+							<Text>Pipeline Number : {item.pipeline_number}</Text>
+						</View>
+					</View>
+				)}
 			</View>
 		</TouchableOpacity>
 	)
@@ -471,7 +492,7 @@ class CustomerProfile extends Component {
 					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
 						<PipelineProgress
 							onPress={() =>
-								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+								this.handleCheckStepper(item)
 							}
 							currentPosition={item.step - 1}
 						/>
@@ -521,7 +542,7 @@ class CustomerProfile extends Component {
 					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
 						<PipelineProgress
 							onPress={() =>
-								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+								this.handleCheckStepper(item)
 							}
 							currentPosition={item.step - 1}
 						/>
@@ -571,7 +592,7 @@ class CustomerProfile extends Component {
 					{this.props.sessionPersistance.id === this.props.navigation.state.params.id ? (
 						<PipelineProgress
 							onPress={() =>
-								this.handleCheckStepper(item.step, item.id_pipeline, item.step_process)
+								this.handleCheckStepper(item)
 							}
 							currentPosition={item.step - 1}
 						/>
