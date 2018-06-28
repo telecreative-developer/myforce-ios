@@ -50,6 +50,7 @@ import bg from '../assets/images/meeting.jpg'
 import LinearGradient from 'react-native-linear-gradient'
 import moment from 'moment'
 import DatePicker from 'react-native-datepicker'
+import { accounting } from 'accounting'
 
 
 const { height, width } = Dimensions.get('window')
@@ -64,6 +65,7 @@ class CustomerProfile extends Component {
 			isModalVisible: false,
 			modalNewPipeline: false,
 			isModalVisibleUpdate: false,
+			isModalVisibleUpdateCustomer: false,
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
@@ -232,6 +234,10 @@ class CustomerProfile extends Component {
 		this.setState({isModalVisibleUpdate:true, pipelines: item, pipeline: item.pipeline})
 	}
 
+	handleUpdateCustomer(item){
+		this.setState({isModalVisibleUpdateCustomer:true, })
+	}
+
 	async handeSaveUpdatePipeline(){
 		await this.props.updatePipeline(
 			{
@@ -375,7 +381,6 @@ class CustomerProfile extends Component {
 
 	renderItemsActive = ({ item }) => (
 		<TouchableOpacity style={styles.customerPipeline} onPress={()=> this.handleSetStep(item.step, item.id_pipeline)}>
-			{console.log(item)}
 			<View style={styles.pipelineContent}>
 				<View style={styles.leftPipeline}>
 					<View style={styles.pipelineTitleDirection}>
@@ -621,6 +626,7 @@ class CustomerProfile extends Component {
 			style={styles.headerDirection}
 			onPress={() => this.setState({ modalPic: true, dataPic: item })}>
 			<Icon name="md-contact" size={15} color={'#fff'} />
+			{console.log('ini isi item render item pic',item)}
 			<Text style={styles.data}>{item.name}</Text>
 		</TouchableOpacity>
 	)
@@ -864,6 +870,184 @@ class CustomerProfile extends Component {
 						</View>
 				</Modal>
 
+				<Modal isVisible={this.state.isModalVisibleUpdateCustomer}>
+						<View style={styles.modalWrapperAddPipeline}>
+							<Content>
+								<View style={styles.imageModal}>
+									<Image source={image} />
+									<Text style={styles.pipelineModalText}>UPDATE PIPELINE</Text>
+								</View>
+								<View style={styles.formDirection}>
+									<Form>
+										<Item stackedLabel>
+											<Label style={{color: 'blue', fontSize: 16}}>Pipeline Title</Label>
+											<Input
+												value={this.state.pipeline}
+												onChangeText={pipeline => this.setState({ pipeline })}
+											/>
+										</Item>
+										<View style={styles.productCategoryView}>
+											<Label style={{color: 'blue'}}>PIC Name</Label>
+											<Picker
+												style={styles.picker}
+												mode="dropdown"
+												iosHeader="PIC Name"
+												selectedValue={this.state.id_pic}
+												onValueChange={id_pic => this.setState({ id_pic })}>
+												{this.props.picsCustomers.map((data, index) => (
+													<Item key={index} label={data.name} value={data.id_pic} />
+												))}
+											</Picker>
+										</View>
+										<View>
+											<Text style={{paddingLeft: 10, color: 'blue'}}>Status Pipeline</Text>
+											<View style={{paddingLeft: 15}}>
+												<ListItem onPress={() => this.setActive()}>
+													<Text>Active</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateactive}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setClose()}>
+													<Text>Close</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateclose}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setDrope()}>
+													<Text>Drope</Text>
+													<Right>
+														<Radio 
+															selected={this.state.statedrop}
+														/>
+													</Right>
+												</ListItem>
+												<ListItem onPress={() => this.setLoose()}>
+													<Text>Loose</Text>
+													<Right>
+														<Radio 
+															selected={this.state.stateloose}
+														/>
+													</Right>
+												</ListItem>
+											</View>
+											<View>
+												<Text style={{paddingLeft: 10, paddingTop: 15, color: 'blue'}}>Probability</Text>
+												<View style={{paddingLeft: 15}}>
+													<ListItem onPress={() => this.setA()}>
+														<Text>A</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 'A' ? true : false}
+															/>
+														</Right>
+													</ListItem>
+													<ListItem onPress={() => this.setB()}>
+														<Text>B</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 'B' ? true : false}
+															/>
+														</Right>
+													</ListItem>
+													<ListItem onPress={() => this.setC()}>
+														<Text>C</Text>
+														<Right>
+															<Radio 
+																selected={this.state.probability === 'C' ? true : false}
+															/>
+														</Right>
+													</ListItem>
+												</View>
+											</View>
+
+											<View>
+												<Text style={{paddingLeft: 10, paddingTop: 15, color: 'blue'}}>Project Type</Text>
+												<View style={{paddingLeft: 15}}>
+													<ListItem onPress={() => this.setProjectORS()}>
+															<Text>ORS</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'ORS' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+														<ListItem onPress={() => this.setProjectFSMA()}>
+															<Text>FSMA</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'FSMA' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+														<ListItem onPress={() => this.setProjectONF()}>
+															<Text>ONF</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'ONF' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+														<ListItem onPress={() => this.setProjectRENT()}>
+															<Text>RENT</Text>
+															<Right>
+																<Radio 
+																	selected={this.state.project_type === 'RENT' ? true : false}
+																/>
+															</Right>
+														</ListItem>
+												</View>
+											</View>
+											<View>
+												<Text>Install Date:</Text>
+												<DatePicker
+										        style={{width: 200}}
+										        date={this.state.install_date}
+										        mode="date"
+										        placeholder="select date"
+										        format="YYYY-MM-DD"
+										        minDate="1990-01-01"
+										        maxDate="2030-01-01"
+										        confirmBtnText="Confirm"
+										        cancelBtnText="Cancel"
+										        customStyles={{
+										          dateIcon: {
+										            position: 'absolute',
+										            left: 0,
+										            top: 4,
+										            marginLeft: 0
+										          },
+										          dateInput: {
+										            marginLeft: 36
+										          }
+										        }}
+										        onDateChange={(install_date) => this.setState({install_date})}
+										     />
+											</View>
+										</View>
+									</Form>
+								</View>
+							</Content>
+							<Footer>
+								<FooterTab>
+									<Button onPress={() => this.setState({ isModalVisibleUpdate: false })}>
+										<Text note style={styles.modalCancelButton}>
+											Cancel
+										</Text>
+									</Button>
+									<Button onPress={() => this.handeSaveUpdatePipeline()}>
+										<Text style={styles.modalYesButton}>Submit</Text>
+									</Button>
+								</FooterTab>
+							</Footer>
+						</View>
+				</Modal>
+
+
 				<Modal isVisible={this.state.modalPic}>
 					<View style={styles.modalWrapperAddPipeline}>
 						<View style={styles.imageModal}>
@@ -1022,17 +1206,19 @@ class CustomerProfile extends Component {
 										}}>
 										PIC List:
 									</Text>
+									{console.log(this.props.picsCustomers)}
 									<FlatList
 										data={this.props.picsCustomers}
 										keyExtractor={this.key}
 										renderItem={this.renderItemsPic}
 									/>
-									{/* <TouchableOpacity
+									<TouchableOpacity
 									style={styles.headerDirection}
-									onPress={() => navigate('ChoosePic')}>
+									onPress={() => navigate('ChoosePic', state.params)}>
+									{console.log(state.params)}
 									<Icon name="md-add" size={13} color={'#fff'}/>
 									<Text style={styles.dataAddPic}>Add More PIC</Text>
-								</TouchableOpacity> */}
+								</TouchableOpacity>
 								</View>
 							</View>
 						</LinearGradient>

@@ -32,6 +32,7 @@ import BarCharts from '../components/BarCharts'
 import PieCharts from '../components/PieCharts'
 import AnimatedBar from 'react-native-animated-bar'
 import { setNavigate } from '../actions/processor'
+import { accounting } from 'accounting'
 
 const { height, width } = Dimensions.get('window')
 
@@ -221,7 +222,7 @@ class Achievements extends Component {
 	)
 
 	render() {
-		console.log(this.props.target)
+		console.log('coba test format:',accounting.formatMoney(this.resultCompleteRevenueMonth()))
 		return (
 			<Container>
 				<View style={styles.customerHeader}>
@@ -365,10 +366,10 @@ class Achievements extends Component {
 								).toFixed(2)} %
 							</Text>
 							<Text style={styles.chartTarget}>
-								Rp. {this.resultCompleteRevenueMonth()} of
+								{accounting.formatMoney(this.resultCompleteRevenueMonth())} of
 							</Text>
 							<Text style={styles.chartTargetUnder}>
-								Rp. {this.props.target.target_revenue_month} targets
+								{accounting.formatMoney(this.props.target.target_revenue_month)} targets
 							</Text>
 							<Text style={styles.chartYear}>Yearly</Text>
 							<AnimatedBar
@@ -396,10 +397,10 @@ class Achievements extends Component {
 								</View>
 							</AnimatedBar>
 							<Text style={styles.chartTarget}>
-								Rp. {this.resultCompleteRevenueYear()} of
+								{accounting.formatMoney(this.resultCompleteRevenueYear())} of
 							</Text>
 							<Text style={styles.chartTarget}>
-								Rp. {this.props.target.target_revenue_year} targets
+								{accounting.formatMoney(this.props.target.target_revenue_year)} targets
 							</Text>
 						</Col>
 					</Grid>
@@ -462,8 +463,8 @@ class Achievements extends Component {
 								).toFixed(2)} %
 							</Text>
 							<Text style={styles.chartTargetUnder}>
-								{this.resultCompletePipelineRevenueMonth()
-								} of {this.props.target.target_pipeline_revenue_month} unit targets
+								 {accounting.formatMoney(this.resultCompletePipelineRevenueMonth())} of
+								 {accounting.formatMoney(this.props.target.target_pipeline_revenue_month)} targets
 							</Text>
 						</Col>
 					</Grid>

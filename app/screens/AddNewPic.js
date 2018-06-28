@@ -32,9 +32,13 @@ class AddNewPic extends Component {
 			name: '',
 			phone: '',
 			email: '',
-			address: props.navigation.state.params.address,
+			address: '',
 			job: ''
 		}
+	}
+
+	componentDidMount(){
+		this.setState({address: this.props.navigation.state.params.address})
 	}
 
 	renderButton() {
@@ -77,10 +81,12 @@ class AddNewPic extends Component {
 			},
 			accessToken
 		)
+		{console.log(email)}
 		this.props.navigation.goBack()
 	}
 
 	render() {
+		{console.log('isi state',this.state)}
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
 				<Header style={styles.header}>

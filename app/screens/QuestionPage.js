@@ -52,7 +52,8 @@ class QuestionPage extends Component {
 			answer: '',
 			activity_desc: '',
 			minutes_of_meeting: '',
-			todo_list: ''
+			todo_list: '',
+			sellingProcessWithStep:''
 		}
 	}
 
@@ -84,6 +85,7 @@ class QuestionPage extends Component {
 			params.step,
 			sessionPersistance.accessToken
 		)
+		console.log('step :', params )
 	}
 
 	handlePostAnswer() {
@@ -277,6 +279,12 @@ class QuestionPage extends Component {
 					<Right />
 				</Header>
 				<ImageBackground source={bg} style={styles.imageBackground}>
+					<View style={{backgroundColor: 'transparent', bottom:105}}>
+						<Text style={styles.step}>
+							STEP {this.props.navigation.state.params.sellingProcessWithStep}
+						</Text>
+						<Text style={styles.title}>{this.props.navigation.state.params.title}</Text>
+					</View>
 					<View style={styles.container}>
 						<View style={styles.viewContainerLeft}>
 							<TouchableOpacity style={styles.card} onPress={() => this.setState({visibleModalActivityDesc: true})}>
@@ -404,7 +412,21 @@ const styles = StyleSheet.create({
 	},
 	containerButtonModal: {
 		flexDirection: 'row', justifyContent: 'center'
-	}
+	},
+	step: {
+		fontSize: 50,
+		fontWeight: '900',
+		color: '#20E6CD',
+		fontStyle: 'italic',
+		textAlign: 'center'
+	},
+	title: {
+		fontSize: 40,
+		fontWeight: '900',
+		color: '#000',
+		fontStyle: 'italic',
+		textAlign: 'center'
+	},
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionPage)

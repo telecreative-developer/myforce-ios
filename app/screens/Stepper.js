@@ -17,10 +17,19 @@ import bg from '../assets/images/meeting.jpg'
 const { width, height } = Dimensions.get('window')
 
 class Stepper extends Component {
+
+	constructor(){
+		super ()
+		this.state = {
+			step:''
+		}
+	}
+
 	componentWillMount() {
 		const { params } = this.props.navigation.state
 		const { accessToken } = this.props.sessionPersistance
 		this.props.fetchSellingProcessWithStep(params.step, accessToken)
+		console.log('stepper :' , params)
 	}
 
 	handleGo(data) {
@@ -75,7 +84,9 @@ class Stepper extends Component {
 							this.handleGo({
 								step: params.step,
 								id_pipeline: params.id_pipeline,
-								id_customer: params.id_customer
+								id_customer: params.id_customer,
+								sellingProcessWithStep: sellingProcessWithStep.step,
+								title: sellingProcessWithStep.title
 							})
 						}>
 						<LinearGradient

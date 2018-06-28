@@ -16,6 +16,7 @@ import {
 	Picker
 } from 'native-base'
 import { NavigationActions } from 'react-navigation'
+import { setNavigate } from '../actions/processor'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import image from '../assets/images/add-user.png'
@@ -62,15 +63,18 @@ class AddCustomerPreview extends Component {
 	componentWillMount() {
 		const { params } = this.props.navigation.state
 		const { id } = this.props.sessionPersistance
+		{console.log('params :' , params)}
+		{console.log('id :' , this.props.sessionPersistance)}
 		this.setState({
-			id: id,
-			name: params.name,
-			email: params.email,
-			phone: params.phone,
-			address: params.address,
-			latitude: parseFloat(params.latitude).toPrecision(6),
-			longitude: parseFloat(params.longitude).toPrecision(6)
+			id_customer: params.idCustomer.id_customer,
+			name: params.idCustomer.name,
+			email: params.idCustomer.email,
+			phone: params.idCustomer.phone,
+			address: params.idCustomer.address,
+			latitude: parseFloat(params.idCustomer.latitude).toPrecision(6),
+			longitude: parseFloat(params.idCustomer.longitude).toPrecision(6)
 		})
+		this.props.postCustomer()
 	}
 
 	key = (item, index) => index
@@ -83,15 +87,18 @@ class AddCustomerPreview extends Component {
 	)
 
 	async handlePostCustomer() {
-		const { sessionPersistance } = await this.props
+		
+		const { sessionPersistance } = this.props
 		await this.props.postCustomer(
 			{ ...this.state, id_branch: sessionPersistance.id_branch },
 			this.props.pics,
 			sessionPersistance.accessToken
 		)
+		await this.props.setNavigate('CustomerProfile', this.props.navigation.state.params.idCustomer)
 	}
 
 	render() {
+		{console.log('ini state',this.props.sessionPersistance)}
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
 				<Header style={styles.header}>
@@ -176,7 +183,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	postCustomer: (data, dataPic, accessToken) => dispatch(postCustomer(data, dataPic, accessToken))
+	postCustomer: (data, dataPic, accessToken) => dispatch(postCustomer(data, dataPic, accessToken)),
+	setNavigate: (link, data) => dispatch(setNavigate(link, data)),
 })
 
 const styles = StyleSheet.create({

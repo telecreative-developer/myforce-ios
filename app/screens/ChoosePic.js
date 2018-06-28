@@ -43,6 +43,7 @@ class ChoosePic extends Component {
 
 	renderItems = ({ item }) => (
 		<ListItem style={{ paddingHorizontal: 10 }}>
+		{console.log(item)}
 			<Body>
 				<Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'left' }}>{item.name}</Text>
 				<Text style={{ fontSize: 14, textAlign: 'left' }}>{item.job}</Text>
@@ -57,6 +58,7 @@ class ChoosePic extends Component {
 	)
 
 	render() {
+		{console.log(this.props.navigation.state.params.id_customer, this.props.pics)}
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
 				<Header style={styles.header}>
@@ -83,7 +85,7 @@ class ChoosePic extends Component {
 								onPress={() =>
 									this.props.navigation.navigate(
 										'AddCustomerPreview',
-										this.props.navigation.state.params
+										{idCustomer: this.props.navigation.state.params, ...this.props.pics}
 									)
 								}
 								style={{ paddingRight: 0 }}>
@@ -101,6 +103,7 @@ class ChoosePic extends Component {
 						onPress={() =>
 							this.props.navigation.navigate('AddNewPic', this.props.navigation.state.params)
 						}>
+						{console.log(this.props.navigation.state.params)}
 						<Icon name="ios-add" size={25} color="#2D38F9" />
 						<Text style={styles.buttonText}>Add New PIC</Text>
 					</Button>

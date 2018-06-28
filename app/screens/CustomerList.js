@@ -37,6 +37,7 @@ class CustomerList extends Component {
 	key = (item, index) => index
 
 	renderItems = ({ item }) => (
+		
 		<TouchableHighlight
 			underlayColor={'transparent'}
 			onPress={() => this.props.setNavigate('CustomerProfile', item)}>

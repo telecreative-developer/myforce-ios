@@ -8,8 +8,10 @@ import { setLoading, setSuccess, setFailed } from './processor'
 import { postPICS } from '../actions/pics'
 import { checkIn } from '../actions/checks'
 
-export const postCustomer = (data, dataPIC, accessToken) => {
+export const postCustomer = (dataUser, dataPIC, accessToken) => {
 	return async dispatch => {
+		console.log("data action", dataUser)
+		console.log("data PIC action",dataPIC)
 		await dispatch(setLoading(true, 'LOADING_ADD_CUSTOMER'))
 		try {
 			const response = await fetch(`${url}/customers`, {
@@ -19,12 +21,13 @@ export const postCustomer = (data, dataPIC, accessToken) => {
 					'Content-Type': 'application/json',
 					Authorization: accessToken
 				},
-				body: JSON.stringify(data)
+				body: JSON.stringify(dataUser)
 			})
 			const dataCustomer = await response.json()
+			console.log("data customer action", dataCustomer)
 			await dataPIC.forEach((data, index) => {
 				dispatch(
-					postPICS({ ...data, id_customer: dataCustomer.id_customer }, dataCustomer, accessToken)
+					postPICS({ ...data, id_customer: dataUser.id_customer }, dataCustomer, accessToken)
 				)
 			})
 			await dispatch(
