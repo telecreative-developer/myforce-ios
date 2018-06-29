@@ -102,6 +102,7 @@ class CustomerProfile extends Component {
 			this.props.sessionPersistance.accessToken
 		)
 		await this.setState({ id_pic: this.props.picsCustomers[0].id_pic })
+		await this.setState({ id_pic: this.props.navigation.state.params.idCustomer.id_pic })
 	}
 
 	componentWillReceiveProps(props) {
