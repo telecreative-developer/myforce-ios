@@ -44,12 +44,11 @@ class AddNewPic extends Component {
 	renderButton() {
 		const { name, email, phone, address, job } = this.state
 		if (
-			!isEmpty(name) &&
-			!isEmpty(job) &&
-			!isEmpty(phone) &&
-			!isEmpty(email) &&
-			!isEmpty(address) &&
-			isEmail(email)
+			!isEmpty( String(JSON.stringify(name))) &&
+			!isEmpty( String(JSON.stringify(phone))) &&
+			!isEmpty( String(JSON.stringify(address))) &&
+			!isEmpty( String(JSON.stringify(job)))&&
+			!isEmpty( String(JSON.stringify(first_name)))
 		) {
 			return (
 				<Button primary style={styles.button} onPress={() => this.handleAddPic()}>

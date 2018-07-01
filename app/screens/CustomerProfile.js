@@ -42,6 +42,8 @@ import { connect } from 'react-redux'
 import PipelineProgress from '../components/PipelineProgress'
 import { fetchPicsWithIDCustomer } from '../actions/pics'
 import { fetchPipelines, postPipeline, fetchPipelineProducts, updatePipeline } from '../actions/pipelines'
+import { updatePic } from '../actions/pics'
+import { updateCustomer } from '../actions/customers'
 import image from '../assets/images/add.png'
 import { isEmpty } from 'validator'
 import { NavigationActions } from 'react-navigation'
@@ -50,8 +52,7 @@ import bg from '../assets/images/meeting.jpg'
 import LinearGradient from 'react-native-linear-gradient'
 import moment from 'moment'
 import DatePicker from 'react-native-datepicker'
-import { accounting } from 'accounting'
-
+import { REMOVE_PIC } from '../constants';
 
 const { height, width } = Dimensions.get('window')
 
@@ -61,11 +62,22 @@ class CustomerProfile extends Component {
 
 		this.state = {
 			id_pic: '',
+			pic_name:'',
+			pic_job:'',
+			pic_phone:'',
+			pic_email:'',
+			dataCustomer:{},
+			customer_name:'',
+			customer_address:'',
+			customer_email:'',
+			customer_phone:'',
+			customer_website:'',
 			isModalVisibleCart: false,
 			isModalVisible: false,
 			modalNewPipeline: false,
 			isModalVisibleUpdate: false,
 			isModalVisibleUpdateCustomer: false,
+			modalPicEdit: false,
 			modalPic: false,
 			pipelineTabs: 'active',
 			pipeline: '',
@@ -88,7 +100,8 @@ class CustomerProfile extends Component {
 			stateclose:false,
 			stateactive:false,
 			stateloose:false,
-			install_date: ''
+			install_date: '',
+			modalEditCustomer:false
 		}
 	}
 
@@ -104,6 +117,20 @@ class CustomerProfile extends Component {
 		await this.setState({ id_pic: this.props.picsCustomers[0].id_pic })
 		await this.setState({ id_pic: this.props.navigation.state.params.idCustomer.id_pic })
 	}
+
+	async reload() {
+		this.props.navigation.navigate('Home')
+		await this.props.fetchPipelines(
+			this.props.navigation.state.params.id_customer,
+			this.props.sessionPersistance.accessToken
+		)
+		await this.props.fetchPicsWithIDCustomer(
+			this.props.navigation.state.params.id_customer,
+			this.props.sessionPersistance.accessToken
+		)
+		await this.setState({ id_pic: this.props.picsCustomers[0].id_pic })
+		await this.setState({ id_pic: this.props.navigation.state.params.idCustomer.id_pic })
+	}	
 
 	componentWillReceiveProps(props) {
 		if (props.success.condition === true && props.success.process_on === 'POST_PIPELINE') {
@@ -126,6 +153,20 @@ class CustomerProfile extends Component {
 			)
 			await this.setState({ pipeline: '' })
 		}
+	}
+
+	handleEditCustomer(){
+		const data = this.props.navigation.state.params
+		console.log(data)
+		this.setState({
+			dataCustomer: data,
+			modalEditCustomer: true,
+			customer_name: data.name,
+			customer_address: data.address,
+			customer_email: data.email,
+			customer_website: data.website,
+			customer_phone: data.phone
+		})
 	}
 
 	handleCheckStepper(item) {
@@ -235,8 +276,8 @@ class CustomerProfile extends Component {
 		this.setState({isModalVisibleUpdate:true, pipelines: item, pipeline: item.pipeline})
 	}
 
-	handleUpdateCustomer(item){
-		this.setState({isModalVisibleUpdateCustomer:true, })
+	handleUpdateCustomer(){
+		this.setState({isModalVisibleUpdateCustomer:true})
 	}
 
 	async handeSaveUpdatePipeline(){
@@ -253,6 +294,47 @@ class CustomerProfile extends Component {
 			}, 
 			this.props.sessionPersistance.accessToken)
 		await this.setState({ pipeline: '', isModalVisibleUpdate:false })
+	}
+
+	async handleSaveUpdateCustomer(){
+		await this.props.updateCustomer(
+			{
+				...this.state.dataCustomer,
+				name: this.state.customer_name,
+				email: this.state.customer_email,
+				website: this.state.customer_website,
+				phone: this.state.customer_phone,
+				address: this.state.customer_address
+			},
+			this.props.sessionPersistance.accessToken)
+			await this.setState({
+				customer_address:'',
+				customer_email:'',
+				customer_name:'',
+				customer_phone:'',
+				customer_website:'',
+				modalEditCustomer:false
+			})
+			await this.reload()
+	}
+
+	async handleSaveUpdatePic(){
+		await this.props.updatePic(
+		{
+			...this.state.dataPic,
+			name: this.state.pic_name,
+			phone: this.state.pic_phone,
+			email: this.state.pic_email,
+			job: this.state.pic_job
+		},
+		this.props.sessionPersistance.accessToken)
+		await this.setState({
+			pic_name:'',
+			pic_job:'',
+			pic_phone:'',
+			pic_email:'',
+			modalPicEdit: false
+		})
 	}
 
 	setActive(){
@@ -623,13 +705,32 @@ class CustomerProfile extends Component {
 	)
 
 	renderItemsPic = ({ item }) => (
-		<TouchableOpacity
-			style={styles.headerDirection}
-			onPress={() => this.setState({ modalPic: true, dataPic: item })}>
-			<Icon name="md-contact" size={15} color={'#fff'} />
-			{console.log('ini isi item render item pic',item)}
-			<Text style={styles.data}>{item.name}</Text>
-		</TouchableOpacity>
+		<View>
+			<TouchableOpacity
+				style={styles.headerDirection}
+				onPress={() => this.setState({ modalPic: true, dataPic: item })}>
+				<Icon name="md-contact" size={15} color={'#fff'} />
+				{console.log('ini isi item render item pic',item)}
+				<Text style={styles.data}>{item.name}</Text>
+				<TouchableOpacity
+					onPress={()=> this.setState({
+						modalPicEdit: true, 
+						dataPic: item,
+						pic_name: item.name,
+						pic_job: item.job,
+						pic_email: item.email,
+						pic_phone: item.phone
+					})}
+				>
+					<Icon name="md-create" size={15} color={'#fff'} style={{marginLeft:25}}/>
+				</TouchableOpacity>
+				{/* <TouchableOpacity 
+					onPress={()=>this.()}
+					>
+					<Icon name="md-minus"/>
+				</TouchableOpacity> */}
+			</TouchableOpacity>
+		</View>
 	)
 
 	renderItemCart = ({ item }) => {
@@ -647,6 +748,7 @@ class CustomerProfile extends Component {
 
 	render() {
 		const { navigate, goBack, state } = this.props.navigation
+		console.log('isi state pic:', this.state)
 		return (
 			<Container>
 				<Modal isVisible={this.state.modalNewPipeline}>
@@ -1093,6 +1195,118 @@ class CustomerProfile extends Component {
 						</Footer>
 					</View>
 				</Modal>
+
+				<Modal isVisible={this.state.modalPicEdit}>
+					<View style={styles.modalWrapperAddPipeline}>
+						<View style={styles.imageModal}>
+							<Text style={styles.pipelineModalText}>EDIT PIC</Text>
+						</View>
+						<Content>
+							<View style={styles.formPicDirection}>
+								<Form>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>PIC Name</Label>
+										<Input 
+											value={this.state.pic_name} 
+											onChangeText={(pic_name) => this.setState({pic_name})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Job</Label>
+										<Input 
+											value={this.state.pic_job} 
+											onChangeText={(pic_job) => this.setState({pic_job})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Phone Number</Label>
+										<Input 
+											value={this.state.pic_phone} 
+											onChangeText={(pic_phone) => this.setState({pic_phone})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Email</Label>
+										<Input 
+											value={this.state.pic_email} 
+											onChangeText={(pic_email) =>this.setState({pic_email})}
+										/>
+									</Item>
+								</Form>
+							</View>
+						</Content>
+						<Footer>
+							<FooterTab>
+								<Button onPress={() => this.handleSaveUpdatePic()}>
+									<Text style={styles.modalYesButton}>SAVE</Text>
+								</Button>
+								<Button onPress={() => this.setState({modalPicEdit: false})}>
+									<Text style={styles.modalYesButton}>Cancel</Text>
+								</Button>
+							</FooterTab>
+						</Footer>
+					</View>
+				</Modal>
+				
+				<Modal isVisible={this.state.modalEditCustomer}>
+					<View style={styles.modalWrapperAddPipeline}>
+						<View style={styles.imageModal}>
+							<Text style={styles.pipelineModalText}>EDIT CUSTOMER</Text>
+						</View>
+						<Content>
+							<View style={styles.formPicDirection}>
+								<Form>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Name</Label>
+										<Input 
+											value={this.state.customer_name} 
+											onChangeText={(customer_name) => this.setState({customer_name})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Email</Label>
+										<Input 
+											value={this.state.customer_email} 
+											onChangeText={(customer_email) => this.setState({customer_email})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Website</Label>
+										<Input 
+											value={this.state.customer_website } 
+											onChangeText={(customer_website) => this.setState({customer_website})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Phone</Label>
+										<Input 
+											value={this.state.customer_phone} 
+											onChangeText={(customer_phone) =>this.setState({customer_phone})}
+										/>
+									</Item>
+									<Item floatingLabel style={{ borderColor: 'transparent' }}>
+										<Label>Address</Label>
+										<Input 
+											value={this.state.customer_address} 
+											onChangeText={(customer_address) =>this.setState({customer_address})}
+										/>
+									</Item>
+								</Form>
+							</View>
+						</Content>
+						<Footer>
+							<FooterTab>
+								<Button onPress={() => this.handleSaveUpdateCustomer()}>
+									<Text style={styles.modalYesButton}>SAVE</Text>
+								</Button>
+								<Button onPress={() => this.setState({modalEditCustomer: false})}>
+									<Text style={styles.modalYesButton}>Cancel</Text>
+								</Button>
+							</FooterTab>
+						</Footer>
+					</View>
+				</Modal>
+
 				<Modal style={styles.modal} isVisible={this.state.isModalVisible}>
 					<View style={styles.modalWrapper}>
 						<View>
@@ -1190,9 +1404,12 @@ class CustomerProfile extends Component {
 							style={styles.linearGradient}>
 							<View style={styles.headerDirectionTitle}>
 								<View style={{ backgroundColor: 'transparent' }}>
-									<TouchableHighlight underlayColor={'transparent'}>
+									<View style={{flexDirection:'row'}}>
 										<H3 style={styles.headerDirectionTitle}>{state.params.name}</H3>
-									</TouchableHighlight>
+										<TouchableOpacity onPress={()=> this.handleEditCustomer()} style={{marginLeft:10}}>
+											<Icon name="md-create" color={"#fff"} size={15}/>
+										</TouchableOpacity>
+									</View>
 									<View style={styles.headerDirection}>
 										<Icon name="md-pin" size={15} color={'#fff'} />
 										<Text style={styles.dataAddress}>{state.params.address}</Text>
@@ -1233,7 +1450,7 @@ class CustomerProfile extends Component {
 											this.props.pipelines.filter(
 												p =>
 													(p.step !== 7 && p.lose === false && p.drop === false) ||
-													(p.step === 7 && p.step_process === true)
+													(p.step === 7 && p.step_process === true) && p.role === 'SALLES'
 											).length
 										)}
 									</H1>
@@ -1245,7 +1462,7 @@ class CustomerProfile extends Component {
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
 											this.props.pipelines.filter(
-												p => p.step === 7 && p.lose === false && p.step_process === false
+												p => p.step === 7 && p.lose === false && p.step_process === false && p.role === 'SALLES'
 											).length
 										)}
 									</H1>
@@ -1256,7 +1473,7 @@ class CustomerProfile extends Component {
 								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'lose' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.lose === true).length)}
+											this.props.pipelines.filter(p => p.lose === true && p.role === 'SALLES').length)}
 									</H1>
 									<Text style={styles.totalText}>LOSE</Text>
 								</TouchableOpacity>
@@ -1265,7 +1482,7 @@ class CustomerProfile extends Component {
 								<TouchableOpacity onPress={() => this.setState({ pipelineTabs: 'drop' })}>
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
-											this.props.pipelines.filter(p => p.drop === true).length)}
+											this.props.pipelines.filter(p => p.drop === true && p.role === 'SALLES').length)}
 									</H1>
 									<Text style={styles.totalText}>DROP</Text>
 								</TouchableOpacity>
@@ -1297,7 +1514,9 @@ const mapDispatchToProps = dispatch => {
 			dispatch(fetchPicsWithIDCustomer(id, accessToken)),
 		fetchPipelineProducts: (id_pipeline, accessToken) =>
 			dispatch(fetchPipelineProducts(id_pipeline, accessToken)),
-		updatePipeline: (item , accessToken) => dispatch(updatePipeline(item, accessToken))
+		updatePipeline: (item , accessToken) => dispatch(updatePipeline(item, accessToken)),
+		updatePic: (item, accessToken) => dispatch(updatePic(item, accessToken)),
+		updateCustomer: (item, accessToken) => dispatch(updateCustomer(item, accessToken))
 	}
 }
 

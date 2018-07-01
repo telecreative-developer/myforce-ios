@@ -8,10 +8,6 @@ import {
 import {
 	Container,
 	Content,
-	Header,
-	Left,
-	Body,
-	Right,
 	Thumbnail,
 	Text,
 	View,
@@ -28,7 +24,6 @@ import PipelineProgress from '../components/PipelineProgress'
 import LinearGradient from 'react-native-linear-gradient'
 import moment from 'moment'
 import defaultAvatar from '../assets/images/default-avatar.png'
-import BarCharts from '../components/BarCharts'
 import PieCharts from '../components/PieCharts'
 import AnimatedBar from 'react-native-animated-bar'
 import { setNavigate } from '../actions/processor'
@@ -50,7 +45,7 @@ class Achievements extends Component {
 		let revenueMonth = 0
 		this.props.pipelinesWithUserId
 			.filter(
-				data => data.month === parseInt(moment().format('M')) && data.step === 7
+				data => data.month === parseInt(moment().format('M')) && data.step === 7 && data.role === 'SALLES'
 			)
 			.map(data => (revenueMonth += data.total))
 		return revenueMonth
@@ -61,7 +56,7 @@ class Achievements extends Component {
 		this.props.pipelinesWithUserId
 			.filter(
 				data =>
-					data.year === parseInt(moment().format('YYYY')) && data.step === 7
+					data.year === parseInt(moment().format('YYYY')) && data.step === 7 && data.role === 'SALLES'
 			)
 			.map(data => (revenueYear += data.total))
 		return revenueYear
@@ -73,7 +68,8 @@ class Achievements extends Component {
 			.filter(
 				data =>
 					data.month === parseInt(moment().format('M')) &&
-					data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+					data.probability === 'S' || data.probability === 'A' || data.probability === 'B' && 
+					data.role === 'SALLES'
 			)
 			.map(data => (pipelineRevenueMonth += data.total))
 		return pipelineRevenueMonth
@@ -85,7 +81,7 @@ class Achievements extends Component {
 				<View>
 					<FlatList
 						data={this.props.pipelinesWithUserId.filter(
-							p => p.step !== 7 && p.lose === false
+							p => p.step !== 7 && p.lose === false && p.role === 'SALLES'
 						)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsActive}
@@ -97,7 +93,7 @@ class Achievements extends Component {
 				<View>
 					<FlatList
 						data={this.props.pipelinesWithUserId.filter(
-							p => p.step === 7 && p.lose === false
+							p => p.step === 7 && p.lose === false && p.role === 'SALLES'
 						)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsClose}
@@ -108,7 +104,9 @@ class Achievements extends Component {
 			return (
 				<View>
 					<FlatList
-						data={this.props.pipelinesWithUserId.filter(p => p.lose === true)}
+						data={this.props.pipelinesWithUserId.filter(p => p.lose === true &&
+									p.role === 'SALLES'
+						)}
 						keyExtractor={this.key}
 						renderItem={this.renderItemsLose}
 					/>
@@ -222,7 +220,7 @@ class Achievements extends Component {
 	)
 
 	render() {
-		console.log('coba test format:',accounting.formatMoney(this.resultCompleteRevenueMonth()))
+		console.log('isi data :' , this.props.pipelinesWithUserId)
 		return (
 			<Container>
 				<View style={styles.customerHeader}>
@@ -276,7 +274,8 @@ class Achievements extends Component {
 									this.props.pipelinesWithUserId.filter(
 										data =>
 											data.month === parseInt(moment().format('M')) &&
-											data.step === 7
+											data.step === 7 && 
+											data.role === 'SALLES'
 									).length
 								}
 							/>
@@ -290,7 +289,8 @@ class Achievements extends Component {
 										this.props.pipelinesWithUserId.filter(
 											data =>
 												data.month === parseInt(moment().format('M')) &&
-												data.step === 7
+												data.step === 7 && 
+												data.role === 'SALLES'
 										).length / this.props.target.target_month
 									) * 100
 								).toFixed(2)} %
@@ -299,7 +299,8 @@ class Achievements extends Component {
 								{this.props.pipelinesWithUserId.filter(
 										data =>
 											data.month === parseInt(moment().format('M')) &&
-											data.step === 7
+											data.step === 7 && 
+											data.role === 'SALLES'
 									).length
 								} of {this.props.target.target_month} unit targets
 							</Text>
@@ -311,7 +312,8 @@ class Achievements extends Component {
 											this.props.pipelinesWithUserId.filter(
 												data =>
 													data.year === parseInt(moment().format('YYYY')) &&
-													data.step === 7
+													data.step === 7 && 
+													data.role === 'SALLES'
 											).length / this.props.target.target_year
 										) * 100
 									).toFixed(2) / 100
@@ -330,7 +332,8 @@ class Achievements extends Component {
 												this.props.pipelinesWithUserId.filter(
 													data =>
 														data.year === parseInt(moment().format('YYYY')) &&
-														data.step === 7
+														data.step === 7 && 
+														data.role === 'SALLES'
 												).length / this.props.target.target_year
 											) * 100
 										).toFixed(2)} %
@@ -342,7 +345,8 @@ class Achievements extends Component {
 									this.props.pipelinesWithUserId.filter(
 										data =>
 											data.year === parseInt(moment().format('YYYY')) &&
-											data.step === 7
+											data.step === 7 && 
+											data.role === 'SALLES'
 									).length
 								} of {this.props.target.target_year} unit targets
 							</Text>
@@ -414,6 +418,7 @@ class Achievements extends Component {
 										data =>
 											data.month === parseInt(moment().format('M')) &&
 											data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+											&& data.role === 'SALLES'
 									).length
 								}
 							/>
@@ -428,6 +433,7 @@ class Achievements extends Component {
 											data =>
 												data.month === parseInt(moment().format('M')) &&
 												data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+												&& data.role === 'SALLES'
 										).length / this.props.target.target_pipeline_month
 									) * 100
 								).toFixed(2)} %
@@ -437,6 +443,7 @@ class Achievements extends Component {
 										data =>
 											data.month === parseInt(moment().format('M')) &&
 											data.probability === 'S' || data.probability === 'A' || data.probability === 'B'
+											&& data.role === 'SALLES'
 									).length
 								} of {this.props.target.target_pipeline_month} unit targets
 							</Text>
@@ -477,7 +484,8 @@ class Achievements extends Component {
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
 											this.props.pipelinesWithUserId.filter(
-												p => p.step !== 7 && p.lose === false
+												p => p.step !== 7 && p.lose === false &&
+												p.role === 'SALLES'
 											).length
 										)}
 									</H1>
@@ -490,7 +498,8 @@ class Achievements extends Component {
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
 											this.props.pipelinesWithUserId.filter(
-												p => p.step === 7 && p.lose === false
+												p => p.step === 7 && p.lose === false &&
+												p.role === 'SALLES'
 											).length
 										)}
 									</H1>
@@ -503,7 +512,8 @@ class Achievements extends Component {
 									<H1 style={styles.totalText}>
 										{JSON.stringify(
 											this.props.pipelinesWithUserId.filter(
-												p => p.lose === true
+												p => p.lose === true && 
+												p.role === 'SALLES'
 											).length
 										)}
 									</H1>

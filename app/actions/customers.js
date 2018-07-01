@@ -116,3 +116,29 @@ export const inputDataToCustomer = data => ({
 		longitude: data.geometry.location.lng
 	}
 })
+
+export const updateCustomer = (items, accessToken) => {
+	console.log(items)
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_UPDATE_PIC'))
+		try {
+			const response = await fetch(`${url}/customers/${items.id_customer}`, {
+				method: 'PUT',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify(items)
+			})
+			const data = await response.json()
+			{console.log(data)}
+			// await dispatch(fetchCustomersSuccess(data.data))
+			await dispatch(setSuccess(false, 'SUCCESS_UPDATE_PIC'))
+			await dispatch(setLoading(false, 'LOADING_UPDATE_PIC'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_UPDATE_PIC', e))
+			dispatch(setLoading(false, 'LOADING_UPDATE_PIC'))
+		}
+	}
+}

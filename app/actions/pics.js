@@ -61,6 +61,7 @@ export const fetchPicsWithIDCustomer = (id_customer, accessToken) => {
 				}
 			})
 			const data = await response.json()
+			{console.log(data.data)}
 			await dispatch(fetchPicsWithIDCustomerSuccess(data.data))
 			await dispatch(setSuccess(true, 'SUCCESS_FETCH_PICS_WITH_IDCUSTOMERS'))
 			await dispatch(setLoading(false, 'LOADING_FETCH_PICS_WITH_IDCUSTOMERS'))
@@ -95,6 +96,7 @@ export const fetchPics = accessToken => {
 				}
 			})
 			const data = await response.json()
+			{console.log(data.data)}
 			await dispatch(fetchPicsSuccess(data.data))
 			await dispatch(setSuccess(true, 'SUCCESS_FETCH_PICS'))
 			await dispatch(setLoading(false, 'LOADING_FETCH_PICS'))
@@ -109,3 +111,53 @@ export const fetchPicsSuccess = data => ({
 	type: FETCH_PICS_SUCCESS,
 	payload: data
 })
+
+export const updatePic = (items, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_UPDATE_PIC'))
+		try {
+			const response = await fetch(`${url}/pics/${items.id_pic}`, {
+				method: 'PUT',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify(items)
+			})
+			const data = await response.json()
+			{console.log(data)}
+			// await dispatch(fetchPicsWithIDCustomer(data))
+			await dispatch(setSuccess(false, 'SUCCESS_UPDATE_PIC'))
+			await dispatch(setLoading(false, 'LOADING_UPDATE_PIC'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_UPDATE_PIC', e))
+			dispatch(setLoading(false, 'LOADING_UPDATE_PIC'))
+		}
+	}
+}
+
+export const deletePic = (items, accessToken) => {
+	return async dispatch => {
+		await dispatch(setLoading(true, 'LOADING_UPDATE_PIC'))
+		try {
+			const response = await fetch(`${url}/pics/${items.id_pic}`, {
+				method: 'DELETE',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: accessToken
+				},
+				body: JSON.stringify(items)
+			})
+			const data = await response.json()
+			{console.log(data)}
+			// await dispatch(fetchPicsWithIDCustomer(data))
+			await dispatch(setSuccess(false, 'SUCCESS_UPDATE_PIC'))
+			await dispatch(setLoading(false, 'LOADING_UPDATE_PIC'))
+		} catch (e) {
+			dispatch(setFailed(true, 'FAILED_UPDATE_PIC', e))
+			dispatch(setLoading(false, 'LOADING_UPDATE_PIC'))
+		}
+	}
+}
