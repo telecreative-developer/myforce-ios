@@ -48,7 +48,7 @@ class AddNewPic extends Component {
 			!isEmpty( String(JSON.stringify(phone))) &&
 			!isEmpty( String(JSON.stringify(address))) &&
 			!isEmpty( String(JSON.stringify(job)))&&
-			!isEmpty( String(JSON.stringify(first_name)))
+			!isEmpty( String(JSON.stringify(email)))
 		) {
 			return (
 				<Button primary style={styles.button} onPress={() => this.handleAddPic()}>
