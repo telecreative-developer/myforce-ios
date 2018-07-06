@@ -373,6 +373,7 @@ class Activity extends PureComponent {
 						</Animated.View>
 					)}
 				</View>
+				{console.log('isi cek in :' , this.props.checks)}
 			</Container>
 		)
 	}

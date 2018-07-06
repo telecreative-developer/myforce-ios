@@ -30,7 +30,7 @@ class AddCustomerPreview extends Component {
 		super()
 
 		this.state = {
-			id: '',
+			id_customer: '',
 			name: '',
 			email: '',
 			phone: '',
@@ -74,7 +74,7 @@ class AddCustomerPreview extends Component {
 			latitude: parseFloat(params.idCustomer.latitude).toPrecision(6),
 			longitude: parseFloat(params.idCustomer.longitude).toPrecision(6)
 		})
-		this.props.postCustomer()
+		this.props.postCustomer(id.accessToken)
 	}
 
 	key = (item, index) => index
@@ -89,6 +89,7 @@ class AddCustomerPreview extends Component {
 	async handlePostCustomer() {
 		
 		const { sessionPersistance } = this.props
+		console.log('isi session persistance :', {...this.state, id_branch: sessionPersistance.id_branch})
 		await this.props.postCustomer(
 			{ ...this.state, id_branch: sessionPersistance.id_branch },
 			this.props.pics,
@@ -98,7 +99,6 @@ class AddCustomerPreview extends Component {
 	}
 
 	render() {
-		{console.log('ini state',this.props.sessionPersistance)}
 		return (
 			<Container style={{ backgroundColor: '#ffffff' }}>
 				<Header style={styles.header}>

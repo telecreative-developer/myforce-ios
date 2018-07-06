@@ -68,7 +68,7 @@ class AddNewPic extends Component {
 	handleAddPic() {
 		const { name, email, phone, address, job } = this.state
 		const { accessToken } = this.props.sessionPersistance
-
+		console.log('AccessToken :', accessToken)
 		this.props.addPIC(
 			{
 				name,
