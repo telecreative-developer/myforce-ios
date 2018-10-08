@@ -11,7 +11,7 @@ The Myforce IOS Application is Created Using React Native & Redux
 - [Explanation each Folder](#explanation-each-folder)
     - [Actions](#actions)
     - [Assets](#assets)
-    - [Component](#component)
+    - [Components](#components)
     - [Constants](#constants)
     - [Lib](#lib)
     - [Native-base-theme](#native-base-theme)
@@ -19,7 +19,6 @@ The Myforce IOS Application is Created Using React Native & Redux
     - [Screens](#screens)
 - [Tips and Trick](#tips-and-trick)
 - [Available Scripts](#available-scripts)
-  - [npm start](#npm-start)
 - [Build With](#build-with)
 - [Authors](#authors)
 
@@ -91,7 +90,7 @@ Folder For Setting environment like server & Socket io (for realtime data).
 
 Folder For Store Theme From [Nativebase](https://nativebase.io/)
 
-### Reducer
+### Reducers
 
 Folder For Storing Reducer Redux
 
@@ -121,7 +120,7 @@ if you already run project using `react-native run-ios`, you can use `npm start`
 
 See the references about [deployment](http://www.ileafsolutions.com/blog/deploying-react-native-app-ios-android-windows/) for more information.
 
-## Built With
+## Build With
 
 * [React Native](https://facebook.github.io/react-native/) - The framework used
 * [Nativebase](https://nativebase.io/) - React Native UI Framework
